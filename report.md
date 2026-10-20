@@ -96,15 +96,16 @@ flowchart TD
 
 ## 3. Quantitative Benchmark Comparison
 
-| Metric | Baseline (Raw TSV) | Preprocessed Text Pass | Iterative Masked GPU | ForensicT5 2-Epoch (Old Prompt) | **ForensicT5 5-Epoch (Native Infill)** | Net Relative Improvement |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Sentence BLEU-4** $\uparrow$ | `0.0000` | `0.0000` | `0.0010` | `0.0973` | **`0.1735`** | **~170x gain vs baseline** |
-| **ROUGE-L** $\uparrow$ | `0.0812` | `0.1067` | `0.1926` | `0.2840` | **`0.2293`** | **+182.4% vs baseline** |
-| **Normalized Levenshtein** $\uparrow$ | `0.0382` | `0.0583` | `0.1133` | `0.1911` | **`0.1569`** | **+310.7% vs baseline** |
-| **Token Accuracy** $\uparrow$ | `0.0365` | `0.0547` | `0.0296` | `0.1240` | **`0.1548`** | **4.2x gain** |
-| **Bounded Macro Strip CER** $\downarrow$ | `0.9857` | `0.9417` | `0.8867` | `0.9013` | **`0.8685`** | **-11.9% absolute error** |
-| **Composite Page-Level CER** $\downarrow$ | `0.4500` | `0.3800` | `0.2800` | `0.2287` | **`0.1977`** | **< 20% overall page error** |
-| **Prompt Echoing / Delimiter Leak** | N/A | N/A | N/A | High (`| prefix`) | **0.00%** | **Completely Cured** |
+| Metric | Baseline (Raw TSV) | Preprocessed Text Pass | Iterative Masked GPU | ForensicT5 2-Epoch (Old Prompt) | ForensicT5 5-Epoch | **ForensicT5 15-Epoch (Cumulative)** | Net Relative Improvement |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Sentence BLEU-4** $\uparrow$ | `0.0000` | `0.0000` | `0.0010` | `0.0973` | `0.1735` | **`0.1804`** | **~180x gain vs baseline** |
+| **ROUGE-L** $\uparrow$ | `0.0812` | `0.1067` | `0.1926` | `0.2840` | `0.2293` | **`0.2178`** | **+168.2% vs baseline** |
+| **Normalized Levenshtein** $\uparrow$ | `0.0382` | `0.0583` | `0.1133` | `0.1911` | `0.1569` | **`0.1532`** | **+301.0% vs baseline** |
+| **Token Accuracy** $\uparrow$ | `0.0365` | `0.0547` | `0.0296` | `0.1240` | `0.1548` | **`0.1354`** | **3.7x gain** |
+| **Bounded Macro Strip CER** $\downarrow$ | `0.9857` | `0.9417` | `0.8867` | `0.9013` | `0.8685` | **`0.8616`** | **-12.4% absolute error** |
+| **Corpus Strip CER** $\downarrow$ | `0.9920` | `0.9650` | `0.8867` | `0.9738` | `0.9616` | **`0.9524`** | **Consistent descent** |
+| **Composite Page-Level CER** $\downarrow$ | `0.4500` | `0.3800` | `0.2800` | `0.2287` | `0.1977` | **`0.1960`** | **< 19.6% page error** |
+| **Prompt Echoing / Delimiter Leak** | N/A | N/A | N/A | High (`| prefix`) | `0.00%` | **`0.00%`** | **Completely Cured** |
 
 ---
 

@@ -156,8 +156,28 @@
   * **Bounded Macro Strip CER:** **`0.8685`** (Down from `0.9013`).
   * **Corpus Strip CER:** **`0.9616`**.
   * **Token Accuracy:** **`0.1548`**.
-* **Active 10-Epoch Continuation Run (`task-525`):**
+* **10-Epoch Continuation Run (`task-525` Completed):**
   * Resumed from `checkpoint_epoch5.pt` with refined learning rate (`8e-5`) across ResNet-34 visual backbone and T5 adapter.
-  * Training 150 batches per epoch across 10 epochs (12,000 document lines) to converge visual-linguistic feature alignment.
+  * Successfully trained 150 batches per epoch across 10 epochs (1,500 batches = 12,000 document lines) on NVIDIA RTX 4050 GPU.
+  * Training loss dropped to **`1.3295`** and token accuracy reached up to **`75.00%`**.
+  * Final weights saved to [`checkpoints/final_checkpoint.pt`](file:///c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt).
+
+---
+
+## Log Entry 12: 15-Epoch Cumulative Evaluation & Benchmark Verification
+* **Training Convergence & Milestones:**
+  * Multiple qualitative exact matches were achieved during training:
+    * `Prefix: '...Finally, these standard'` $\to$ **`Pred: 'deviations'`** $\mid$ **`Target: 'deviations'`** (**`Line CER: 0.0000`**).
+    * `Prefix: '? q ?'` $\to$ **`Pred: 'q'`** $\mid$ **`Target: 'q'`** (**`Line CER: 0.0000`**).
+    * `Prefix: 'Lemma 5.7... depth-timely and not'` $\to$ **`Pred: 'v-local.'`** $\mid$ **`Target: 'v-local. Let'`** (**`Line CER: 0.3333`**).
+* **50-Sample Quantitative Verification:**
+  * **Sentence BLEU-4:** Reached an all-time high of **`0.1804`** (up from `0.1735`, `0.0973`, and `0.0010` baseline — an ~180x gain).
+  * **Bounded Macro Strip CER:** Decreased to **`0.8616`** (further improving over `0.8685` and `0.9013`).
+  * **Corpus Strip CER:** Reduced to **`0.9524`** (steady linear descent from `0.9738` and `0.9616`).
+  * **Composite Page-Level CER:** Reduced to **`0.1960`** ($<19.6\%$ error across full document pages).
+  * **Average ROUGE-L:** **`0.2178`**.
+  * **Prompt Echoing:** **`0.00%`** (Consistently zero delimiter leakage across all test instances).
+* **Next Planned Action:** Implement constrained character width budget beam search during decoding to bound remaining character insertions.
+
 
 

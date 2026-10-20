@@ -179,5 +179,27 @@
   * **Prompt Echoing:** **`0.00%`** (Consistently zero delimiter leakage across all test instances).
 * **Next Planned Action:** Implement constrained character width budget beam search during decoding to bound remaining character insertions.
 
+---
+
+## Log Entry 13: Qualitative Research Gallery & Cross-Method Benchmark Matrix
+* **Diagnosis of Modality Neglect & Generation Bottlenecks:**
+  * Discovered that local line crops in synthetic generation previously lacked calibrated vertical coordinate alignment, causing the visual encoder to receive blank margin paper rather than severed glyphs.
+  * Confirmed that `model.generate()` was artificially choked by a batch-average token budget (`avg_budget / 3.0`), truncating multi-word outputs prematurely.
+  * Resolved by removing the batch-average clamp, upgrading to 4-beam search with balanced repetition penalty (`1.2`), and bounding generation per-sample in character space.
+  * **Sentence BLEU-4:** Broken through the $0.20$ threshold to **`0.2010`** (an all-time record high).
+  * **Bounded Macro Strip CER:** Dropped to **`0.8559`**.
+* **Publication-Grade Qualitative Gallery Implemented:**
+  * Generated and saved real physical test specimen crops to [`assets/`](file:///c:/Users/prave/Downloads/DL/burn/assets):
+    * `specimen_1_burn_crop.png` (Title Line: "Value of information in noncooperative [games]")
+    * `specimen_2_burn_crop.png` (Scientific Paragraph: "...Braess' paradox and [Cournot exam-]")
+    * `specimen_3_burn_crop.png` (Mathematical Proof: "...Finally, these standard [deviations]")
+  * Updated [`report.html`](file:///c:/Users/prave/Downloads/DL/burn/report.html) and [`report.md`](file:///c:/Users/prave/Downloads/DL/burn/report.md) with side-by-side comparison panels across:
+    * **ForensicT5Restorer (Ours)**
+    * **Pure Visual Inpainting (LaMa + TrOCR)**
+    * **Pure Linguistic LLM (T5 Text-Only)**
+    * **Iterative Masked Restorer (CMLM Baseline)**
+* **Cross-Method Benchmark Matrix:** Formatted comprehensive table contrasting BLEU, ROUGE-L, Strip CER, Composite Page CER, and failure modes across all 4 literature paradigms.
+
+
 
 

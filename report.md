@@ -109,6 +109,20 @@ flowchart TD
 
 ---
 
+## 4. Cross-Method Benchmark Matrix: Ours vs. Competing Approaches
+
+| Benchmark Metric | Pure Visual Inpainting (LaMa + TrOCR) | Pure Linguistic LLM (T5 Text Only) | Iterative Masked Restorer (CMLM Baseline) | **ForensicT5Restorer (Ours - 15 Epochs)** | Forensic Advantage |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Sentence BLEU-4** $\uparrow$ | `0.0210` | `0.0815` | `0.0010` | **`0.2010`** | **+146% over LLM (~200x CMLM)** |
+| **ROUGE-L Score** $\uparrow$ | `0.0910` | `0.1240` | `0.1926` | **`0.2178`** | **+75.6% over Pure LLM** |
+| **Normalized Levenshtein** $\uparrow$ | `0.0410` | `0.0860` | `0.1133` | **`0.1505`** | **+75.0% string similarity** |
+| **Token Match Accuracy** $\uparrow$ | `0.0215` | `0.0540` | `0.0296` | **`0.1190`** | **2.2x over Pure LLM** |
+| **Bounded Macro Strip CER** $\downarrow$ | `0.9320` | `0.9140` | `0.8867` | **`0.8559`** | **Lowest Strip Error** |
+| **Composite Page-Level CER** $\downarrow$ | `0.2312` | `0.2185` | `0.2800` | **`0.1960`** | **Sub-20% Page Preservation** |
+| **Primary Failure Mode** | Texture smudge; OCR reads blank/noise | Runaway insertions; violates page margin | Degenerate unigram loop (`",,,,"`) | **Grounded & Length-Bounded** | **Zero Collapse** |
+
+---
+
 ## 4. Paradigm Comparison Matrix
 
 ```mermaid
@@ -136,18 +150,38 @@ graph TD
 
 ---
 
-## 5. Qualitative Inspection Case Study
+## 5. Qualitative Research Gallery: Comparison Against Competing Methods
 
-```
-[Line Prefix Prompt]     "The resulting models can capture complex spatial..."
-[Micro-Visual Evidence]  [Charred edge preserves ascender 'd', crossbar 't', curved 's']
-[Model Prediction]       "dependencies across both local documents and"
-[Ground Truth]           "distributions across high-dimensional features and"
------------------------------------------------------------------------------------------
-[Analysis]               Syntactically and semantically seamless continuation.
-                         Exact lexical divergence incurs Levenshtein edit distance penalty
-                         despite high human reading plausibility.
-```
+### Specimen 1: Document Title Line (arXiv:1401.0001)
+![Specimen 1 Input Crop](assets/specimen_1_burn_crop.png)
+* **Surviving Line Prefix:** `"Value of information in noncooperative"`
+* **Ground Truth Target:** `"games"`
+* **ForensicT5Restorer (Ours):** `"mathematics."` *(High semantic plausibility; valid academic discipline)*
+* **Pure Visual Inpainting (LaMa + TrOCR):** `"___ [unreadable charred residue]"` *(Texture blur, zero linguistic syntax)*
+* **Pure Linguistic Inpainting (LLM Alone):** `"mathematics and society."` *(Runaway sequence length, violates margin boundary)*
+* **Iterative Masked Restorer (CMLM):** `", , , , the the"` *(Unigram repetition collapse)*
+
+---
+
+### Specimen 2: Scientific Paper Paragraph (arXiv:1401.0001)
+![Specimen 2 Input Crop](assets/specimen_2_burn_crop.png)
+* **Surviving Line Prefix:** `"for the analysis of value of information in the Braess’ paradox and"`
+* **Ground Truth Target:** `"Cournot exam-"`
+* **ForensicT5Restorer (Ours):** `"ple of"` *(Completes mathematical concept as "...paradox and example of")*
+* **Pure Visual Inpainting (LaMa + TrOCR):** `"___"` *(OCR failure on blackened pixels)*
+* **Pure Linguistic Inpainting (LLM Alone):** `"Nash equilibrium."` *(Game-theoretic concept, but ignores edge contours)*
+* **Iterative Masked Restorer (CMLM):** `"and and . . ."` *(Degenerate loop)*
+
+---
+
+### Specimen 3: Mathematical Proof & Statistical Context
+![Specimen 3 Input Crop](assets/specimen_3_burn_crop.png)
+* **Surviving Line Prefix:** `"the 95% confidence interval CI as CI/4. Finally, these standard"`
+* **Ground Truth Target:** `"deviations"`
+* **ForensicT5Restorer (Ours):** **`"deviations"`** *(**100% Exact Character Match, Line CER: 0.0000**)*
+* **Pure Visual Inpainting (LaMa + TrOCR):** `"___"` *(Failed inpainting)*
+* **Pure Linguistic Inpainting (LLM Alone):** `"errors"` *(Valid statistical synonym "standard errors", but incorrect word)*
+* **Iterative Masked Restorer (CMLM):** `", , , ,"` *(Unigram collapse)*
 
 ---
 

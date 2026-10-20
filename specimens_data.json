@@ -1,0 +1,38 @@
+[
+  {
+    "idx": 1,
+    "crop_rel_path": "assets/specimen_1_crop.png",
+    "prefix": "Value of information in noncooperative",
+    "target": "games",
+    "pred_ours": "mathematics.",
+    "pred_llm": "mathematics.",
+    "pred_lama": "___ [unreadable charred residue]",
+    "pred_cmlm": ", , , , the the",
+    "cer_ours": 1.8,
+    "cer_llm": 1.8
+  },
+  {
+    "idx": 2,
+    "crop_rel_path": "assets/specimen_2_crop.png",
+    "prefix": "for the analysis of value of information in the Braess\u2019 paradox and",
+    "target": "Cournot exam-",
+    "pred_ours": "ple of",
+    "pred_llm": "ple of",
+    "pred_lama": "___ [unreadable charred residue]",
+    "pred_cmlm": ", , , , the the",
+    "cer_ours": 0.9230769230769231,
+    "cer_llm": 0.9230769230769231
+  },
+  {
+    "idx": 3,
+    "crop_rel_path": "assets/specimen_3_crop.png",
+    "prefix": "independent of i. So evaluating at \u03b8 (cid:48) = \u03b8 and by the above proportionality,",
+    "target": "(18)",
+    "pred_ours": "we",
+    "pred_llm": "we",
+    "pred_lama": "___ [unreadable charred residue]",
+    "pred_cmlm": ", , , , the the",
+    "cer_ours": 1.0,
+    "cer_llm": 1.0
+  }
+]

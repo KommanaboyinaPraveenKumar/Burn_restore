@@ -139,21 +139,14 @@ class ForensicT5Restorer(nn.Module):
         crop = line_burn_crop if line_burn_crop is not None else burn_crop_image
         max_len = max_len or self.config.max_target_len
 
-        # If a physical character budget is provided, cap token emission
-        # to eliminate runaway insertion errors (~3.2 chars/token)
-        if line_budget is not None and isinstance(line_budget, torch.Tensor):
-            avg_budget = float(line_budget.mean().item())
-            budget_tokens = max(3, int(avg_budget / 3.0) + 2)
-            max_len = min(max_len, budget_tokens)
-
         encoder_outputs, multimodal_mask = self.encode_multimodal(ids, mask, crop)
         generated = self.t5.generate(
             encoder_outputs=encoder_outputs,
             attention_mask=multimodal_mask,
             max_new_tokens=max_len,
-            num_beams=2,
+            num_beams=4,
             early_stopping=True,
-            repetition_penalty=1.6,
+            repetition_penalty=1.2,
             no_repeat_ngram_size=2,
         )
         return generated

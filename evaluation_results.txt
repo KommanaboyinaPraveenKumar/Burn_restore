@@ -1,7 +1,7 @@
-Bounded Macro Strip CER: 0.8616
-Corpus Strip CER: 0.9524
-Composite Page-Level CER: 0.1960
-Average Token Accuracy: 0.1354
-Average Normalized Levenshtein: 0.1532
-Average BLEU: 0.1804
-Average ROUGE-L: 0.2178
+Bounded Macro Strip CER: 0.8559
+Corpus Strip CER: 0.9626
+Composite Page-Level CER: 0.1979
+Average Token Accuracy: 0.1190
+Average Normalized Levenshtein: 0.1505
+Average BLEU: 0.2010
+Average ROUGE-L: 0.2103

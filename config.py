@@ -67,8 +67,9 @@ class Config:
     learning_rate: float = 1e-4
 
     weight_decay: float = 1e-4
-    epochs: int = 3
+    epochs: int = 5
     grad_clip_norm: float = 1.0
+
     log_every: int = 10
     num_workers: int = 0
     seed: int = 42

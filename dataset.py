@@ -161,8 +161,9 @@ class LineGroundedDocumentDataset(Dataset):
         line_prefix = target_cand["prefix"]
         target_text = target_cand["target"]
 
-        # Structured prompt for T5: provides both full page context and immediate line prefix
-        prompt_text = f"restore line | page: {page_context_text} | prefix: {line_prefix}"
+        # T5 Native Infilling syntax: activates T5's pre-trained span infilling heads
+        prompt_text = f"Context: {page_context_text} | Incomplete line: {line_prefix} <extra_id_0>"
+        infill_target_text = f"<extra_id_0> {target_text} <extra_id_1>"
 
         # Tokenize prompt and target
         prompt_enc = self.tokenizer(
@@ -173,12 +174,13 @@ class LineGroundedDocumentDataset(Dataset):
             return_tensors="pt",
         )
         target_enc = self.tokenizer(
-            target_text,
+            infill_target_text,
             truncation=True,
             max_length=self.config.max_target_len,
             padding="max_length",
             return_tensors="pt",
         )
+
 
         # Extract focused high-resolution line crop (128x256)
         line_crop = self._prepare_line_crop(

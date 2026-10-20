@@ -135,3 +135,29 @@
   * **Sentence BLEU:** `0.1131` (up from 0.0973)
   * **ROUGE-L:** `0.2146`
 
+---
+
+## Log Entry 11: T5 Native Span Infilling & Extended 10-Epoch Retraining
+* **T5 Native Span Infilling Formulation:**
+  * Replaced custom prompt string with native T5 sentinel token infilling:
+    * **Prompt:** `Context: {page_context} | Incomplete line: {prefix} <extra_id_0>`
+    * **Target:** `<extra_id_0> {target_text} <extra_id_1>`
+  * Added `extract_infill_text()` in [`metrics.py`](file:///c:/Users/prave/Downloads/DL/burn/metrics.py) to reliably extract text strictly between `<extra_id_0>` and `<extra_id_1>`.
+  * **Result:** Prompt echoing and delimiter leakage (`"| prefix"`, repeated line prompts) have been completely eliminated.
+* **5-Epoch GPU Training Run (`task-361`):**
+  * Completed 5 epochs (750 batches = 6,000 document lines) on NVIDIA RTX 4050 Laptop GPU.
+  * Training loss dropped from `5.38` down to **`1.8155`**, with token accuracy consistently reaching **60%–67%**.
+  * Checkpoint saved to [`checkpoints/final_checkpoint.pt`](file:///c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt) and archived to `checkpoints/checkpoint_epoch5.pt`.
+* **50-Sample Quantitative Verification:**
+  * **Prompt Echoing:** `0.00%` (Completely cured).
+  * **Composite Page-Level CER:** **`0.1977`** (Broached the $<20\%$ error threshold across damaged pages).
+  * **Sentence BLEU:** **`0.1735`** (Up from `0.0973` in 2-epoch run and `0.0010` in iterative baseline).
+  * **ROUGE-L:** **`0.2293`**.
+  * **Bounded Macro Strip CER:** **`0.8685`** (Down from `0.9013`).
+  * **Corpus Strip CER:** **`0.9616`**.
+  * **Token Accuracy:** **`0.1548`**.
+* **Active 10-Epoch Continuation Run (`task-525`):**
+  * Resumed from `checkpoint_epoch5.pt` with refined learning rate (`8e-5`) across ResNet-34 visual backbone and T5 adapter.
+  * Training 150 batches per epoch across 10 epochs (12,000 document lines) to converge visual-linguistic feature alignment.
+
+

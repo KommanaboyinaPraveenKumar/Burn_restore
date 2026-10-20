@@ -499,7 +499,7 @@
         <div class="kpi-card kpi-purple">
             <div class="kpi-label">Sentence BLEU-4</div>
             <div class="kpi-value-row">
-                <span class="kpi-value">0.0973</span>
+                <span class="kpi-value">0.1735</span>
                 <span class="kpi-delta delta-up">~100x</span>
             </div>
             <div class="kpi-sub">Up from degenerate 0.0010</div>
@@ -508,8 +508,8 @@
         <div class="kpi-card kpi-rose">
             <div class="kpi-label">Strip CER vs Page CER</div>
             <div class="kpi-value-row">
-                <span class="kpi-value">0.9013</span>
-                <span class="kpi-delta delta-neutral">&lt; 0.22 Full Page</span>
+                <span class="kpi-value">0.8685</span>
+                <span class="kpi-delta delta-neutral">0.1977 Full Page (< 20%)</span>
             </div>
             <div class="kpi-sub">Evaluated strictly on destroyed edge</div>
         </div>
@@ -967,50 +967,65 @@
                     <th>Initial Baseline</th>
                     <th>Preprocessed Text Pass</th>
                     <th>Iterative Masked GPU</th>
-                    <th>ForensicT5Restorer</th>
+                    <th>ForensicT5 2-Epoch (Old Prompt)</th>
+                    <th>ForensicT5 5-Epoch (Native Infill)</th>
                     <th>Net Gain</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
+                    <td><strong>Sentence BLEU-4 &uarr;</strong></td>
+                    <td class="font-mono">0.0000</td>
+                    <td class="font-mono">0.0000</td>
+                    <td class="font-mono">0.0010</td>
+                    <td class="font-mono">0.0973</td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.1735</td>
+                    <td><span style="color:#34d399; font-weight:600;">~170x gain</span></td>
+                </tr>
+                <tr>
                     <td><strong>ROUGE-L Score &uarr;</strong></td>
                     <td class="font-mono">0.0812</td>
                     <td class="font-mono">0.1067</td>
                     <td class="font-mono">0.1926</td>
-                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2840</td>
-                    <td><span style="color:#34d399; font-weight:600;">+249.8%</span></td>
+                    <td class="font-mono">0.2840</td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2293</td>
+                    <td><span style="color:#34d399; font-weight:600;">+182.4%</span></td>
                 </tr>
                 <tr>
                     <td><strong>Normalized Levenshtein &uarr;</strong></td>
                     <td class="font-mono">0.0382</td>
                     <td class="font-mono">0.0583</td>
                     <td class="font-mono">0.1133</td>
-                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1911</td>
-                    <td><span style="color:#34d399; font-weight:600;">+400.3%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Sentence BLEU-4 &uarr;</strong></td>
-                    <td class="font-mono">0.0000</td>
-                    <td class="font-mono">0.0000</td>
-                    <td class="font-mono">0.0010</td>
-                    <td class="font-mono" style="color:var(--accent-purple); font-weight:700;">0.0973</td>
-                    <td><span style="color:#34d399; font-weight:600;">~100x gain</span></td>
+                    <td class="font-mono">0.1911</td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1569</td>
+                    <td><span style="color:#34d399; font-weight:600;">+310.7%</span></td>
                 </tr>
                 <tr>
                     <td><strong>Token Match Accuracy &uarr;</strong></td>
                     <td class="font-mono">0.0365</td>
                     <td class="font-mono">0.0547</td>
                     <td class="font-mono">0.0296</td>
-                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.1240</td>
+                    <td class="font-mono">0.1240</td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.1548</td>
                     <td><span style="color:#34d399; font-weight:600;">4.2x gain</span></td>
                 </tr>
                 <tr>
-                    <td><strong>Character Error Rate (CER) &darr;</strong></td>
+                    <td><strong>Bounded Macro Strip CER &darr;</strong></td>
                     <td class="font-mono">0.9857</td>
                     <td class="font-mono">0.9417</td>
                     <td class="font-mono">0.8867</td>
-                    <td class="font-mono" style="color:#f43f5e; font-weight:700;">0.9013 (Macro)</td>
-                    <td><span style="color:#94a3b8;">Line Grounded</span></td>
+                    <td class="font-mono">0.9013</td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.8685</td>
+                    <td><span style="color:#34d399; font-weight:600;">-11.9% err</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Composite Page CER &darr;</strong></td>
+                    <td class="font-mono">0.4500</td>
+                    <td class="font-mono">0.3800</td>
+                    <td class="font-mono">0.2800</td>
+                    <td class="font-mono">0.2287</td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1977</td>
+                    <td><span style="color:#34d399; font-weight:600;">&lt; 20% Page Error</span></td>
                 </tr>
             </tbody>
         </table>

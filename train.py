@@ -26,7 +26,8 @@ from transformers import AutoTokenizer
 from config import Config
 from dataset import SideBurnDocumentDataset
 from model import ForensicT5Restorer, GroundedDocumentRestorer
-from metrics import compute_cer, compute_token_accuracy
+from metrics import compute_cer, compute_token_accuracy, extract_infill_text
+
 
 def set_seed(seed: int) -> None:
     random.seed(seed)
@@ -54,12 +55,14 @@ def run_qualitative_eval(model, tokenizer, batch, config, device) -> None:
                 input_ids=batch["input_ids"][:1],
                 attention_mask=batch["attention_mask"][:1],
                 line_burn_crop=batch["line_burn_crop"][:1],
+                line_budget=batch["line_budget"][:1] if "line_budget" in batch else None,
                 max_len=config.max_target_len,
             )
-        pred_text = tokenizer.decode(generated[0], skip_special_tokens=True)
+        pred_text = extract_infill_text(tokenizer.decode(generated[0], skip_special_tokens=False))
         target_text = batch["raw_target_text"][0]
         prefix_text = batch["raw_prefix"][0]
         cer = compute_cer(pred_text, target_text)
+
         safe_prefix = prefix_text.encode("ascii", "replace").decode("ascii")
         safe_pred = pred_text.encode("ascii", "replace").decode("ascii")
         safe_target = target_text.encode("ascii", "replace").decode("ascii")

@@ -8,16 +8,17 @@ from dataset import SideBurnDocumentDataset, LineGroundedDocumentDataset
 from model import ForensicT5Restorer, GroundedDocumentRestorer
 
 
-from metrics import compute_cer, compute_token_accuracy, compute_normalized_levenshtein, compute_bleu, compute_rouge_l
+from metrics import compute_cer, compute_token_accuracy, compute_normalized_levenshtein, compute_bleu, compute_rouge_l, extract_infill_text
 
 def evaluate(config, checkpoint_path, image_dir, text_dir, device):
     tokenizer = AutoTokenizer.from_pretrained(config.text_model_name)
-    dataset = SideBurnDocumentDataset(config, image_dir, text_dir, tokenizer=tokenizer)
+    dataset = SideBurnDocumentDataset(config, image_dir, text_dir, tokenizer=tokenizer, is_eval=True)
     dataloader = DataLoader(dataset, batch_size=config.batch_size, shuffle=False, num_workers=config.num_workers, collate_fn=SideBurnDocumentDataset.collate_fn)
 
     model = ForensicT5Restorer(config).to(device)
-    model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+    model.load_state_dict(torch.load(checkpoint_path, map_location=device, weights_only=False))
     model.eval()
+
 
     total_cer = 0.0
     total_raw_cer = 0.0
@@ -39,7 +40,7 @@ def evaluate(config, checkpoint_path, image_dir, text_dir, device):
                 line_budget=batch["line_budget"],
                 max_len=config.max_target_len,
             )
-            pred_texts = [tokenizer.decode(g, skip_special_tokens=True) for g in generated]
+            pred_texts = [extract_infill_text(tokenizer.decode(g, skip_special_tokens=False)) for g in generated]
             target_texts = batch["raw_target_text"]
             prefixes = batch["raw_prefix"]
             budgets = batch["line_budget"].cpu().numpy()

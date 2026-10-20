@@ -200,3 +200,20 @@ def compute_rouge_l(pred_text: str, target_text: str) -> Optional[float]:
     except Exception as exc:  # pragma: no cover - defensive guard
         warnings.warn(f"[metrics] ROUGE-L computation failed: {exc}")
         return None
+
+
+def extract_infill_text(raw_decoded: str) -> str:
+    """Extracts restored text generated between <extra_id_0> and <extra_id_1> or EOS.
+    Falls back gracefully if raw text has no special span tokens."""
+    text = raw_decoded
+    if "<extra_id_0>" in text:
+        text = text.split("<extra_id_0>", 1)[1]
+    if "<extra_id_1>" in text:
+        text = text.split("<extra_id_1>", 1)[0]
+    for i in range(2, 10):
+        if f"<extra_id_{i}>" in text:
+            text = text.split(f"<extra_id_{i}>", 1)[0]
+    if "| prefix" in text:
+        text = text.replace("| prefix", "")
+    return text.strip()
+

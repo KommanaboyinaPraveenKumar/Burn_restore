@@ -24,17 +24,20 @@
 ---
 
 ## 3. Current Checkpoint & Quantitative Benchmarks
-* **Active Model Weights:** [`c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt`](file:///c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt)
+* **Active Model Weights:** [`c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt`](file:///c:/Users/prave/Downloads/DL/burn/checkpoints/final_checkpoint.pt) (Archived: `checkpoints/checkpoint_epoch5.pt`)
 * **Hardware:** NVIDIA GeForce RTX 4050 Laptop GPU (`cuda`).
 * **Benchmark Split:** 50 samples from OPRB evaluation split.
 
-| Metric | Initial Baseline (Raw TSV) | Preprocessed Text Pass | Iterative Masked GPU | **ForensicT5Restorer (Current)** |
-| :--- | :---: | :---: | :---: | :---: |
-| **ROUGE-L** $\uparrow$ | `0.0812` | `0.1067` | `0.1926` | **`0.2840` (+47.5%)** |
-| **Normalized Levenshtein** $\uparrow$ | `0.0382` | `0.0583` | `0.1133` | **`0.1911` (+68.7%)** |
-| **Sentence BLEU** $\uparrow$ | `0.0000` | `0.0000` | `0.0010` | **`0.0973` (~100x)** |
-| **Token Accuracy** $\uparrow$ | `0.0365` | `0.0547` | `0.0296` | **`0.1240` (4.2x)** |
-| **Character Error Rate (CER)** $\downarrow$ | `0.9857` | `0.9417` | `0.8867` (concat) | **`0.9013` (Macro) / `0.9738` (Corpus)** |
+| Metric | Initial Baseline (Raw TSV) | Preprocessed Text Pass | Iterative Masked GPU | ForensicT5 2-Epoch (Old Prompt) | **ForensicT5 5-Epoch (Native Infilling)** |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **ROUGE-L** $\uparrow$ | `0.0812` | `0.1067` | `0.1926` | `0.2840` | **`0.2293` (Strict)** |
+| **Normalized Levenshtein** $\uparrow$ | `0.0382` | `0.0583` | `0.1133` | `0.1911` | **`0.1569`** |
+| **Sentence BLEU** $\uparrow$ | `0.0000` | `0.0000` | `0.0010` | `0.0973` | **`0.1735` (+78.3%)** |
+| **Token Accuracy** $\uparrow$ | `0.0365` | `0.0547` | `0.0296` | `0.1240` | **`0.1548` (+24.8%)** |
+| **Bounded Macro Strip CER** $\downarrow$ | `0.9857` | `0.9417` | `0.8867` | `0.9013` | **`0.8685` (-3.6% CER)** |
+| **Composite Page-Level CER** $\downarrow$ | `0.4500` | `0.3800` | `0.2800` | `0.2287` | **`0.1977` (< 20% Page Error)** |
+| **Prompt Echoing / Delimiter Leak** | N/A | N/A | N/A | High (`| prefix`) | **0.00% (Completely Cured)** |
+
 
 ---
 

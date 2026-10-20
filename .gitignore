@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Datasets
+data/
+*.tar
+*.tar.gz
+*.gz
+*.zip
+
+# Model Checkpoints / Weights (>100MB exceeds GitHub limits)
+checkpoints/*.pt
+checkpoints/*.pth
+checkpoints/*.bin
+checkpoints/*.safetensors
+!checkpoints/.gitkeep
+
+# Temporary / Generated Outputs
+burnt_output/
+*.log
+
+# Environments
+.env
+venv/
+.venv/
+env/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/

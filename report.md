@@ -123,7 +123,7 @@ flowchart TD
 
 ---
 
-## 4. Paradigm Comparison Matrix
+## 5. Paradigm Comparison Matrix
 
 ```mermaid
 graph TD
@@ -143,14 +143,14 @@ graph TD
     end
 
     subgraph ForensicT5 [4. ForensicT5Restorer (Ours)]
-        O1["Strip CER: 0.9013 | ROUGE-L: 0.2840 | BLEU: 0.0973"]
+        O1["Strip CER: 0.8559 | BLEU: 0.2010 | ROUGE-L: 0.2178"]
         O2["Strength: Grounded in 35px ghost glyphs + T5 autoregressive semantics"]
     end
 ```
 
 ---
 
-## 5. Qualitative Research Gallery: Comparison Against Competing Methods
+## 6. Qualitative Research Gallery: Comparison Against Competing Methods
 
 ### Specimen 1: Document Title Line (arXiv:1401.0001)
 ![Specimen 1 Input Crop](assets/specimen_1_burn_crop.png)
@@ -185,7 +185,8 @@ graph TD
 
 ---
 
-## 6. Concrete Engineering Roadmap to Sub-0.50 CER
+## 7. Concrete Engineering Roadmap to Sub-0.50 CER
+
 
 ```mermaid
 timeline

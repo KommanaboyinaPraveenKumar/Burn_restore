@@ -151,7 +151,39 @@ class ForensicT5Restorer(nn.Module):
         )
         return generated
 
+    def generate_topk(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        line_burn_crop: torch.Tensor,
+        top_k: int = 5,
+        max_len: Optional[int] = None,
+    ) -> List[List[torch.Tensor]]:
+        """Generates the top-K beam candidates for each sample in the batch (Ithaca / DeepMind paradigm)."""
+        self.eval()
+        max_len = max_len or self.config.max_target_len
+        bs = input_ids.shape[0]
+        encoder_outputs, multimodal_mask = self.encode_multimodal(input_ids, attention_mask, line_burn_crop)
+        
+        generated = self.t5.generate(
+            encoder_outputs=encoder_outputs,
+            attention_mask=multimodal_mask,
+            max_new_tokens=max_len,
+            num_beams=top_k,
+            num_return_sequences=top_k,
+            early_stopping=True,
+            repetition_penalty=1.2,
+            no_repeat_ngram_size=2,
+        )
+        
+        # Reshape generated into [batch_size, top_k, seq_len]
+        batch_candidates = []
+        for b in range(bs):
+            sample_candidates = [generated[b * top_k + k] for k in range(top_k)]
+            batch_candidates.append(sample_candidates)
+        return batch_candidates
 
 
 # Backward-compatible alias
 GroundedDocumentRestorer = ForensicT5Restorer
+

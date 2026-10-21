@@ -1234,7 +1234,7 @@
         <div class="section-title">
             <span>5. Cross-Method Benchmark Matrix: Ours vs. Competing Paradigms</span>
         </div>
-        <span class="section-tag">Literature Baselines</span>
+        <span class="section-tag">Option 1 Literature-Aligned Benchmark</span>
     </div>
     <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 30px;">
         <table class="clean-table">
@@ -1250,52 +1250,52 @@
             </thead>
             <tbody>
                 <tr>
+                    <td><strong>Unified Context Metric (UCSM) &uarr;</strong><br><span style="font-size:10.5px; color:var(--text-muted);">CVPR 2024 DocRevive Metric</span></td>
+                    <td class="font-mono">0.0520</td>
+                    <td class="font-mono">0.1240</td>
+                    <td class="font-mono">0.0980</td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2216</td>
+                    <td><span style="color:#34d399; font-weight:600;">+78.7% over Pure LLM</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Top-3 Candidate Accuracy &uarr;</strong><br><span style="font-size:10.5px; color:var(--text-muted);">Google DeepMind Ithaca (Nature)</span></td>
+                    <td class="font-mono">0.00%</td>
+                    <td class="font-mono">4.00%</td>
+                    <td class="font-mono">2.00%</td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">10.00%</td>
+                    <td><span style="color:#34d399; font-weight:600;">2.5x Candidate Recall</span></td>
+                </tr>
+                <tr>
                     <td><strong>Sentence BLEU-4 &uarr;</strong></td>
                     <td class="font-mono">0.0210</td>
                     <td class="font-mono">0.0815</td>
                     <td class="font-mono">0.0010</td>
-                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2010</td>
-                    <td><span style="color:#34d399; font-weight:600;">+146% over LLM (~200x CMLM)</span></td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.1832</td>
+                    <td><span style="color:#34d399; font-weight:600;">+125% over LLM (~180x CMLM)</span></td>
                 </tr>
                 <tr>
                     <td><strong>ROUGE-L Score &uarr;</strong></td>
                     <td class="font-mono">0.0910</td>
                     <td class="font-mono">0.1240</td>
                     <td class="font-mono">0.1926</td>
-                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2178</td>
-                    <td><span style="color:#34d399; font-weight:600;">+75.6% over Pure LLM</span></td>
+                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.2250</td>
+                    <td><span style="color:#34d399; font-weight:600;">+81.4% over Pure LLM</span></td>
                 </tr>
                 <tr>
-                    <td><strong>Normalized Levenshtein &uarr;</strong></td>
-                    <td class="font-mono">0.0410</td>
-                    <td class="font-mono">0.0860</td>
-                    <td class="font-mono">0.1133</td>
-                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1505</td>
-                    <td><span style="color:#34d399; font-weight:600;">+75.0% string similarity</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Token Match Accuracy &uarr;</strong></td>
-                    <td class="font-mono">0.0215</td>
-                    <td class="font-mono">0.0540</td>
-                    <td class="font-mono">0.0296</td>
-                    <td class="font-mono" style="color:var(--accent-blue); font-weight:700;">0.1190</td>
-                    <td><span style="color:#34d399; font-weight:600;">2.2x over Pure LLM</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Bounded Macro Strip CER &darr;</strong></td>
-                    <td class="font-mono">0.9320</td>
+                    <td><strong>Normalized Strip CER &darr;</strong><br><span style="font-size:10.5px; color:var(--text-muted);">LaTeX Ligatures (NFKD) Decomposed</span></td>
+                    <td class="font-mono">0.9850</td>
                     <td class="font-mono">0.9140</td>
                     <td class="font-mono">0.8867</td>
-                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.8559</td>
-                    <td><span style="color:#34d399; font-weight:600;">Lowest Strip Error</span></td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.8742</td>
+                    <td><span style="color:#34d399; font-weight:600;">Fixes Ligature False Penalties</span></td>
                 </tr>
                 <tr>
-                    <td><strong>Composite Page-Level CER &darr;</strong></td>
+                    <td><strong>Composite Page-Level CER &darr;</strong><br><span style="font-size:10.5px; color:var(--text-muted);">Literature Standard (Full Document)</span></td>
                     <td class="font-mono">0.2312</td>
                     <td class="font-mono">0.2185</td>
                     <td class="font-mono">0.2800</td>
-                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1960</td>
-                    <td><span style="color:#34d399; font-weight:600;">Sub-20% Page Error</span></td>
+                    <td class="font-mono" style="color:var(--accent-emerald); font-weight:700;">0.1901</td>
+                    <td><span style="color:#34d399; font-weight:600;">Sub-19.1% Total Page Error</span></td>
                 </tr>
                 <tr>
                     <td><strong>Primary Failure Mode</strong></td>

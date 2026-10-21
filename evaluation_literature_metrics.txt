@@ -1,0 +1,42 @@
+=== LITERATURE-ALIGNED EVALUATION BENCHMARK (OPTION 1) ===
+Raw_Macro_Strip_CER: 0.8797
+Normalized_Strip_CER: 0.8742
+Composite_Page_CER: 0.1901
+Top1_Accuracy: 0.0400
+Top3_Accuracy: 0.1000
+Top5_Accuracy: 0.1000
+Sentence_BLEU4: 0.1832
+ROUGE_L: 0.2250
+DocRevive_UCSM: 0.2216
+
+=== SAMPLE DETAILS ===
+[00] GT='games' | Top1='mathematics.' | Top3Hit=False | NormCER=1.00 | UCSM=0.24
+     Candidates: ['mathematics.', 'mathematics,', 'mathematics', 'science.', 'science']
+[01] GT='Cournot exam-' | Top1='ple of' | Top3Hit=False | NormCER=0.92 | UCSM=0.16
+     Candidates: ['ple of', 'ple of the', 'ple of negative', 'the ple of', 'for the analysis of']
+[02] GT='(18)' | Top1='we' | Top3Hit=False | NormCER=1.00 | UCSM=0.12
+     Candidates: ['we', 'it', 'i', 'the', '<unk>']
+[03] GT='quantities' | Top1='(cid:89)' | Top3Hit=False | NormCER=1.00 | UCSM=0.21
+     Candidates: ['(cid:89)', 'equations', 'equations.', '<unk>i', 'vectors']
+[04] GT='(1)' | Top1='(cid:105)' | Top3Hit=False | NormCER=1.00 | UCSM=0.27
+     Candidates: ['(cid:105)', 'f, <unk>', '.', '<unk>', '(cid:104)']
+[05] GT='player' | Top1='a-priori' | Top3Hit=False | NormCER=1.00 | UCSM=0.26
+     Candidates: ['a-priori', 'information channel', 'information channel', 'y hoods', 'a-']
+[06] GT='the hh process, both at leading order [22, 31], and at higher orders [16, 30]. Nevertheless,' | Top1='the' | Top3Hit=False | NormCER=0.97 | UCSM=0.04
+     Candidates: ['the', 'NNLO', 'a', 'NLO', 'a single']
+[07] GT='HJB. It is shown' | Top1='solution.' | Top3Hit=False | NormCER=0.81 | UCSM=0.26
+     Candidates: ['solution.', 'solution', 'function', 'analysis', 'model']
+[08] GT='that' | Top1='a' | Top3Hit=True | NormCER=0.75 | UCSM=0.31
+     Candidates: ['a', 'that', 'the', 'that the', 'an']
+[09] GT='Kenney' | Top1='TABLE 4' | Top3Hit=False | NormCER=1.00 | UCSM=0.15
+     Candidates: ['TABLE 4', 'TABLE', 'NGC 4402', 'TABLE 4 NGC', 'TABLE 3']
+[10] GT='as' | Top1='(cid:34)' | Top3Hit=False | NormCER=1.00 | UCSM=0.09
+     Candidates: ['(cid:34)', '(cid:19)', '(cid:18)', '(cid:31)', '(cid:36)']
+[11] GT='ϕi(v) is a' | Top1='<unk>i(v)' | Top3Hit=False | NormCER=0.90 | UCSM=0.32
+     Candidates: ['<unk>i(v)', '<unk>i(v).', 'a', 'the', 'that']
+[12] GT='preﬁx of' | Top1='prefix of' | Top3Hit=True | NormCER=0.00 | UCSM=0.83
+     Candidates: ['prefix of', 'prefix', 'prefix.', 'prefix for', 'prefix of p']
+[13] GT='M into' | Top1='the' | Top3Hit=False | NormCER=1.00 | UCSM=0.17
+     Candidates: ['the', 'two regions of', 'two', 'two regions', 'the shortest']
+[14] GT='(cid:90) (cid:90)' | Top1='<unk> e2q' | Top3Hit=False | NormCER=0.94 | UCSM=0.15
+     Candidates: ['<unk> e2q', '<unk>', '(cid:113)', '<unk> (cid:113)', '<unk> e2q,']

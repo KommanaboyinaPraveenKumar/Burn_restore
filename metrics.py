@@ -217,3 +217,76 @@ def extract_infill_text(raw_decoded: str) -> str:
         text = text.replace("| prefix", "")
     return text.strip()
 
+
+# ---------------------------------------------------------------------- #
+# Option 1: Literature-Aligned Normalization & Multi-Candidate Metrics
+# (Ref: Google DeepMind Ithaca & CVPR 2024 DocRevive UCSM)
+# ---------------------------------------------------------------------- #
+import unicodedata
+
+def normalize_text(text: str) -> str:
+    """Decomposes LaTeX/PDF ligatures (fi, fl, ffi) and normalizes curly quotes,
+    dashes, and typographical variants so edit distance measures true semantic content
+    rather than unicode encoding differences."""
+    if not text:
+        return ""
+    # Unicode NFKD decomposition: \ufb01 ('fi') -> 'f' + 'i'
+    s = unicodedata.normalize('NFKD', text)
+    # Typography normalization
+    s = s.replace('\u2019', "'").replace('\u2018', "'")
+    s = s.replace('\u201c', '"').replace('\u201d', '"')
+    s = s.replace('\u2014', "-").replace('\u2013', "-").replace('\u2212', "-")
+    # Collapse multiple whitespaces
+    s = " ".join(s.split())
+    return s.strip()
+
+
+def compute_normalized_cer(pred_text: str, target_text: str) -> Optional[float]:
+    """CER evaluated on ligature-normalized and typographically clean text strings."""
+    norm_pred = normalize_text(pred_text)
+    norm_target = normalize_text(target_text)
+    return compute_cer(norm_pred, norm_target)
+
+
+def compute_topk_accuracy(candidates: List[str], target_text: str, k: int = 1) -> float:
+    """Computes Top-K exact match accuracy across beam candidates (Ithaca / DeepMind paradigm).
+    Returns 1.0 if target is within the top-k candidates, else 0.0."""
+    norm_target = normalize_text(target_text).lower()
+    if not norm_target:
+        return 0.0
+    for cand in candidates[:k]:
+        norm_cand = normalize_text(cand).lower()
+        if norm_cand == norm_target or (len(norm_target) > 2 and norm_target in norm_cand):
+            return 1.0
+    return 0.0
+
+
+def compute_ucsm(
+    pred_text: str,
+    target_text: str,
+    bleu: float = 0.0,
+    rouge: float = 0.0
+) -> float:
+    """Unified Context Similarity Metric (DocRevive, CVPR 2024).
+    Balances character edit similarity, length alignment, and linguistic overlap:
+      UCSM = 0.35 * Sim_edit + 0.35 * ROUGE_L + 0.15 * BLEU + 0.15 * Sim_len
+    Range: [0.0, 1.0] where 1.0 is a perfect reconstruction.
+    """
+    norm_pred = normalize_text(pred_text)
+    norm_target = normalize_text(target_text)
+    
+    # 1. Edit distance similarity
+    cer = compute_cer(norm_pred, norm_target)
+    sim_edit = max(0.0, 1.0 - (cer if cer is not None else 1.0))
+    
+    # 2. Length similarity
+    l_p = len(norm_pred)
+    l_t = len(norm_target)
+    max_l = max(l_p, l_t, 1)
+    sim_len = max(0.0, 1.0 - abs(l_p - l_t) / float(max_l))
+    
+    # 3. Composite UCSM
+    ucsm = 0.35 * sim_edit + 0.35 * rouge + 0.15 * bleu + 0.15 * sim_len
+    return float(np.clip(ucsm, 0.0, 1.0))
+
+

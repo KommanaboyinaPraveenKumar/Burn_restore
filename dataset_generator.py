@@ -133,15 +133,16 @@ class SideBurnGenerator:
         alpha = (x_idx - fade_start) / np.maximum(boundary_col - fade_start, 1e-3)
         alpha = np.clip(alpha, 0.0, 1.0)[..., None]                       # (H, W, 1)
 
-        charred = out * (1.0 - alpha) + charcoal.reshape(1, 1, 3) * alpha
-
         # Organic scorch texture noise, confined to the damaged region only.
         noise = np.random.normal(0.0, cfg.scorch_noise_std, size=(h, w, 1)).astype(np.float32)
         in_damage_zone = (x_idx >= fade_start)[..., None]
+        charred = out * (1.0 - alpha) + charcoal * alpha
         charred = charred + noise * in_damage_zone
 
-        out = np.where(x_idx[..., None] >= fade_start, charred, out)
+        out = np.where(in_damage_zone, charred, out)
         return np.clip(out, 0, 255).astype(np.uint8)
+
+
 
     # ------------------------------------------------------------------ #
     # Proportional text splitting

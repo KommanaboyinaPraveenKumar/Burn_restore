@@ -41,6 +41,23 @@
             padding: 32px 20px 80px 20px;
         }
 
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: #0b0f19 !important;
+                color: #f8fafc !important;
+                padding: 12px !important;
+            }
+            .paper-specimen-card, .card, .kpi-card, .diagnostic-box, .method-box {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            .container {
+                max-width: 100% !important;
+            }
+        }
+
         .container {
             max-width: 1040px;
             margin: 0 auto;

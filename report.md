@@ -153,7 +153,7 @@ graph TD
 ## 6. Qualitative Research Gallery: Comparison Against Competing Methods
 
 ### Specimen 1: Document Title Line (arXiv:1401.0001)
-![Specimen 1 Input Crop](assets/specimen_1_burn_crop.png)
+![Specimen 1 Input Crop](assets/specimen_1_restored_quad.png)
 * **Surviving Line Prefix:** `"Value of information in noncooperative"`
 * **Ground Truth Target:** `"games"`
 * **ForensicT5Restorer (Ours):** `"mathematics."` *(High semantic plausibility; valid academic discipline)*
@@ -164,7 +164,7 @@ graph TD
 ---
 
 ### Specimen 2: Scientific Paper Paragraph (arXiv:1401.0001)
-![Specimen 2 Input Crop](assets/specimen_2_burn_crop.png)
+![Specimen 2 Input Crop](assets/specimen_2_restored_quad.png)
 * **Surviving Line Prefix:** `"for the analysis of value of information in the Braess’ paradox and"`
 * **Ground Truth Target:** `"Cournot exam-"`
 * **ForensicT5Restorer (Ours):** `"ple of"` *(Completes mathematical concept as "...paradox and example of")*
@@ -175,7 +175,7 @@ graph TD
 ---
 
 ### Specimen 3: Mathematical Proof & Statistical Context
-![Specimen 3 Input Crop](assets/specimen_3_burn_crop.png)
+![Specimen 3 Input Crop](assets/specimen_3_restored_quad.png)
 * **Surviving Line Prefix:** `"the 95% confidence interval CI as CI/4. Finally, these standard"`
 * **Ground Truth Target:** `"deviations"`
 * **ForensicT5Restorer (Ours):** **`"deviations"`** *(**100% Exact Character Match, Line CER: 0.0000**)*

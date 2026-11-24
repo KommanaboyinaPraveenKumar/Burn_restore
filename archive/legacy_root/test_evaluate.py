@@ -1,14 +1,39 @@
 import os
+import sys
+from pathlib import Path
+
+_burn_dir = Path(__file__).resolve().parent
+if str(_burn_dir) not in sys.path:
+    sys.path.insert(0, str(_burn_dir))
+
 import torch
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 
-from config import Config
-from dataset import SideBurnDocumentDataset, LineGroundedDocumentDataset
-from model import ForensicT5Restorer, GroundedDocumentRestorer
-
-
-from metrics import compute_cer, compute_token_accuracy, compute_normalized_levenshtein, compute_bleu, compute_rouge_l, extract_infill_text
+try:
+    from config import Config
+    from dataset import SideBurnDocumentDataset
+    from model import ForensicT5Restorer
+    from metrics import (
+        compute_cer,
+        compute_token_accuracy,
+        compute_normalized_levenshtein,
+        compute_bleu,
+        compute_rouge_l,
+        extract_infill_text,
+    )
+except ImportError:
+    from Burn_restore.config import Config
+    from Burn_restore.dataset import SideBurnDocumentDataset
+    from Burn_restore.model import ForensicT5Restorer
+    from Burn_restore.metrics import (
+        compute_cer,
+        compute_token_accuracy,
+        compute_normalized_levenshtein,
+        compute_bleu,
+        compute_rouge_l,
+        extract_infill_text,
+    )
 
 def evaluate(config, checkpoint_path, image_dir, text_dir, device):
     tokenizer = AutoTokenizer.from_pretrained(config.text_model_name)
@@ -46,39 +71,38 @@ def evaluate(config, checkpoint_path, image_dir, text_dir, device):
             budgets = batch["line_budget"].cpu().numpy()
 
             for pred, target, prefix, budget in zip(pred_texts, target_texts, prefixes, budgets):
-                # Physical length grounding: truncate runaway insertions beyond the missing margin
-                max_chars = max(4, int(float(budget) * 1.25) + 3)
-                pred_bounded = pred[:max_chars].rstrip()
-                raw_c = compute_cer(pred_bounded, target)
+                # Physical grounding is enforced directly by PhysicalBudgetLogitsProcessor during generation
+                pred_eval = pred.strip()
+                raw_c = compute_cer(pred_eval, target)
 
                 cer = raw_c if raw_c is not None else 1.0
                 bounded_cer = min(1.0, cer)
                 total_cer += bounded_cer
                 total_raw_cer += cer
-                edit_dist = cer * len(target) if target else len(pred_bounded)
+                edit_dist = cer * len(target) if target else len(pred_eval)
 
                 total_edit_dist += edit_dist
                 total_target_chars += len(target)
 
                 acc = compute_token_accuracy(
-                    torch.tensor(tokenizer.encode(pred_bounded, add_special_tokens=False)),
+                    torch.tensor(tokenizer.encode(pred_eval, add_special_tokens=False)),
                     torch.tensor(tokenizer.encode(target, add_special_tokens=False)),
                     tokenizer.pad_token_id,
                 )
                 if acc is not None:
                     total_acc += float(acc)
-                lev = compute_normalized_levenshtein(pred_bounded, target)
+                lev = compute_normalized_levenshtein(pred_eval, target)
                 if lev is not None:
                     total_lev += lev
-                bleu = compute_bleu(pred_bounded, target)
+                bleu = compute_bleu(pred_eval, target)
                 if bleu is not None:
                     total_bleu += bleu
-                rouge = compute_rouge_l(pred_bounded, target)
+                rouge = compute_rouge_l(pred_eval, target)
                 if rouge is not None:
                     total_rouge += rouge
                 if count < 5:
                     safe_pref = prefix.encode("ascii", "replace").decode("ascii")
-                    safe_p = pred_bounded.encode("ascii", "replace").decode("ascii")
+                    safe_p = pred_eval.encode("ascii", "replace").decode("ascii")
                     safe_t = target.encode("ascii", "replace").decode("ascii")
                     print(f"[sample {count+1}] Prefix: {safe_pref}\n         Pred:   {safe_p}\n         Target: {safe_t} | Bounded CER: {bounded_cer:.4f}\n")
                 count += 1

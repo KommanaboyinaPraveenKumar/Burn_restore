@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grounded Document Restoration — Interactive Research Workbench</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .canvas-container { position: relative; overflow: auto; max-height: 600px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- Navigation Bar -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="h-8 w-8 rounded bg-amber-500 flex items-center justify-center font-bold text-slate-950">
+        FR
+      </div>
+      <div>
+        <h1 class="text-lg font-semibold tracking-tight">Side-Burnt Line Completion</h1>
+        <p class="text-xs text-slate-400">Reads faded strokes, suggests burnt endings &middot; T5 + ResNet-34 (research prototype)</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4 text-xs text-slate-300">
+      <span id="backend-status" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+        Checking server...
+      </span>
+      <a href="/docs" target="_blank" class="hover:text-amber-400 transition-colors">API Docs</a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Controls & Document Canvas (7 cols) -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- Upload & Mode Card -->
+      <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">1. Document Input & Detection Mode</h2>
+
+        <!-- Drag & Drop Zone -->
+        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-amber-500 transition-colors cursor-pointer bg-slate-50">
+          <input type="file" id="file-input" accept="image/*" class="hidden" />
+          <svg class="mx-auto h-9 w-9 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          <p class="text-sm font-medium text-slate-700">Click to upload or drag & drop a damaged document</p>
+          <p class="text-xs text-slate-500 mt-1">PNG, JPG, TIFF up to 25 MB</p>
+        </div>
+
+        <!-- Detection Mode Switch -->
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <button id="mode-auto" class="px-4 py-2 text-xs font-semibold rounded border border-amber-600 bg-amber-50 text-amber-900 focus:outline-none">
+            Auto Detection (OpenCV)
+          </button>
+          <button id="mode-manual" class="px-4 py-2 text-xs font-semibold rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 focus:outline-none">
+            Manual Region Selection
+          </button>
+        </div>
+
+        <div id="manual-coords-hint" class="hidden mt-3 text-xs text-slate-500 bg-slate-100 p-2.5 rounded border border-slate-200">
+          Click and drag on the document image below to select the damaged margin region.
+          <span id="coords-display" class="font-mono font-bold text-slate-700 ml-2"></span>
+        </div>
+
+        <!-- Surviving text (the model's context) -->
+        <div class="mt-4">
+          <div class="flex items-center justify-between">
+            <label for="page-text-input" class="text-xs font-semibold text-slate-700">Surviving text</label>
+            <span id="page-text-count" class="text-[10px] text-slate-400 font-mono">0 lines</span>
+          </div>
+          <textarea id="page-text-input" rows="6" spellcheck="false"
+            placeholder="Type or paste what is still legible, one printed line per line, top to bottom (leave a blank line for an illegible line). Without it the model only sees the burn edge."
+            class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded text-[11px] font-mono leading-snug focus:outline-none focus:border-amber-500"></textarea>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="mt-4 flex items-center justify-between">
+          <div class="flex items-center space-x-3 text-xs">
+            <label class="text-slate-600">Max Lines:</label>
+            <input type="number" id="max-lines-input" value="6" min="1" max="25" class="w-16 px-2 py-1 border border-slate-300 rounded text-xs" />
+            <label class="text-slate-600 ml-2">Beams:</label>
+            <input type="number" id="num-beams-input" value="4" min="1" max="8" class="w-14 px-2 py-1 border border-slate-300 rounded text-xs" />
+          </div>
+          <button id="restore-btn" disabled class="px-5 py-2 rounded text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors shadow-sm">
+            Execute Restoration
+          </button>
+        </div>
+      </div>
+
+      <!-- Document Viewer Canvas Card -->
+      <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">2. Document Workspace & Overlay</h2>
+          <div class="text-xs space-x-2">
+            <button id="view-original-btn" class="px-2 py-1 border rounded bg-slate-100 text-slate-700 text-xs font-medium">Original</button>
+            <button id="view-overlay-btn" class="px-2 py-1 border rounded bg-white text-slate-600 text-xs font-medium">Restoration Overlay</button>
+          </div>
+        </div>
+
+        <div class="canvas-container bg-slate-100 border border-slate-200 rounded flex items-center justify-center p-2 min-h-[420px]">
+          <canvas id="doc-canvas" class="max-w-full shadow-sm rounded"></canvas>
+          <div id="canvas-placeholder" class="text-center text-slate-400 text-xs">
+            No document loaded. Please upload a file to begin.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Structured Results & Audit (5 cols) -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Status & Latency Card -->
+      <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-2">Inference Performance & Audit</h2>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs mt-3">
+          <div class="bg-slate-50 p-2.5 rounded border border-slate-100">
+            <span class="block text-slate-400 text-[10px]">TOTAL TIME</span>
+            <span id="stat-total-time" class="font-bold text-slate-800 text-sm">--</span>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded border border-slate-100">
+            <span class="block text-slate-400 text-[10px]">SEVERED LINES</span>
+            <span id="stat-lines-count" class="font-bold text-slate-800 text-sm">--</span>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded border border-slate-100">
+            <span class="block text-slate-400 text-[10px]">AVG PER LINE</span>
+            <span id="stat-avg-latency" class="font-bold text-slate-800 text-sm">--</span>
+          </div>
+        </div>
+
+        <div class="mt-3 text-[11px] text-slate-500 border-t border-slate-100 pt-3 flex justify-between">
+          <span>Detection: <strong id="stat-detection-mode">--</strong></span>
+          <span>Budget Policy: <strong class="text-emerald-700">Active Grounding</strong></span>
+        </div>
+      </div>
+
+      <!-- Restored Lines Results Card -->
+      <div class="bg-white rounded-lg border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">3. Line-by-Line Restorations</h2>
+          <div class="space-x-2">
+            <button id="copy-all-btn" disabled class="px-2.5 py-1 text-xs border rounded bg-slate-50 text-slate-700 hover:bg-slate-100 disabled:opacity-50">
+              Copy Text
+            </button>
+            <button id="download-json-btn" disabled class="px-2.5 py-1 text-xs border rounded bg-slate-50 text-slate-700 hover:bg-slate-100 disabled:opacity-50">
+              Export JSON
+            </button>
+          </div>
+        </div>
+
+        <div id="restoration-list" class="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+          <p class="text-xs text-slate-400 text-center py-12">Restoration results will appear here after execution.</p>
+        </div>
+
+        <!-- Research Limitations Footnote -->
+        <div class="mt-4 p-3 bg-amber-50 rounded border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+          <strong class="font-semibold">Research Notice:</strong> Characters read from faded strokes are usually right. Everything after them is a language-model guess from the surrounding text, kept within the estimated line length. Treat suggestions as hypotheses, not recovered text. Trained on synthetic burns only.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
+    Side-Burnt Line Completion &bull; Research prototype &bull; Synthetic training data
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    let currentImage = null;
+    let overlayImageSrc = null;
+    let originalImageSrc = null;
+    let activeMode = 'auto'; // 'auto' or 'manual'
+    let manualBBox = null;
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+    let currentResults = null;
+
+    const canvas = document.getElementById('doc-canvas');
+    const ctx = canvas.getContext('2d');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const restoreBtn = document.getElementById('restore-btn');
+    const placeholder = document.getElementById('canvas-placeholder');
+
+    // Health check on startup
+    fetch('/health')
+      .then(r => r.json())
+      .then(d => {
+        const badge = document.getElementById('backend-status');
+        if (d.status === 'healthy') {
+          badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950 text-emerald-400 border border-emerald-800';
+          badge.textContent = `Server Ready (${d.device.toUpperCase()})`;
+        } else {
+          badge.textContent = 'Degraded';
+        }
+      })
+      .catch(() => {
+        document.getElementById('backend-status').textContent = 'Server Offline';
+      });
+
+    // File Upload Handlers
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-amber-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-amber-500'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-amber-500');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        originalImageSrc = e.target.result;
+        overlayImageSrc = null;
+        currentResults = null;
+        currentImage = new Image();
+        currentImage.onload = () => {
+          placeholder.classList.add('hidden');
+          canvas.width = currentImage.width;
+          canvas.height = currentImage.height;
+          ctx.drawImage(currentImage, 0, 0);
+          restoreBtn.disabled = false;
+        };
+        currentImage.src = originalImageSrc;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Mode Toggle
+    const autoBtn = document.getElementById('mode-auto');
+    const manualBtn = document.getElementById('mode-manual');
+    const hint = document.getElementById('manual-coords-hint');
+
+    autoBtn.addEventListener('click', () => {
+      activeMode = 'auto';
+      autoBtn.className = 'px-4 py-2 text-xs font-semibold rounded border border-amber-600 bg-amber-50 text-amber-900 focus:outline-none';
+      manualBtn.className = 'px-4 py-2 text-xs font-semibold rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 focus:outline-none';
+      hint.classList.add('hidden');
+      manualBBox = null;
+      redrawCanvas();
+    });
+
+    manualBtn.addEventListener('click', () => {
+      activeMode = 'manual';
+      manualBtn.className = 'px-4 py-2 text-xs font-semibold rounded border border-amber-600 bg-amber-50 text-amber-900 focus:outline-none';
+      autoBtn.className = 'px-4 py-2 text-xs font-semibold rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 focus:outline-none';
+      hint.classList.remove('hidden');
+      redrawCanvas();
+    });
+
+    // Canvas Mouse Events for Manual Box Drawing
+    canvas.addEventListener('mousedown', (e) => {
+      if (activeMode !== 'manual' || !currentImage) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      startX = (e.clientX - rect.left) * scaleX;
+      startY = (e.clientY - rect.top) * scaleY;
+      isDrawing = true;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing || activeMode !== 'manual') return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const currX = (e.clientX - rect.left) * scaleX;
+      const currY = (e.clientY - rect.top) * scaleY;
+
+      redrawCanvas();
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(startX, startY, currX - startX, currY - startY);
+    });
+
+    canvas.addEventListener('mouseup', (e) => {
+      if (!isDrawing || activeMode !== 'manual') return;
+      isDrawing = false;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const endX = (e.clientX - rect.left) * scaleX;
+      const endY = (e.clientY - rect.top) * scaleY;
+
+      const x1 = Math.round(Math.min(startX, endX));
+      const y1 = Math.round(Math.min(startY, endY));
+      const x2 = Math.round(Math.max(startX, endX));
+      const y2 = Math.round(Math.max(startY, endY));
+
+      if ((x2 - x1) > 10 && (y2 - y1) > 10) {
+        manualBBox = [x1, y1, x2, y2];
+        document.getElementById('coords-display').textContent = `[${x1}, ${y1}, ${x2}, ${y2}]`;
+      }
+    });
+
+    function redrawCanvas() {
+      if (!currentImage) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(currentImage, 0, 0);
+      if (manualBBox && activeMode === 'manual') {
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(manualBBox[0], manualBBox[1], manualBBox[2] - manualBBox[0], manualBBox[3] - manualBBox[1]);
+      }
+    }
+
+    // View toggle buttons
+    document.getElementById('view-original-btn').addEventListener('click', () => {
+      if (!originalImageSrc) return;
+      const img = new Image();
+      img.onload = () => { currentImage = img; redrawCanvas(); };
+      img.src = originalImageSrc;
+    });
+
+    document.getElementById('view-overlay-btn').addEventListener('click', () => {
+      if (!overlayImageSrc) return;
+      const img = new Image();
+      img.onload = () => { currentImage = img; redrawCanvas(); };
+      img.src = overlayImageSrc;
+    });
+
+    const pageTextInput = document.getElementById('page-text-input');
+    const countLines = (t) => {
+      const ls = t.replace(/\r\n/g, '\n').split('\n');
+      while (ls.length && !ls[0].trim()) ls.shift();
+      while (ls.length && !ls[ls.length - 1].trim()) ls.pop();
+      return ls.length;
+    };
+    pageTextInput.addEventListener('input', () => {
+      const n = countLines(pageTextInput.value);
+      document.getElementById('page-text-count').textContent = `${n} line${n === 1 ? '' : 's'}`;
+    });
+
+    // Execute Restoration
+    restoreBtn.addEventListener('click', async () => {
+      if (!fileInput.files.length) return;
+      restoreBtn.disabled = true;
+      restoreBtn.textContent = 'Restoring...';
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      formData.append('max_lines', document.getElementById('max-lines-input').value);
+      formData.append('num_beams', document.getElementById('num-beams-input').value);
+      const pageText = document.getElementById('page-text-input').value;
+      if (pageText.trim()) formData.append('page_text', pageText);
+
+      if (activeMode === 'manual' && manualBBox) {
+        formData.append('manual_bbox', manualBBox.join(','));
+      }
+
+      try {
+        const resp = await fetch('/restore/image', { method: 'POST', body: formData });
+        if (!resp.ok) {
+          const err = await resp.json();
+          alert('Restoration error: ' + (err.detail || 'Server error'));
+          return;
+        }
+
+        const data = await resp.json();
+        currentResults = data;
+        renderResults(data);
+      } catch (err) {
+        alert('Network request failed: ' + err.message);
+      } finally {
+        restoreBtn.disabled = false;
+        restoreBtn.textContent = 'Execute Restoration';
+      }
+    });
+
+    function renderResults(data) {
+      document.getElementById('stat-total-time').textContent = `${data.total_page_inference_ms.toFixed(0)} ms`;
+      document.getElementById('stat-lines-count').textContent = data.restored_lines_count;
+      document.getElementById('stat-avg-latency').textContent = `${data.avg_latency_per_line_ms.toFixed(0)} ms`;
+      document.getElementById('stat-detection-mode').textContent = data.burn_detection.is_manual ? 'Manual BBox' : 'Auto Boundary';
+
+      if (data.diagnostic_overlay_base64) {
+        overlayImageSrc = data.diagnostic_overlay_base64;
+        const img = new Image();
+        img.onload = () => { currentImage = img; redrawCanvas(); };
+        img.src = overlayImageSrc;
+      }
+
+      const listContainer = document.getElementById('restoration-list');
+      listContainer.innerHTML = '';
+
+      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const detWarnings = (data.burn_detection.warnings || []).filter(w => !/override/i.test(w));
+      if (detWarnings.length) {
+        const warn = document.createElement('div');
+        warn.className = 'p-2.5 rounded border border-amber-300 bg-amber-50 text-[11px] text-amber-900 space-y-1';
+        warn.innerHTML = detWarnings.map(w => `<div>&#9888; ${esc(w)}</div>`).join('');
+        listContainer.appendChild(warn);
+      }
+      data.restorations.forEach(r => {
+        const b = r.physical_budget;
+        const violationBadge = b.budget_violation
+          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800">Violation (+${b.excess_characters} ch)</span>`
+          : `<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">Within Budget</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'p-3 bg-slate-50 rounded border border-slate-200 text-xs space-y-1.5';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-700">Line ${r.line_idx}</span>
+            <div class="flex items-center space-x-1.5">
+              ${violationBadge}
+              <span class="text-slate-400 font-mono text-[10px]">${r.inference_time_ms.toFixed(0)} ms</span>
+            </div>
+          </div>
+          <div class="text-slate-600">
+            <span class="font-medium text-slate-500">Surviving:</span> &hellip;${esc(r.surviving_prefix.slice(-48))}
+          </div>
+          <div class="text-slate-900 bg-white p-2 rounded border border-slate-200 font-mono text-[11px]">
+            <span class="text-amber-700 font-semibold">&bull; Top suggestion:</span> "${esc(r.predicted_restoration)}"
+          </div>
+          ${(r.candidates && r.candidates.length > 1) ? `<div class="text-[10px] text-slate-600">
+            <span class="font-medium text-slate-500">Alternatives:</span> ${r.candidates.slice(1).map(c => `"${esc(c)}"`).join(' &middot; ')}
+          </div>` : ''}
+          ${r.visual_reading ? `<div class="text-[10px] text-slate-600 font-mono">
+            <span class="font-medium text-slate-500 font-sans">Vision-only reading:</span> &hellip;${esc(r.visual_reading.slice(-24))}
+          </div>` : ''}
+          <div class="text-[10px] text-amber-800">Suggestions for fully burnt text are guesses from context, not recovered content.</div>
+          <div class="text-[10px] text-slate-500 flex justify-between">
+            <span>Est. missing: ${(r.estimated_missing_chars ?? b.estimated_budget).toFixed(1)} chars &middot; max ${(r.upper_char_budget ?? b.estimated_budget).toFixed(1)} &middot; generated ${b.generated_character_count}</span>
+            <span>Damage Width: ${r.damaged_width_px} px</span>
+          </div>
+        `;
+        listContainer.appendChild(card);
+      });
+
+      document.getElementById('copy-all-btn').disabled = false;
+      document.getElementById('download-json-btn').disabled = false;
+    }
+
+    // Export & Copy
+    document.getElementById('copy-all-btn').addEventListener('click', () => {
+      if (!currentResults) return;
+      const fullText = currentResults.restorations.map(r => `${r.surviving_prefix} ${r.predicted_restoration}`).join('\n');
+      navigator.clipboard.writeText(fullText);
+      alert('Restored document text copied to clipboard.');
+    });
+
+    document.getElementById('download-json-btn').addEventListener('click', () => {
+      if (!currentResults) return;
+      const blob = new Blob([JSON.stringify(currentResults, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `restoration_report_${Date.now()}.json`;
+      a.click();
+    });
+  </script>
+</body>
+</html>
+

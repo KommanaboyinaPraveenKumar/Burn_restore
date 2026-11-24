@@ -1,0 +1,7 @@
+On the Solvability of Non-Linear Boundary Value Problems in Fluid Dynamics
+Consider the stationary Navier-Stokes equations governing incompressible viscous flow:
+-nu * Delta u + (u . grad) u + grad p = f in Omega
+div u = 0 in Omega, with no-slip boundary condition u = 0 on dOmega.
+We establish the existence of weak solutions in Sobolev space H1_0(Omega).
+The regularity of pressure p follows from the classical de Rham decomposition theorem.
+Numerical simulations were performed using quadratic Lagrange finite elements.

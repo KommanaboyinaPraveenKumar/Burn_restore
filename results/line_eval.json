@@ -1,0 +1,1751 @@
+{
+  "n_lines": 5854,
+  "split": "test",
+  "top_k": 5,
+  "systems": {
+    "empty": {
+      "corpus_cer": 1.0,
+      "corpus_cer_95ci": [
+        1.0,
+        1.0
+      ],
+      "macro_wer": 1.0,
+      "exact_match": 0.0,
+      "first_word_acc": 0.0,
+      "budget_violation_rate": 0.0,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.0,
+      "read_acc_95ci": [
+        0.0,
+        0.0
+      ],
+      "read_cer": 1.0,
+      "read_acc_at_k": 0.0,
+      "inferred_cer": 1.0,
+      "exact_match_at_k": 0.0,
+      "first_word_acc_at_k": 0.0,
+      "oracle_cer_at_k": 1.0,
+      "bits_per_char": null,
+      "auroc_conf_first_word": null,
+      "first_word_acc_top25pct_conf": null
+    },
+    "t5_zero_shot": {
+      "corpus_cer": 0.9615,
+      "corpus_cer_95ci": [
+        0.9547,
+        0.9688
+      ],
+      "macro_wer": 1.1473,
+      "exact_match": 0.0065,
+      "first_word_acc": 0.0697,
+      "budget_violation_rate": 0.132,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.1099,
+      "read_acc_95ci": [
+        0.102,
+        0.1182
+      ],
+      "read_cer": 0.8452,
+      "read_acc_at_k": 0.1323,
+      "inferred_cer": 0.9992,
+      "exact_match_at_k": 0.0099,
+      "first_word_acc_at_k": 0.0827,
+      "oracle_cer_at_k": 0.8646,
+      "bits_per_char": 4.4967,
+      "auroc_conf_first_word": 0.555,
+      "first_word_acc_top25pct_conf": 0.0861
+    },
+    "text_only": {
+      "corpus_cer": 0.8092,
+      "corpus_cer_95ci": [
+        0.8036,
+        0.8151
+      ],
+      "macro_wer": 0.9494,
+      "exact_match": 0.0354,
+      "first_word_acc": 0.1307,
+      "budget_violation_rate": 0.0463,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.184,
+      "read_acc_95ci": [
+        0.1747,
+        0.1934
+      ],
+      "read_cer": 0.7528,
+      "read_acc_at_k": 0.3266,
+      "inferred_cer": 0.8559,
+      "exact_match_at_k": 0.0651,
+      "first_word_acc_at_k": 0.2173,
+      "oracle_cer_at_k": 0.6782,
+      "bits_per_char": 1.9114,
+      "auroc_conf_first_word": 0.7147,
+      "first_word_acc_top25pct_conf": 0.2796
+    },
+    "full": {
+      "corpus_cer": 0.7438,
+      "corpus_cer_95ci": [
+        0.7369,
+        0.7507
+      ],
+      "macro_wer": 0.8634,
+      "exact_match": 0.0738,
+      "first_word_acc": 0.3837,
+      "budget_violation_rate": 0.0723,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.6769,
+      "read_acc_95ci": [
+        0.6652,
+        0.6893
+      ],
+      "read_cer": 0.2646,
+      "read_acc_at_k": 0.8094,
+      "inferred_cer": 0.8313,
+      "exact_match_at_k": 0.1406,
+      "first_word_acc_at_k": 0.519,
+      "oracle_cer_at_k": 0.5675,
+      "bits_per_char": 1.5571,
+      "auroc_conf_first_word": 0.686,
+      "first_word_acc_top25pct_conf": 0.5885
+    },
+    "full_zero_img": {
+      "corpus_cer": 0.8171,
+      "corpus_cer_95ci": [
+        0.8107,
+        0.8235
+      ],
+      "macro_wer": 0.984,
+      "exact_match": 0.0294,
+      "first_word_acc": 0.0977,
+      "budget_violation_rate": 0.0723,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.162,
+      "read_acc_95ci": [
+        0.1526,
+        0.1715
+      ],
+      "read_cer": 0.787,
+      "read_acc_at_k": 0.2687,
+      "inferred_cer": 0.8517,
+      "exact_match_at_k": 0.0588,
+      "first_word_acc_at_k": 0.1688,
+      "oracle_cer_at_k": 0.6695,
+      "bits_per_char": 1.9531,
+      "auroc_conf_first_word": 0.6979,
+      "first_word_acc_top25pct_conf": 0.2064
+    },
+    "full_shuf_img": {
+      "corpus_cer": 0.844,
+      "corpus_cer_95ci": [
+        0.8378,
+        0.8508
+      ],
+      "macro_wer": 1.0398,
+      "exact_match": 0.0114,
+      "first_word_acc": 0.0415,
+      "budget_violation_rate": 0.0776,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.0748,
+      "read_acc_95ci": [
+        0.0683,
+        0.0815
+      ],
+      "read_cer": 0.8842,
+      "read_acc_at_k": 0.1211,
+      "inferred_cer": 0.8757,
+      "exact_match_at_k": 0.0313,
+      "first_word_acc_at_k": 0.0779,
+      "oracle_cer_at_k": 0.6859,
+      "bits_per_char": 2.3546,
+      "auroc_conf_first_word": 0.587,
+      "first_word_acc_top25pct_conf": 0.067
+    },
+    "full_v1": {
+      "corpus_cer": 0.8068,
+      "corpus_cer_95ci": [
+        0.8022,
+        0.811
+      ],
+      "macro_wer": 0.9255,
+      "exact_match": 0.0309,
+      "first_word_acc": 0.2538,
+      "budget_violation_rate": 0.0188,
+      "read_lines_frac": 0.9681,
+      "read_acc": 0.4648,
+      "read_acc_95ci": [
+        0.4516,
+        0.4771
+      ],
+      "read_cer": 0.4486,
+      "read_acc_at_k": 0.6017,
+      "inferred_cer": 0.8842,
+      "exact_match_at_k": 0.0586,
+      "first_word_acc_at_k": 0.3666,
+      "oracle_cer_at_k": 0.6843,
+      "bits_per_char": 1.9499,
+      "auroc_conf_first_word": 0.735,
+      "first_word_acc_top25pct_conf": 0.4614
+    }
+  },
+  "comparisons": {
+    "full_vs_text_only": {
+      "cer": [
+        -0.0653,
+        0.0
+      ],
+      "read_err": [
+        -0.4931,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.0245,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.3544,
+        0.0
+      ]
+    },
+    "full_vs_full_zero_img": {
+      "cer": [
+        -0.0732,
+        0.0
+      ],
+      "read_err": [
+        -0.5152,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.0203,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.396,
+        0.0
+      ]
+    },
+    "full_vs_full_shuf_img": {
+      "cer": [
+        -0.1002,
+        0.0
+      ],
+      "read_err": [
+        -0.6021,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.0444,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.7977,
+        0.0
+      ]
+    },
+    "text_only_vs_t5_zero_shot": {
+      "cer": [
+        -0.1524,
+        0.0
+      ],
+      "read_err": [
+        -0.074,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.1435,
+        0.0
+      ],
+      "bits_per_char": [
+        -2.586,
+        0.0
+      ]
+    },
+    "full_vs_empty": {
+      "cer": [
+        -0.2562,
+        0.0
+      ],
+      "read_err": [
+        -0.6771,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.1687,
+        0.0
+      ]
+    },
+    "text_only_vs_empty": {
+      "cer": [
+        -0.1909,
+        0.0
+      ],
+      "read_err": [
+        -0.184,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.1442,
+        0.0
+      ]
+    },
+    "full_vs_full_v1": {
+      "cer": [
+        -0.0629,
+        0.0
+      ],
+      "read_err": [
+        -0.2119,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.0529,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.3928,
+        0.0
+      ]
+    }
+  },
+  "samples": [
+    {
+      "prefix": "close, when he would look as if his short-sighted eyes had fail",
+      "target": "ed to",
+      "read": "ed",
+      "inferred": " to",
+      "t5_zero_shot": [
+        ". The",
+        ". The",
+        ". Then,",
+        ". The",
+        ""
+      ],
+      "text_only": [
+        "to",
+        "to",
+        "t to",
+        "not to",
+        ""
+      ],
+      "full": [
+        "ed to",
+        "et to",
+        "ed to fully",
+        "er to",
+        "ed, and"
+      ],
+      "full_zero_img": [
+        "to",
+        "n to",
+        "ent to",
+        "to",
+        "ing to"
+      ],
+      "full_shuf_img": [
+        "ald to",
+        "ad to",
+        "all to",
+        "ake to",
+        "al to"
+      ],
+      "full_v1": [
+        "ed to",
+        "ed him to",
+        "ed, and",
+        "ed, and I would",
+        "ed, and I could"
+      ]
+    },
+    {
+      "prefix": "recognize the approaching lady till that moment. Then, if she w",
+      "target": "as going to",
+      "read": "a",
+      "inferred": "s going to",
+      "t5_zero_shot": [
+        "riggled",
+        "riggled",
+        "riggled",
+        "riggled",
+        "riggled"
+      ],
+      "text_only": [
+        "ain't",
+        "aint to",
+        "aint",
+        "ed",
+        "eed"
+      ],
+      "full": [
+        "as",
+        "as at",
+        "as to",
+        "as the",
+        "as a"
+      ],
+      "full_zero_img": [
+        "ent to",
+        "ain't",
+        "ain't at",
+        "ain't seen",
+        "ent to see"
+      ],
+      "full_shuf_img": [
+        "e at",
+        "et to",
+        "et",
+        "eet to",
+        "eet"
+      ],
+      "full_v1": [
+        "ave",
+        "aave",
+        "aint",
+        "ave a",
+        ""
+      ]
+    },
+    {
+      "prefix": "Meg's he always had something for the babies. If her face was ",
+      "target": "turned",
+      "read": "tu",
+      "inferred": "rned",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "the",
+        "the",
+        "the"
+      ],
+      "text_only": [
+        "a little",
+        "a bit",
+        "coming",
+        "t",
+        ""
+      ],
+      "full": [
+        "towed",
+        "tucked",
+        "a little",
+        "turned",
+        "a bit"
+      ],
+      "full_zero_img": [
+        "still",
+        "a little",
+        "not",
+        "sat",
+        "a bit"
+      ],
+      "full_shuf_img": [
+        "as",
+        "as sharp as she was",
+        "a little",
+        "as a",
+        "so"
+      ],
+      "full_v1": [
+        "a",
+        "in the",
+        "in",
+        "the",
+        ""
+      ]
+    },
+    {
+      "prefix": "homeward, he had merely strolled down to see the river, and",
+      "target": "was just",
+      "read": "w",
+      "inferred": "as just",
+      "t5_zero_shot": [
+        "he was",
+        "he was",
+        "he was",
+        "he was",
+        "he was"
+      ],
+      "text_only": [
+        "he was not",
+        "he was",
+        "was not",
+        "he had been",
+        "was"
+      ],
+      "full": [
+        "was not",
+        "would not be",
+        "was",
+        "were",
+        "he was"
+      ],
+      "full_zero_img": [
+        "no one was",
+        "was not",
+        "he was",
+        "was",
+        ""
+      ],
+      "full_shuf_img": [
+        "he was not",
+        "he was",
+        "was not",
+        "had no idea of",
+        "was"
+      ],
+      "full_v1": [
+        "he was",
+        "was",
+        "it was",
+        "had been",
+        ""
+      ]
+    },
+    {
+      "prefix": "returning, unless they were tired of his frequent calls. Und",
+      "target": "er the",
+      "read": "e",
+      "inferred": "r the",
+      "t5_zero_shot": [
+        "isclosed",
+        "ead",
+        "ead",
+        "ead",
+        "rew"
+      ],
+      "text_only": [
+        "in these",
+        "in such",
+        "ead in",
+        "ead, under",
+        "ead, in"
+      ],
+      "full": [
+        "elighted by the",
+        "ecided by the",
+        "ecided in some",
+        "ecided in",
+        "ecided, under"
+      ],
+      "full_zero_img": [
+        "eneous",
+        "in all",
+        "oing in such",
+        "eniable",
+        "eniable in"
+      ],
+      "full_shuf_img": [
+        "wet",
+        "wow in all",
+        "wet in all",
+        "wow, under",
+        "wow, in"
+      ],
+      "full_v1": [
+        "ed his",
+        "ed to his",
+        "ed the",
+        "ed a",
+        ""
+      ]
+    },
+    {
+      "prefix": "circumstances, what could Jo do but greet him civilly, and i",
+      "target": "nvite him in? If",
+      "read": "n",
+      "inferred": "vite him in? If",
+      "t5_zero_shot": [
+        "d line",
+        "d line",
+        "d line",
+        "d line",
+        "d line"
+      ],
+      "text_only": [
+        "n if",
+        "d if",
+        "n t if",
+        "n t he did? When",
+        "n t he did. When"
+      ],
+      "full": [
+        "rrationally, if",
+        "nn, if",
+        "rrational, if",
+        "rrational. When",
+        "rrationally, when"
+      ],
+      "full_zero_img": [
+        "n if",
+        "n when",
+        "ng if",
+        "n, if",
+        "n, unless"
+      ],
+      "full_shuf_img": [
+        "e if",
+        "ce, if",
+        "ed if",
+        "ce, when",
+        "ce, unless"
+      ],
+      "full_v1": [
+        "rr. When",
+        "rr,",
+        "rr. As",
+        "rr, as",
+        ""
+      ]
+    },
+    {
+      "prefix": "she was tired of his visits, she concealed her weariness with",
+      "target": "perfect skill, and",
+      "read": "p",
+      "inferred": "erfect skill, and",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "the",
+        "the",
+        "the"
+      ],
+      "text_only": [
+        "him, and she",
+        "him, and",
+        "him. She",
+        "him and",
+        "a smile and"
+      ],
+      "full": [
+        "her eyes, and",
+        "his eyes, and",
+        "a smile and",
+        "him, and",
+        "a smile,"
+      ],
+      "full_zero_img": [
+        "her eyes, and",
+        "him, and",
+        "his eyes, and",
+        "her eyes. She",
+        "her eyes and"
+      ],
+      "full_shuf_img": [
+        "her eyes, and",
+        "her eyes. She",
+        "tears, and",
+        "her eyes and",
+        "her eyes. He"
+      ],
+      "full_v1": [
+        "her hand. She",
+        "her. She",
+        "her eyes. She",
+        "him. She",
+        "her hand, and"
+      ]
+    },
+    {
+      "prefix": "took care that there should be coffee for supper, \"as Fried",
+      "target": "rich-I mean Mr.",
+      "read": "ri",
+      "inferred": "ch-I mean Mr.",
+      "t5_zero_shot": [
+        "man's",
+        "man's",
+        "man said",
+        "man's",
+        "man said"
+      ],
+      "text_only": [
+        "e",
+        "e,",
+        "na",
+        "nad",
+        "nah"
+      ],
+      "full": [
+        "ie",
+        "ir",
+        "ir,",
+        "ir-and",
+        "ir-the"
+      ],
+      "full_zero_img": [
+        "ill",
+        "en",
+        "aer",
+        "aer,",
+        "nee"
+      ],
+      "full_shuf_img": [
+        "P.",
+        "py,",
+        "pa",
+        "py",
+        "poe"
+      ],
+      "full_v1": [
+        "ird,",
+        "ird",
+        "ir,",
+        "irt,",
+        "irty"
+      ]
+    },
+    {
+      "prefix": "Bhaer-doesn't like tea.\" By the second week, everyone knew",
+      "target": "perfectly well",
+      "read": "",
+      "inferred": "perfectly well",
+      "t5_zero_shot": [
+        "what was going on",
+        "what was going on, and",
+        "what was going on",
+        "what was going on",
+        "what was going on"
+      ],
+      "text_only": [
+        "exactly",
+        "about",
+        "of",
+        "that",
+        ""
+      ],
+      "full": [
+        "about",
+        "exactly",
+        "what was going on,",
+        "what was going on, and",
+        "how to do"
+      ],
+      "full_zero_img": [
+        "about",
+        "exactly",
+        "of",
+        "a lot of",
+        "a little about"
+      ],
+      "full_shuf_img": [
+        "id",
+        "id about",
+        "ie",
+        "id of",
+        "ir"
+      ],
+      "full_v1": [
+        "that",
+        "y that",
+        "to say that",
+        "to say",
+        "y,"
+      ]
+    },
+    {
+      "prefix": "what was going on, yet everyone tried to look as if they w",
+      "target": "ere stone-blind to",
+      "read": "e",
+      "inferred": "re stone-blind to",
+      "t5_zero_shot": [
+        "reaked in the",
+        "reaked in the",
+        "reaked in the",
+        "reaked in the",
+        "reaked in the"
+      ],
+      "text_only": [
+        "ain't see",
+        "aint",
+        "ain't hear",
+        "ain't notice",
+        "ain't know"
+      ],
+      "full": [
+        "ent to see",
+        "erring",
+        "ert to see",
+        "ere to see",
+        "ere noticing"
+      ],
+      "full_zero_img": [
+        "ain't aware of",
+        "ain't seeing",
+        "ent to see",
+        "oed to see",
+        ""
+      ],
+      "full_shuf_img": [
+        "y to see",
+        "ear",
+        "ay",
+        "ay to see",
+        "y to see all"
+      ],
+      "full_v1": [
+        "ened",
+        "ent to",
+        "eet",
+        "eeped",
+        ""
+      ]
+    },
+    {
+      "prefix": "the changes in Jo's face. They never asked why she sang",
+      "target": "about her work,",
+      "read": "a",
+      "inferred": "bout her work,",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "what was going on",
+        "the",
+        "the"
+      ],
+      "text_only": [
+        ", but she",
+        ". She",
+        ", she",
+        "and",
+        ""
+      ],
+      "full": [
+        "and",
+        "at all. She",
+        "a song,",
+        "at all,",
+        "all the songs,"
+      ],
+      "full_zero_img": [
+        "and",
+        "out, but she",
+        "or",
+        "out,",
+        "s,"
+      ],
+      "full_shuf_img": [
+        "er. She",
+        "er,",
+        "er, but she",
+        "er, she",
+        "erly,"
+      ],
+      "full_v1": [
+        "and",
+        "on. She",
+        "on, and",
+        "on. He",
+        ""
+      ]
+    },
+    {
+      "prefix": "did up her hair three times a day, and got so blooming wit",
+      "target": "h her evening",
+      "read": "h ",
+      "inferred": "her evening",
+      "t5_zero_shot": [
+        ". The",
+        ". The",
+        ". The",
+        ". The",
+        ". The"
+      ],
+      "text_only": [
+        "ning that she had no physical",
+        "e that she had no",
+        "t that she had no",
+        "ning that she had no",
+        "ny that she had no"
+      ],
+      "full": [
+        "h her",
+        "h the",
+        "h an",
+        "h that she could",
+        "h that she would"
+      ],
+      "full_zero_img": [
+        "n the",
+        "n her",
+        "ned the",
+        "ne the",
+        "ned her"
+      ],
+      "full_shuf_img": [
+        "all the",
+        "all of the",
+        "all her",
+        "ad the",
+        "a"
+      ],
+      "full_v1": [
+        "h her",
+        "h the",
+        "h his",
+        "h to",
+        ""
+      ]
+    },
+    {
+      "prefix": "exercise. And no one seemed to have the slightest suspici",
+      "target": "on that Professor",
+      "read": "o",
+      "inferred": "n that Professor",
+      "t5_zero_shot": [
+        "osity",
+        "osity",
+        "osity",
+        "osity",
+        "osity"
+      ],
+      "text_only": [
+        "tion.",
+        "nce.",
+        "tion that",
+        "nce that",
+        ""
+      ],
+      "full": [
+        "on.",
+        "on that",
+        "on.",
+        "tion.",
+        "on that"
+      ],
+      "full_zero_img": [
+        "nce.",
+        "nce that",
+        "nce",
+        "nce.",
+        "nce that"
+      ],
+      "full_shuf_img": [
+        "h.",
+        "h that",
+        "h, but",
+        "h, and",
+        ""
+      ],
+      "full_v1": [
+        "n of",
+        "n of the",
+        "ns of",
+        "nt of",
+        "on of"
+      ]
+    },
+    {
+      "prefix": "Bhaer, while talking philosophy with the father, was giving ",
+      "target": "the daughter",
+      "read": "th",
+      "inferred": "e daughter",
+      "t5_zero_shot": [
+        "her the",
+        "her the",
+        "her the",
+        "her the",
+        "her the"
+      ],
+      "text_only": [
+        "her",
+        "his",
+        "the",
+        "him",
+        ""
+      ],
+      "full": [
+        "her",
+        "the",
+        "his",
+        "her many",
+        "him"
+      ],
+      "full_zero_img": [
+        "her",
+        "his",
+        "her many",
+        "ed",
+        "him"
+      ],
+      "full_shuf_img": [
+        "on her",
+        "on his",
+        "on",
+        "o",
+        "her"
+      ],
+      "full_v1": [
+        "the",
+        "his",
+        "her",
+        "their",
+        ""
+      ]
+    },
+    {
+      "prefix": "lessons in love. Jo couldn't even lose her heart in a decorou",
+      "target": "s manner, but",
+      "read": "s ",
+      "inferred": "manner, but",
+      "t5_zero_shot": [
+        ". The",
+        ". The",
+        ". The",
+        ". The",
+        ". Jo was"
+      ],
+      "text_only": [
+        "n. Jo",
+        "n. She",
+        "l. Jo",
+        "l. She",
+        ""
+      ],
+      "full": [
+        "se. She",
+        "s. She",
+        "se. Jo",
+        "s. Jo",
+        "se, but"
+      ],
+      "full_zero_img": [
+        "nce. She",
+        "nt. She",
+        "nce. She",
+        "tion. She",
+        "nt, but"
+      ],
+      "full_shuf_img": [
+        "thet. She",
+        "thet. Jo",
+        "tion. She",
+        "thet, but she",
+        "thetion. She"
+      ],
+      "full_v1": [
+        "s. She",
+        "s, and",
+        "s, she",
+        "s and",
+        ""
+      ]
+    },
+    {
+      "prefix": "sternly tried to quench her feelings, and failing to do so, le",
+      "target": "d a somewhat",
+      "read": "d ",
+      "inferred": "a somewhat",
+      "t5_zero_shot": [
+        "an",
+        "an",
+        "an",
+        "an back to the",
+        "an to the"
+      ],
+      "text_only": [
+        "nked her into an",
+        "nced her",
+        "nched her into an",
+        "nched into an",
+        "nched her"
+      ],
+      "full": [
+        "d in her",
+        "d out her",
+        "d into an",
+        "d in an",
+        ""
+      ],
+      "full_zero_img": [
+        "nched her into an",
+        "nching her into an",
+        "nked her into an",
+        "nched into an",
+        "nching her"
+      ],
+      "full_shuf_img": [
+        "ssed her into an",
+        "st her into an",
+        "ssed her in an",
+        "st into an",
+        "ss her"
+      ],
+      "full_v1": [
+        "d her",
+        "d a",
+        "d in her",
+        "d the",
+        "d her in"
+      ]
+    },
+    {
+      "prefix": "agitated life. She was mortally afraid of being laughed at for s",
+      "target": "urrendering,",
+      "read": "ur",
+      "inferred": "rendering,",
+      "t5_zero_shot": [
+        "everance. The",
+        "everance. The",
+        "arcastic reasons. The",
+        "everance. The",
+        "arcastic reasons. La"
+      ],
+      "text_only": [
+        "elling",
+        "eening",
+        "ympathetic",
+        "een years",
+        "een"
+      ],
+      "full": [
+        "urviving",
+        "urrence",
+        "urfing",
+        "urrence,",
+        "urry"
+      ],
+      "full_zero_img": [
+        "nuffing",
+        "inging",
+        "nuffs",
+        "ence",
+        "ensing"
+      ],
+      "full_shuf_img": [
+        "ding",
+        "d,",
+        "d",
+        "d, and",
+        "d, but"
+      ],
+      "full_v1": [
+        "urning",
+        "urding",
+        "urring",
+        "urrected",
+        ""
+      ]
+    },
+    {
+      "prefix": "after her many and vehement declarations of independence. La",
+      "target": "urie was her",
+      "read": "ur",
+      "inferred": "ie was her",
+      "t5_zero_shot": [
+        "rry was",
+        "ura was",
+        "rry was",
+        "ura was",
+        "rry was"
+      ],
+      "text_only": [
+        "n",
+        "nced",
+        "rd",
+        "rn",
+        ""
+      ],
+      "full": [
+        "ud",
+        "ut",
+        "ud was",
+        "ut her",
+        "uud"
+      ],
+      "full_zero_img": [
+        "nny",
+        "nna",
+        "nn",
+        "nse",
+        "nst"
+      ],
+      "full_shuf_img": [
+        "urry",
+        "urry was",
+        "urous",
+        "urud",
+        "urne"
+      ],
+      "full_v1": [
+        "ws were",
+        "wn",
+        "wn,",
+        "ud",
+        "wrong"
+      ]
+    },
+    {
+      "prefix": "in the air, but whether I can unlock the door remains to be seen,\" ",
+      "target": "observed Jo",
+      "read": "ob",
+      "inferred": "served Jo",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "he said",
+        "line:",
+        "line:"
+      ],
+      "text_only": [
+        "he said",
+        "he replied",
+        "he says",
+        "she said",
+        ""
+      ],
+      "full": [
+        "he said",
+        "he said,",
+        "he told me",
+        "she said",
+        "he replied"
+      ],
+      "full_zero_img": [
+        "he said",
+        "he said,",
+        "he told me",
+        "he replied",
+        "she said"
+      ],
+      "full_shuf_img": [
+        "u said",
+        "utah said",
+        "ud said",
+        "utd said",
+        "utta said"
+      ],
+      "full_v1": [
+        "he said",
+        "I said",
+        "I said,",
+        "she said",
+        "said"
+      ]
+    },
+    {
+      "prefix": "mysteriously. \"I've got the key to mine, but I'm not allowed to try i",
+      "target": "t. Hang",
+      "read": "t.",
+      "inferred": " Hang",
+      "t5_zero_shot": [
+        ".e.",
+        ".e.",
+        ".e.",
+        ".e.",
+        ".e."
+      ],
+      "text_only": [
+        "n't at",
+        "n't in",
+        "nt in",
+        "nt at",
+        "n't to"
+      ],
+      "full": [
+        "t at",
+        "t in",
+        "t it in",
+        "t it at",
+        "t to get to"
+      ],
+      "full_zero_img": [
+        "ng",
+        "nt in",
+        "nt at",
+        "nt my",
+        "nst"
+      ],
+      "full_shuf_img": [
+        "bbly in",
+        "bbly at",
+        "bbright at",
+        "bbly to",
+        "bbly to get to"
+      ],
+      "full_v1": [
+        "t the",
+        "t my",
+        "t a",
+        "t to the",
+        ""
+      ]
+    },
+    {
+      "prefix": "college!\" muttered Laurie with an impatient sigh. \"Wait and see if ",
+      "target": "it doesn't",
+      "read": "it",
+      "inferred": " doesn't",
+      "t5_zero_shot": [
+        "it's",
+        "it's",
+        "it's",
+        "it's",
+        "it's"
+      ],
+      "text_only": [
+        "I can",
+        "I'll",
+        "you can",
+        "i can",
+        "it will"
+      ],
+      "full": [
+        "it will",
+        "it'll",
+        "it would",
+        "it can",
+        "it could"
+      ],
+      "full_zero_img": [
+        "I can",
+        "I'll",
+        "i can",
+        "you can",
+        "you'll"
+      ],
+      "full_shuf_img": [
+        "t I can",
+        "t it will",
+        "t you can",
+        "t",
+        ""
+      ],
+      "full_v1": [
+        "t",
+        "t you",
+        "if I can",
+        "if I",
+        ""
+      ]
+    },
+    {
+      "prefix": "bring you something worth having,\" replied the boy, laughing at t",
+      "target": "he thought",
+      "read": "h",
+      "inferred": "e thought",
+      "t5_zero_shot": [
+        "hou",
+        "hou. The",
+        "hou",
+        "hou",
+        "hou"
+      ],
+      "text_only": [
+        "he sense",
+        "he he thought",
+        "he he knew",
+        "e a bit",
+        "he he was unaware"
+      ],
+      "full": [
+        "he sight",
+        "he glimpse",
+        "he tale",
+        "he secret",
+        "he sigh"
+      ],
+      "full_zero_img": [
+        "uttering",
+        "utter",
+        "o he thought",
+        "o a bit",
+        "oss"
+      ],
+      "full_shuf_img": [
+        "it. It was the story",
+        "it. It was a glimpse",
+        "it. \"It's the beginning",
+        "it. \"It's the story",
+        "it. \"It's part"
+      ],
+      "full_v1": [
+        "he hair,",
+        "he hair",
+        "he eyes",
+        "he hand",
+        ""
+      ]
+    },
+    {
+      "prefix": "of a charming little secret which he fancied he knew. Meg colored",
+      "target": "behind the",
+      "read": "b",
+      "inferred": "ehind the",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "the",
+        "the",
+        "the"
+      ],
+      "text_only": [
+        "the",
+        "his",
+        "his",
+        "on the",
+        "a"
+      ],
+      "full": [
+        "the",
+        "his",
+        "his head on the",
+        "his hand on the",
+        "his head on his"
+      ],
+      "full_zero_img": [
+        "the",
+        "his",
+        "out the",
+        "out his",
+        ""
+      ],
+      "full_shuf_img": [
+        "his",
+        "his head on the",
+        "his hand on the",
+        "the",
+        "he on the"
+      ],
+      "full_v1": [
+        "his",
+        "in his",
+        "to his",
+        "on his",
+        "with his"
+      ]
+    },
+    {
+      "prefix": "brake, but asked no questions and looked across the river with th",
+      "target": "e same",
+      "read": "e ",
+      "inferred": "same",
+      "t5_zero_shot": [
+        "y eyes. Meg colored",
+        "y eyes. Meg color",
+        "y eyes. Meg",
+        "y eyes. Meg",
+        "y eyes. Meg"
+      ],
+      "text_only": [
+        "e",
+        "er",
+        "a",
+        "en",
+        ""
+      ],
+      "full": [
+        "e",
+        "e most",
+        "e very",
+        "e gentle",
+        ""
+      ],
+      "full_zero_img": [
+        "e",
+        "en",
+        "aw the",
+        "awn",
+        "ound"
+      ],
+      "full_shuf_img": [
+        "be",
+        "be the",
+        "bee",
+        "beard",
+        "bet"
+      ],
+      "full_v1": [
+        "e",
+        "e room. He",
+        "e place. He",
+        "e hand. He",
+        "e room. The"
+      ]
+    },
+    {
+      "prefix": "expectant expression which Mr. Brooke had worn when he told th",
+      "target": "e story of",
+      "read": "e",
+      "inferred": " story of",
+      "t5_zero_shot": [
+        "line the",
+        "line",
+        "line",
+        "line",
+        "line:"
+      ],
+      "text_only": [
+        "er that he was",
+        "e that he was",
+        "er he was",
+        "o he was",
+        "e he was"
+      ],
+      "full": [
+        "e story of",
+        "e he was",
+        "e lady",
+        "e man,",
+        ""
+      ],
+      "full_zero_img": [
+        "ost of",
+        "om to",
+        "om of",
+        "od of",
+        "oy of"
+      ],
+      "full_shuf_img": [
+        "e story of",
+        "e story to",
+        "e he was",
+        "e lady",
+        ""
+      ],
+      "full_v1": [
+        "e to",
+        "e head to",
+        "e door to",
+        "e ear of",
+        "e ear to"
+      ]
+    },
+    {
+      "prefix": "the knight. \"If we are all alive ten years hence, let's meet, and see ",
+      "target": "how many",
+      "read": "h",
+      "inferred": "ow many",
+      "t5_zero_shot": [
+        "what's",
+        "what's",
+        "what's",
+        "what's",
+        "what's"
+      ],
+      "text_only": [
+        "how many",
+        "if any",
+        "if all",
+        ", how many",
+        "if none"
+      ],
+      "full": [
+        "how many",
+        "how much",
+        ", how many",
+        "if all",
+        "whether all"
+      ],
+      "full_zero_img": [
+        "how many",
+        "if all",
+        "if any",
+        "if none",
+        "where all"
+      ],
+      "full_shuf_img": [
+        "e how many",
+        "e, how many",
+        "e if any",
+        "e if all",
+        "e whether all"
+      ],
+      "full_v1": [
+        "it. But",
+        "a good deal",
+        "a good chance",
+        "h,",
+        "h, and"
+      ]
+    },
+    {
+      "prefix": "of us have got our wishes, or how much nearer we are then than",
+      "target": "now,\" said",
+      "read": "n",
+      "inferred": "ow,\" said",
+      "t5_zero_shot": [
+        "the",
+        "the",
+        "we are",
+        "the",
+        "the"
+      ],
+      "text_only": [
+        "we are,\" said",
+        "ever,\" said",
+        "it is,\" said",
+        "we are,\" says",
+        ""
+      ],
+      "full": [
+        "ever,\" said",
+        "now,\" said",
+        "we are,\" said",
+        "ever?\" said",
+        "ever,\" says"
+      ],
+      "full_zero_img": [
+        "we are,\" said",
+        "ever,\" said",
+        "now,\" said",
+        "we are.\"",
+        "we are.\" \"I am"
+      ],
+      "full_shuf_img": [
+        "he is,\" said",
+        "we are,\" said",
+        "now,\" said",
+        "he was,\" said",
+        "he is,\" says"
+      ],
+      "full_v1": [
+        "I am.",
+        "if I can.",
+        "if I could.",
+        "a good",
+        "if I can,"
+      ]
+    },
+    {
+      "prefix": "Jo, always ready with a plan. \"Bless me! How old I shall be, twent",
+      "target": "y-seven!\"",
+      "read": "y",
+      "inferred": "-seven!\"",
+      "t5_zero_shot": [
+        "y years",
+        "ieth",
+        "ieth",
+        "ieth",
+        "ieth"
+      ],
+      "text_only": [
+        "y years ago,\"",
+        "y years,\"",
+        "y,\"",
+        "y years.\"",
+        "y years ago?\""
+      ],
+      "full": [
+        "y years,\"",
+        "y years?\"",
+        "y?\"",
+        "y,\"",
+        ""
+      ],
+      "full_zero_img": [
+        "en years?\"",
+        "en years,\"",
+        "ieth?\"",
+        "ie years,\"",
+        "ie years?\""
+      ],
+      "full_shuf_img": [
+        "me,\"",
+        "me!\"",
+        "een years,\"",
+        "een years?\"",
+        "een years.\""
+      ],
+      "full_v1": [
+        "y, I",
+        "y I",
+        "y,",
+        "y, and",
+        ""
+      ]
+    },
+    {
+      "prefix": "exclaimed Meg, who felt grown up already, having just reached se",
+      "target": "venteen.",
+      "read": "v",
+      "inferred": "enteen.",
+      "t5_zero_shot": [
+        "duced",
+        "ize. The",
+        "ize. The",
+        "duced",
+        "ize. The"
+      ],
+      "text_only": [
+        "d.",
+        "n.",
+        "nny.",
+        "nne.",
+        "nno."
+      ],
+      "full": [
+        "ver.",
+        "ver.\"",
+        "ve.\"",
+        "ve.",
+        "ver!\""
+      ],
+      "full_zero_img": [
+        "nne,\" he said.",
+        "nne.\"",
+        "nny.\"",
+        "nny.",
+        "nne."
+      ],
+      "full_shuf_img": [
+        "y.",
+        "y.\"",
+        "yy.\"",
+        "yy.",
+        "y a little."
+      ],
+      "full_v1": [
+        "wn.",
+        "w.",
+        "ve.",
+        "ved.",
+        "ver."
+      ]
+    },
+    {
+      "prefix": "\"You and I will be twenty-six, Teddy, Beth twenty-four, and Amy",
+      "target": "twenty-two.",
+      "read": "t",
+      "inferred": "wenty-two.",
+      "t5_zero_shot": [
+        "twenty-four, and",
+        "twenty-four!\"",
+        "twenty-four!\"",
+        "twenty-four!\"",
+        "twenty-four, and Amy"
+      ],
+      "text_only": [
+        "twenty-four.",
+        "twenty-five.",
+        "twenty-four!",
+        "twenty-five!",
+        "twenty-two."
+      ],
+      "full": [
+        "twenty-four.",
+        "twenty-five.",
+        "twenty-four.\"",
+        "twenty-two.",
+        "twenty-three."
+      ],
+      "full_zero_img": [
+        "twenty-four.",
+        "twenty-five.",
+        "twenty-four.\"",
+        "twenty-two.",
+        "twenty-five.\""
+      ],
+      "full_shuf_img": [
+        "twenty-four.",
+        "twenty-five.",
+        "twenty-four.\"",
+        "twenty-five.\"",
+        "."
+      ],
+      "full_v1": [
+        ".",
+        "and I.",
+        "'ll be there.",
+        "'ll be there.\"",
+        ""
+      ]
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "audit_timestamp": "2026-11-12T10:40:10Z",
+  "environment": {
+    "python_version": "3.11.9",
+    "torch_version": "2.10.0+cpu",
+    "device": "cpu",
+    "cuda_available": false
+  },
+  "architecture_audit": {
+    "model_class": "ForensicT5Restorer",
+    "text_backbone": "t5-small",
+    "vision_backbone": "resnet34",
+    "total_parameters": 85476929,
+    "trainable_parameters": 85476929,
+    "parameter_breakdown": {
+      "t5_parameters": 60506624,
+      "visual_encoder_parameters": 22539072,
+      "cross_modal_fusion_parameters": 2102785,
+      "contrastive_aligner_parameters": 328448
+    },
+    "components_verified": {
+      "multiscale_vision": true,
+      "spatial_positional_embeddings": true,
+      "gated_cross_modal_fusion": true,
+      "contrastive_stroke_aligner": true,
+      "physical_budget_processor_integrated": true
+    }
+  },
+  "checkpoint_audit": {
+    "checkpoints_found": [
+      {
+        "filename": "best_checkpoint.pt",
+        "file_size_mb": 978.68,
+        "sha256": "2403d3190e8e3c2863d23734c881f1b60e8bc58c762652ad96e9a1a72c06fc12",
+        "epoch": 3,
+        "global_step": 6,
+        "keys_present": [
+          "epoch",
+          "global_step",
+          "model_state_dict",
+          "optimizer_state_dict",
+          "scheduler_state_dict",
+          "scaler_state_dict",
+          "metrics",
+          "config_dict"
+        ],
+        "has_model_state_dict": true
+      },
+      {
+        "filename": "final_checkpoint.pt",
+        "file_size_mb": 978.68,
+        "sha256": "34a797042e9a748834258b5242fd9b699990b75a0e5cbf45da0d88dcfe136ea0",
+        "epoch": 3,
+        "global_step": 6,
+        "keys_present": [
+          "epoch",
+          "global_step",
+          "model_state_dict",
+          "optimizer_state_dict",
+          "scheduler_state_dict",
+          "scaler_state_dict",
+          "metrics",
+          "config_dict"
+        ],
+        "has_model_state_dict": true
+      },
+      {
+        "filename": "latest_checkpoint.pt",
+        "file_size_mb": 978.68,
+        "sha256": "4b84515610b149954cb09a604622a322b03590c6e60432a371a457d9481ed077",
+        "epoch": 3,
+        "global_step": 6,
+        "keys_present": [
+          "epoch",
+          "global_step",
+          "model_state_dict",
+          "optimizer_state_dict",
+          "scheduler_state_dict",
+          "scaler_state_dict",
+          "metrics",
+          "config_dict"
+        ],
+        "has_model_state_dict": true
+      }
+    ],
+    "smoke_inference_test": {
+      "status": "passed",
+      "checkpoint_used": "best_checkpoint.pt",
+      "test_prompt": "Incomplete line: The system <extra_id_0>",
+      "raw_output": "<pad>.  s,  in - e  to</s>"
+    }
+  },
+  "dataset_audit": {
+    "active_dataset": "Synthetic Document Fixture v1.0",
+    "total_document_pages": 6,
+    "split_counts": {
+      "train": 4,
+      "val": 1,
+      "test": 1
+    },
+    "page_level_zero_leakage_verified": true,
+    "splits_manifest_path": "data/splits.json",
+    "damage_provenance": "Synthetic calibrated random-walk burn corruption (Phase 1 generator)",
+    "external_corpus_status": {
+      "oprb_surveyed": true,
+      "oprb_downloaded": false,
+      "license": "Creative Commons Attribution 4.0 International (CC-BY-4.0)",
+      "volume_compressed": "4.22 GB",
+      "note": "OPRB was surveyed but not downloaded locally, preserving disk bandwidth per instructions."
+    }
+  },
+  "metric_audit": {
+    "raw_cer_formulation": "Levenshtein(P, T) / len(T) (Unbounded; exceeds 1.0 when insertions occur)",
+    "normalized_cer_formulation": "Levenshtein(P, T) / max(len(P), len(T)) (Strictly bounded in [0, 1])",
+    "position_char_acc_formulation": "Exact index match sum(P[i] == T[i]) / max(|P|, |T|)",
+    "cer_greater_than_one_explained": "In natural language infilling, when autoregressive decoders suffer from insertion runaway, insertions I can far exceed reference length N, producing Raw CER > 1.0. This reflects true discrete edit distance, not a computational error.",
+    "verified_baseline_results": {
+      "Baseline_A_Heuristic_OCR": {
+        "mean_raw_cer": 0.9429,
+        "mean_normalized_cer": 0.9429,
+        "mean_wer": 1.0,
+        "budget_violation_rate": 0.0,
+        "insertion_rate": 0.0,
+        "deletion_rate": 0.9312
+      },
+      "Baseline_B_Text_Only_T5": {
+        "mean_raw_cer": 2.3082,
+        "mean_normalized_cer": 2.2965,
+        "mean_wer": 6.43,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.5518,
+        "deletion_rate": 0.0
+      },
+      "Baseline_C_Legacy_Visual_Prefix": {
+        "mean_raw_cer": 2.3082,
+        "mean_normalized_cer": 2.2965,
+        "mean_wer": 6.43,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.5518,
+        "deletion_rate": 0.0
+      },
+      "Baseline_D_Spatial_Forensic_Encoder": {
+        "mean_raw_cer": 2.3082,
+        "mean_normalized_cer": 2.2965,
+        "mean_wer": 6.43,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.5518,
+        "deletion_rate": 0.0
+      },
+      "Baseline_E_Gated_Cross_Modal_Fusion": {
+        "mean_raw_cer": 2.3082,
+        "mean_normalized_cer": 2.2965,
+        "mean_wer": 6.43,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.5518,
+        "deletion_rate": 0.0
+      },
+      "Baseline_F_Cross_Modal_Contrastive": {
+        "mean_raw_cer": 2.3082,
+        "mean_normalized_cer": 2.2965,
+        "mean_wer": 6.43,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.5518,
+        "deletion_rate": 0.0
+      },
+      "Baseline_G_Full_Multimodal_Grounded": {
+        "mean_raw_cer": 2.1592,
+        "mean_normalized_cer": 2.1397,
+        "mean_wer": 5.0633,
+        "budget_violation_rate": 1.0,
+        "insertion_rate": 1.3722,
+        "deletion_rate": 0.0
+      }
+    }
+  },
+  "visual_grounding_audit": {
+    "reported_stress_tests": {
+      "normal": {
+        "perturbation": "normal",
+        "mean_raw_cer": 2.1592,
+        "mean_wer": 5.0633,
+        "char_acc": 0.0,
+        "budget_violation_rate": 1.0
+      },
+      "zeroed": {
+        "perturbation": "zeroed",
+        "mean_raw_cer": 2.1547,
+        "mean_wer": 5.0633,
+        "char_acc": 0.0,
+        "budget_violation_rate": 1.0
+      },
+      "shuffled": {
+        "perturbation": "shuffled",
+        "mean_raw_cer": 2.1592,
+        "mean_wer": 5.0633,
+        "char_acc": 0.0,
+        "budget_violation_rate": 1.0
+      },
+      "noisy": {
+        "perturbation": "noisy",
+        "mean_raw_cer": 2.1765,
+        "mean_wer": 5.0633,
+        "char_acc": 0.0,
+        "budget_violation_rate": 1.0
+      }
+    },
+    "scientific_assessment": "UNRESOLVED RESEARCH LIMITATION",
+    "analysis": "While Gaussian noise injection (std=0.5) degrades CER slightly (2.1592 -> 2.1765), zeroed visual crops (CER 2.1547) and spatially shuffled crops (CER 2.1592) achieve essentially identical error rates to normal unperturbed crops (CER 2.1592). This empirical evidence indicates that the current T5-small restorer is predominantly driven by textual prefix language modeling rather than fine character stroke morphology. Visual grounding cannot be claimed as solved."
+  },
+  "physical_budget_audit": {
+    "processor_implemented": "PhysicalBudgetLogitsProcessor in model.py",
+    "baseline_budget_violation_rate": "100.0% in unconstrained baseline benchmark (N=10)",
+    "moderate_burn_violation_rate": "76.7% across 30 fixture instances",
+    "root_cause": "Greedy beam search and high language model confidence frequently overpower additive EOS logit biases until several extra tokens are emitted.",
+    "phase5_remedy": "Implemented post-generation word-boundary snapping in BudgetEstimator, which safely clamps text runaway to the nearest linguistic word boundary within budget + buffer.",
+    "scientific_assessment": "PARTIALLY RESOLVED VIA INFERENCE ESTIMATOR; ACTIVE TRAINING CONTINUATION REQUIRED"
+  },
+  "statistical_audit": {
+    "paired_bootstrap_protocol": "1000 resamples, 95% confidence interval",
+    "evaluated_sample_size": "N = 10 paired line instances across fixture splits",
+    "full_model_vs_text_only": {
+      "n_samples": 10,
+      "mean_difference": -0.149,
+      "ci_lower_95": -0.3671,
+      "ci_upper_95": 0.0087,
+      "p_value": 0.173,
+      "statistically_significant_05": false,
+      "cohens_d": -0.481
+    },
+    "statistical_power_assessment": "PRELIMINARY / UNDERPOWERED",
+    "scientific_assessment": "The mean difference of -0.1490 and Cohen's d of -0.4810 favor the multimodal model, but p = 0.1730 and the 95% CI [-0.3671, +0.0087] span zero. With N = 10 from 6 fixture pages, statistical power is insufficient to claim formal statistical significance at alpha=0.05. Results must be presented as preliminary prototype evidence."
+  }
+}

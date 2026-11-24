@@ -1,0 +1,8 @@
+Pharmacokinetic Profiling of Novel Pyrimidine Receptor Antagonists
+Department of Pharmaceutical Sciences and Structural Biology
+Compound 4b demonstrated exceptional in vitro potency against the kinase domain.
+Half-maximal inhibitory concentration (IC50) was determined to be 4.2 nanomolar.
+Liquid chromatography mass spectrometry confirmed plasma stability exceeding four hours.
+Metabolic degradation yielded two primary hydroxylated metabolites in microsomal assays.
+No significant inhibition of cytochrome P450 isoforms was observed below ten micromolar.
+These findings establish compound 4b as a viable candidate for preclinical evaluation.

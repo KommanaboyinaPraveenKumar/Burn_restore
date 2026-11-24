@@ -1,0 +1,331 @@
+{
+  "n_lines": 5854,
+  "split": "test",
+  "systems": {
+    "empty": {
+      "corpus_cer": 1.0,
+      "corpus_cer_95ci": [
+        1.0,
+        1.0
+      ],
+      "macro_cer": 1.0,
+      "macro_wer": 1.0,
+      "exact_match": 0.0,
+      "first_word_acc": 0.0,
+      "budget_violation_rate": 0.0
+    },
+    "t5_zero_shot": {
+      "corpus_cer": 0.953,
+      "corpus_cer_95ci": [
+        0.9461,
+        0.9596
+      ],
+      "macro_cer": 1.0682,
+      "macro_wer": 1.1335,
+      "exact_match": 0.0067,
+      "first_word_acc": 0.0709,
+      "budget_violation_rate": 0.1228
+    },
+    "text_only": {
+      "corpus_cer": 0.8043,
+      "corpus_cer_95ci": [
+        0.7989,
+        0.8096
+      ],
+      "macro_cer": 0.8282,
+      "macro_wer": 0.9399,
+      "exact_match": 0.035,
+      "first_word_acc": 0.1319,
+      "budget_violation_rate": 0.0378
+    },
+    "full": {
+      "corpus_cer": 0.8043,
+      "corpus_cer_95ci": [
+        0.8001,
+        0.8085
+      ],
+      "macro_cer": 0.8059,
+      "macro_wer": 0.9185,
+      "exact_match": 0.0307,
+      "first_word_acc": 0.253,
+      "budget_violation_rate": 0.0149
+    },
+    "full_zero_img": {
+      "corpus_cer": 0.876,
+      "corpus_cer_95ci": [
+        0.872,
+        0.8799
+      ],
+      "macro_cer": 0.9199,
+      "macro_wer": 1.0333,
+      "exact_match": 0.008,
+      "first_word_acc": 0.0323,
+      "budget_violation_rate": 0.0195
+    },
+    "full_shuf_img": {
+      "corpus_cer": 0.8676,
+      "corpus_cer_95ci": [
+        0.8638,
+        0.8718
+      ],
+      "macro_cer": 0.9164,
+      "macro_wer": 1.0399,
+      "exact_match": 0.0055,
+      "first_word_acc": 0.0225,
+      "budget_violation_rate": 0.015
+    }
+  },
+  "comparisons": {
+    "full_vs_text_only": {
+      "cer_delta": 0.0001,
+      "p_not_better": 0.528
+    },
+    "full_vs_full_zero_img": {
+      "cer_delta": -0.0717,
+      "p_not_better": 0.0
+    },
+    "full_vs_full_shuf_img": {
+      "cer_delta": -0.0633,
+      "p_not_better": 0.0
+    },
+    "text_only_vs_t5_zero_shot": {
+      "cer_delta": -0.1487,
+      "p_not_better": 0.0
+    },
+    "full_vs_empty": {
+      "cer_delta": -0.1957,
+      "p_not_better": 0.0
+    },
+    "text_only_vs_empty": {
+      "cer_delta": -0.1958,
+      "p_not_better": 0.0
+    }
+  },
+  "samples": [
+    {
+      "prefix": "close, when he would look as if his short-sighted eyes had fail",
+      "target": "ed to",
+      "t5_zero_shot": ". Then,",
+      "text_only": "to",
+      "full": "ed to",
+      "full_zero_img": "to",
+      "full_shuf_img": "ad to"
+    },
+    {
+      "prefix": "recognize the approaching lady till that moment. Then, if she w",
+      "target": "as going to",
+      "t5_zero_shot": "iggled",
+      "text_only": "ain't",
+      "full": "ave",
+      "full_zero_img": "ain't.",
+      "full_shuf_img": "ed."
+    },
+    {
+      "prefix": "Meg's he always had something for the babies. If her face was ",
+      "target": "turned",
+      "t5_zero_shot": "the",
+      "text_only": "a little",
+      "full": "a",
+      "full_zero_img": "a",
+      "full_shuf_img": "a"
+    },
+    {
+      "prefix": "homeward, he had merely strolled down to see the river, and",
+      "target": "was just",
+      "t5_zero_shot": "he was",
+      "text_only": "he was",
+      "full": "he was",
+      "full_zero_img": "he was",
+      "full_shuf_img": "he was"
+    },
+    {
+      "prefix": "returning, unless they were tired of his frequent calls. Und",
+      "target": "er the",
+      "t5_zero_shot": "ead",
+      "text_only": "in these",
+      "full": "ed his",
+      "full_zero_img": "if he had no",
+      "full_shuf_img": "despite his"
+    },
+    {
+      "prefix": "circumstances, what could Jo do but greet him civilly, and i",
+      "target": "nvite him in? If",
+      "t5_zero_shot": "d line",
+      "text_only": "n if",
+      "full": "rr. When",
+      "full_zero_img": ", when",
+      "full_shuf_img": "ke him. When"
+    },
+    {
+      "prefix": "she was tired of his visits, she concealed her weariness with",
+      "target": "perfect skill, and",
+      "t5_zero_shot": "the",
+      "text_only": "her, and she",
+      "full": "her hand. She",
+      "full_zero_img": "her. She",
+      "full_shuf_img": "rs. She"
+    },
+    {
+      "prefix": "took care that there should be coffee for supper, \"as Fried",
+      "target": "rich-I mean Mr.",
+      "t5_zero_shot": "man said",
+      "text_only": "e",
+      "full": "ird,",
+      "full_zero_img": "'s",
+      "full_shuf_img": "and"
+    },
+    {
+      "prefix": "Bhaer-doesn't like tea.\" By the second week, everyone knew",
+      "target": "perfectly well",
+      "t5_zero_shot": "what was going on",
+      "text_only": "exactly",
+      "full": "that",
+      "full_zero_img": "to say",
+      "full_shuf_img": "ing that"
+    },
+    {
+      "prefix": "what was going on, yet everyone tried to look as if they w",
+      "target": "ere stone-blind to",
+      "t5_zero_shot": "reaked in the",
+      "text_only": "ain't see",
+      "full": "ened",
+      "full_zero_img": "aint",
+      "full_shuf_img": "y did"
+    },
+    {
+      "prefix": "the changes in Jo's face. They never asked why she sang",
+      "target": "about her work,",
+      "t5_zero_shot": "the",
+      "text_only": ", but she",
+      "full": "and",
+      "full_zero_img": ". She",
+      "full_shuf_img": "er, and"
+    },
+    {
+      "prefix": "did up her hair three times a day, and got so blooming wit",
+      "target": "h her evening",
+      "t5_zero_shot": ". The",
+      "text_only": "e that she had no",
+      "full": "h her",
+      "full_zero_img": "'s",
+      "full_shuf_img": "at her"
+    },
+    {
+      "prefix": "exercise. And no one seemed to have the slightest suspici",
+      "target": "on that Professor",
+      "t5_zero_shot": "osity",
+      "text_only": "tion.",
+      "full": "n of",
+      "full_zero_img": "st of",
+      "full_shuf_img": "h of"
+    },
+    {
+      "prefix": "Bhaer, while talking philosophy with the father, was giving ",
+      "target": "the daughter",
+      "t5_zero_shot": "her the",
+      "text_only": "her",
+      "full": "the",
+      "full_zero_img": "the",
+      "full_shuf_img": "an"
+    },
+    {
+      "prefix": "lessons in love. Jo couldn't even lose her heart in a decorou",
+      "target": "s manner, but",
+      "t5_zero_shot": "e",
+      "text_only": "n. Jo",
+      "full": "s. She",
+      "full_zero_img": ". She",
+      "full_shuf_img": "and"
+    },
+    {
+      "prefix": "sternly tried to quench her feelings, and failing to do so, le",
+      "target": "d a somewhat",
+      "t5_zero_shot": "an",
+      "text_only": "nced her",
+      "full": "d her",
+      "full_zero_img": "st her",
+      "full_shuf_img": "s her"
+    },
+    {
+      "prefix": "agitated life. She was mortally afraid of being laughed at for s",
+      "target": "urrendering,",
+      "t5_zero_shot": "everance. The",
+      "text_only": "elling",
+      "full": "urning",
+      "full_zero_img": ", and",
+      "full_shuf_img": "d her,"
+    },
+    {
+      "prefix": "after her many and vehement declarations of independence. La",
+      "target": "urie was her",
+      "t5_zero_shot": "zareth was",
+      "text_only": "n",
+      "full": "ws were",
+      "full_zero_img": "'s",
+      "full_shuf_img": "nn,"
+    },
+    {
+      "prefix": "in the air, but whether I can unlock the door remains to be seen,\" ",
+      "target": "observed Jo",
+      "t5_zero_shot": "the",
+      "text_only": "he said",
+      "full": "he said",
+      "full_zero_img": "he said",
+      "full_shuf_img": "he said"
+    },
+    {
+      "prefix": "mysteriously. \"I've got the key to mine, but I'm not allowed to try i",
+      "target": "t. Hang",
+      "t5_zero_shot": ".e.",
+      "text_only": "n't at",
+      "full": "t the",
+      "full_zero_img": "st the",
+      "full_shuf_img": "ot the"
+    },
+    {
+      "prefix": "college!\" muttered Laurie with an impatient sigh. \"Wait and see if ",
+      "target": "it doesn't",
+      "t5_zero_shot": "it's",
+      "text_only": "I can",
+      "full": "t",
+      "full_zero_img": "I'll",
+      "full_shuf_img": "t you"
+    },
+    {
+      "prefix": "bring you something worth having,\" replied the boy, laughing at t",
+      "target": "he thought",
+      "t5_zero_shot": "hou",
+      "text_only": "he he thought",
+      "full": "he hair",
+      "full_zero_img": "a little",
+      "full_shuf_img": "ie,"
+    },
+    {
+      "prefix": "of a charming little secret which he fancied he knew. Meg colored",
+      "target": "behind the",
+      "t5_zero_shot": "the",
+      "text_only": "the",
+      "full": "his",
+      "full_zero_img": "at the",
+      "full_shuf_img": "he"
+    },
+    {
+      "prefix": "brake, but asked no questions and looked across the river with th",
+      "target": "e same",
+      "t5_zero_shot": "y eyes. Meg colored",
+      "text_only": "e",
+      "full": "e",
+      "full_zero_img": "'s",
+      "full_shuf_img": "he"
+    },
+    {
+      "prefix": "expectant expression which Mr. Brooke had worn when he told th",
+      "target": "e story of",
+      "t5_zero_shot": "line the",
+      "text_only": "er that he was",
+      "full": "e head to",
+      "full_zero_img": "'s hand to",
+      "full_shuf_img": "e head to"
+    }
+  ]
+}

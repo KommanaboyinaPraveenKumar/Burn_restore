@@ -1,0 +1,49 @@
+{
+  "checkpoint": "checkpoints\\best_checkpoint.pt",
+  "split": "val",
+  "total_samples": 1,
+  "macro_metrics": {
+    "mean_cer": 3.0,
+    "median_cer": 3.0,
+    "mean_wer": 6.0,
+    "mean_char_acc": 0.0,
+    "mean_word_acc": 0.0,
+    "exact_match_line_rate": 0.0,
+    "budget_violation_rate": 1.0
+  },
+  "aggregate_error_breakdown": {
+    "total_insertions": 24,
+    "total_deletions": 0,
+    "total_substitutions": 9,
+    "over_generated_samples": 1,
+    "under_generated_samples": 0,
+    "balanced_samples": 0
+  },
+  "samples": [
+    {
+      "sample_idx": 0,
+      "stem": "sample_page_001",
+      "prefix": "In multi-agent strategic settings, however, more information can alter equilibrium",
+      "ground_truth": "strategies.",
+      "restored_output": "<pad>. :, - a's <unk> _________</s>",
+      "character_budget": 15.0,
+      "is_budget_violated": true,
+      "cer": 3.0,
+      "wer": 6.0,
+      "char_acc": 0.0,
+      "word_acc": 0.0,
+      "exact_match": 0.0,
+      "error_breakdown": {
+        "pred_length": 35,
+        "target_length": 11,
+        "length_diff": 24,
+        "bias_category": "over_generated",
+        "matches": 2,
+        "substitutions": 9,
+        "insertions": 24,
+        "deletions": 0,
+        "total_edits": 33
+      }
+    }
+  ]
+}

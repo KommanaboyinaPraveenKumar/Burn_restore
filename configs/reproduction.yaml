@@ -1,0 +1,56 @@
+# configs/reproduction.yaml
+# Complete reproduction configuration for Grounded Side-Burnt Document Text Restoration
+
+seed: 42
+hardware:
+  preferred_device: "auto"  # "cuda" if available, else "cpu"
+  allow_mixed_precision: true
+  amp_dtype: "float16"
+
+model:
+  architecture: "ForensicT5Restorer"
+  text_backbone: "t5-small"
+  vision_backbone: "resnet34"
+  pretrained_vision: true
+  d_model: 512
+  use_multi_scale_vision: true
+  use_spatial_pos_embed: true
+  use_cross_modal_fusion: true
+  fusion_heads: 8
+  fusion_dropout: 0.1
+  lambda_contrastive: 0.1
+  contrastive_temp: 0.07
+  use_physical_budget_processor: true
+  alignment_penalty_weight: 4.0
+  budget_margin_buffer: 2.0
+
+dataset:
+  manifest_path: "data/splits.json"
+  page_resize: [1024, 1024]
+  line_crop_size: [128, 256]
+  crop_context_px: 180
+  avg_char_width_px: 14.0
+  burn_profile: "moderate"
+
+training:
+  batch_size: 8
+  warmup_epochs: 1
+  freeze_t5_warmup: true
+  total_epochs: 5
+  lr_warmup_adapters: 1.0e-4
+  lr_t5_backbone: 1.0e-5
+  lr_vision_backbone: 1.0e-5
+  lr_adapters: 5.0e-5
+  weight_decay: 1.0e-4
+  scheduler_type: "cosine"
+  scheduler_warmup_ratio: 0.1
+  contrastive_sched_start: 0.20
+  contrastive_sched_end: 0.05
+  grad_clip_norm: 1.0
+
+inference:
+  checkpoint_path: "checkpoints/best_checkpoint.pt"
+  num_beams: 4
+  max_new_tokens: 32
+  enable_word_snapping: true
+

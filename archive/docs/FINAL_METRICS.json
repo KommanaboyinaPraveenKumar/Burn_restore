@@ -1,0 +1,567 @@
+{
+  "metadata": {
+    "title": "Authoritative Canonical Evaluation of Grounded Document Text Restoration",
+    "timestamp": "2026-11-12T11:35:08Z",
+    "checkpoint_path": "C:\\Users\\prana\\Downloads\\Deep learning project\\checkpoints\\best_checkpoint.pt",
+    "checkpoint_sha256": "2403d3190e8e3c2863d23734c881f1b60e8bc58c762652ad96e9a1a72c06fc12",
+    "test_split_file": "sample_page_006.png",
+    "test_instances_count": 6,
+    "test_seed": 1262090837,
+    "model_parameters": 85476929,
+    "cross_modal_gate_weight": 0.5000231862068176
+  },
+  "baselines": {
+    "EXP-01-Heuristic-Baseline": {
+      "config": {
+        "mode": "heuristic",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 89,
+        "total_word_edit_distance": 12,
+        "corpus_cer": 0.957,
+        "corpus_wer": 1.0,
+        "macro_cer": 0.9544,
+        "macro_wer": 1.0,
+        "char_accuracy_bounded": 0.0456,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.1853,
+        "mean_rouge_l": 0.0848,
+        "decoder_budget_violation_rate": 0.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 0.0,
+        "vis_tokens_mean_norm": 0.0,
+        "vis_tokens_mean_std": 0.0
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": ".",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": ".",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": ".",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": ".",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": ".",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": ".",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-02-Text-Only-T5": {
+      "config": {
+        "mode": "text_only",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 214,
+        "total_word_edit_distance": 88,
+        "corpus_cer": 2.3011,
+        "corpus_wer": 7.3333,
+        "macro_cer": 2.6802,
+        "macro_wer": 9.6667,
+        "char_accuracy_bounded": 0.0,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.0076,
+        "mean_rouge_l": 0.1926,
+        "decoder_budget_violation_rate": 1.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 745.24,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": "<pad>, s. e a -  t : <unk> n d  and  de l'",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "<pad> s, in. and to - ed l a i n  t o r' at",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": "<pad> s., - e in a l d n  to r o t i <unk>,",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": "<pad> s in, and to. - e d l a n  t i o r'",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": "<pad> s in, and to. - e d l a  n i t o r'",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "<pad> s in, and to. - e d l a  n i' ( t r",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-03-Legacy-Visual-Prefix": {
+      "config": {
+        "mode": "legacy_prefix",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 88,
+        "total_word_edit_distance": 12,
+        "corpus_cer": 0.9462,
+        "corpus_wer": 1.0,
+        "macro_cer": 0.9268,
+        "macro_wer": 1.0,
+        "char_accuracy_bounded": 0.0732,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.1908,
+        "mean_rouge_l": 0.2025,
+        "decoder_budget_violation_rate": 0.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 285.35,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": ").</s>",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "healing.</s>",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": ".</s>",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": ".</s>",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": ".</s>",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "the letter spacing.</s>",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-04-Spatial-Vision-Encoder": {
+      "config": {
+        "mode": "spatial_encoder",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 88,
+        "total_word_edit_distance": 12,
+        "corpus_cer": 0.9462,
+        "corpus_wer": 1.0,
+        "macro_cer": 0.9268,
+        "macro_wer": 1.0,
+        "char_accuracy_bounded": 0.0732,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.1908,
+        "mean_rouge_l": 0.2025,
+        "decoder_budget_violation_rate": 0.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 252.53,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": ").</s>",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "healing.</s>",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": ".</s>",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": ".</s>",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": ".</s>",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "the letter spacing.</s>",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-05-Gated-Multimodal-Model": {
+      "config": {
+        "mode": "full",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 214,
+        "total_word_edit_distance": 88,
+        "corpus_cer": 2.3011,
+        "corpus_wer": 7.3333,
+        "macro_cer": 2.6802,
+        "macro_wer": 9.6667,
+        "char_accuracy_bounded": 0.0,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.0076,
+        "mean_rouge_l": 0.1926,
+        "decoder_budget_violation_rate": 1.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 781.32,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": "<pad>, s. e a -  t : <unk> n d  and  de l'",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "<pad> s, in. and to - ed l a i n  t o r' at",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": "<pad> s., - e in l a d n  to r o t i <unk>,",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": "<pad> s in, and to. - e d l a n  t i o r'",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": "<pad> s in, and to. - e d l a  n i t o r'",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "<pad> s in, and to. - e d l a  n i' ( t r",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-06-Full-Multimodal-Beam4": {
+      "config": {
+        "mode": "full",
+        "visual_override": null,
+        "use_budget_processor": false,
+        "apply_word_snapping": false,
+        "num_beams": 4
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 199,
+        "total_word_edit_distance": 84,
+        "corpus_cer": 2.1398,
+        "corpus_wer": 7.0,
+        "macro_cer": 2.5104,
+        "macro_wer": 9.3333,
+        "char_accuracy_bounded": 0.0,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.008,
+        "mean_rouge_l": 0.1919,
+        "decoder_budget_violation_rate": 1.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 1176.27,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": "<pad> s, . e a - d : <unk> n t  and  de l'",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "<pad>. s , - e d l  in  to a  and n t i'",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": "<pad> s., - e ll  d a n  to r o t i <unk>",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": "<pad>.  s,  to - e d l a  and n  in o t i",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": "<pad>.  s,  in -  to a d l e  and n o t i",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "<pad>.  s,  in - e  to l d  and n a i  ( t",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-07-Proposed-Model-Logits-Budget": {
+      "config": {
+        "mode": "full",
+        "visual_override": null,
+        "use_budget_processor": true,
+        "apply_word_snapping": false,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 183,
+        "total_word_edit_distance": 67,
+        "corpus_cer": 1.9677,
+        "corpus_wer": 5.5833,
+        "macro_cer": 2.3154,
+        "macro_wer": 7.3889,
+        "char_accuracy_bounded": 0.0,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.0103,
+        "mean_rouge_l": 0.2197,
+        "decoder_budget_violation_rate": 1.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 1358.73,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": "<pad>, s. e a -  t : <unk> n d  and</s>",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "<pad> s, in. and to - ed l a i n</s>",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": "<pad> s., - e in l a d n  to r o</s>",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": "<pad> s in, and to. - e d l a n</s>",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": "<pad> s in, and to. - e d l a  n</s>",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "<pad> s in, and to. - e d l a  n</s>",
+          "targ": "known scribal hands."
+        }
+      ]
+    },
+    "EXP-08-Proposed-Model-Word-Snapping": {
+      "config": {
+        "mode": "full",
+        "visual_override": null,
+        "use_budget_processor": true,
+        "apply_word_snapping": true,
+        "num_beams": 1
+      },
+      "metrics": {
+        "sample_count": 6,
+        "total_target_characters": 93,
+        "total_target_words": 12,
+        "total_char_edit_distance": 103,
+        "total_word_edit_distance": 34,
+        "corpus_cer": 1.1075,
+        "corpus_wer": 2.8333,
+        "macro_cer": 1.2743,
+        "macro_wer": 3.7778,
+        "char_accuracy_bounded": 0.0986,
+        "word_accuracy_bounded": 0.0,
+        "exact_match_rate": 0.0,
+        "mean_bleu_4": 0.0256,
+        "mean_rouge_l": 0.2693,
+        "decoder_budget_violation_rate": 0.0,
+        "word_snapped_budget_violation_rate": 0.0,
+        "mean_latency_ms": 611.68,
+        "vis_tokens_mean_norm": 128.0034,
+        "vis_tokens_mean_std": 1.0001
+      },
+      "sample_predictions": [
+        {
+          "line_idx": 0,
+          "pred": "<pad>, s. e a - t :",
+          "targ": "Archives)"
+        },
+        {
+          "line_idx": 1,
+          "pred": "<pad> s, in. and to",
+          "targ": "challenges."
+        },
+        {
+          "line_idx": 2,
+          "pred": "<pad> s., - e in l a",
+          "targ": "the margin glyphs,"
+        },
+        {
+          "line_idx": 3,
+          "pred": "<pad> s in, and to.",
+          "targ": "morphology."
+        },
+        {
+          "line_idx": 4,
+          "pred": "<pad> s in, and to.",
+          "targ": "under infrared lighting."
+        },
+        {
+          "line_idx": 5,
+          "pred": "<pad> s in, and to.",
+          "targ": "known scribal hands."
+        }
+      ]
+    }
+  },
+  "visual_modality_stress_tests": [
+    {
+      "Visual Condition": "Clean Image (Normal)",
+      "Corpus CER": 1.9677,
+      "Delta vs Clean CER": "+0.0000",
+      "Corpus WER": 5.5833,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    },
+    {
+      "Visual Condition": "Zeroed Image (Blackout)",
+      "Corpus CER": 1.9677,
+      "Delta vs Clean CER": "+0.0000",
+      "Corpus WER": 5.5833,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    },
+    {
+      "Visual Condition": "Gaussian Blurred Image (sigma=5)",
+      "Corpus CER": 1.9677,
+      "Delta vs Clean CER": "+0.0000",
+      "Corpus WER": 5.5833,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    },
+    {
+      "Visual Condition": "Spatially Shuffled Pixels",
+      "Corpus CER": 1.9677,
+      "Delta vs Clean CER": "+0.0000",
+      "Corpus WER": 5.5833,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    },
+    {
+      "Visual Condition": "Contrast-Inverted Pixels",
+      "Corpus CER": 1.957,
+      "Delta vs Clean CER": "-0.0107",
+      "Corpus WER": 5.5,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    },
+    {
+      "Visual Condition": "Noise-Corrupted (std=0.5)",
+      "Corpus CER": 1.957,
+      "Delta vs Clean CER": "-0.0107",
+      "Corpus WER": 5.5,
+      "Char Acc (Bounded)": 0.0,
+      "Visual Feature Norm": 128.0034,
+      "Visual Feature Std": 1.0001
+    }
+  ]
+}

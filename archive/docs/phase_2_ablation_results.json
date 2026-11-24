@@ -1,0 +1,91 @@
+{
+  "benchmark_summary": {
+    "Config A: Text-only T5 Baseline": {
+      "CER": 2.6474,
+      "WER": 1.75,
+      "Char_Acc": 0.0,
+      "Word_Acc": 0.0,
+      "Exact_Match": 0.0,
+      "Budget_Violation_Chars": 7.46,
+      "Latency_Sec": 0.6359
+    },
+    "Config B: Legacy Visual Prefix Baseline": {
+      "CER": 2.6474,
+      "WER": 1.75,
+      "Char_Acc": 0.0,
+      "Word_Acc": 0.0,
+      "Exact_Match": 0.0,
+      "Budget_Violation_Chars": 7.46,
+      "Latency_Sec": 0.3843
+    },
+    "Config C: Spatial Forensic Encoder": {
+      "CER": 2.8141,
+      "WER": 1.75,
+      "Char_Acc": 0.0,
+      "Word_Acc": 0.0,
+      "Exact_Match": 0.0,
+      "Budget_Violation_Chars": 8.21,
+      "Latency_Sec": 0.8317
+    },
+    "Config D: Gated Cross-Modal Fusion": {
+      "CER": 5.752,
+      "WER": 9.5,
+      "Char_Acc": 0.0,
+      "Word_Acc": 0.0,
+      "Exact_Match": 0.0,
+      "Budget_Violation_Chars": 32.38,
+      "Latency_Sec": 0.9957
+    },
+    "Config E: Full Multimodal + Physical Budget": {
+      "CER": 3.8221,
+      "WER": 5.0,
+      "Char_Acc": 0.0,
+      "Word_Acc": 0.0,
+      "Exact_Match": 0.0,
+      "Budget_Violation_Chars": 18.38,
+      "Latency_Sec": 0.8012
+    }
+  },
+  "sensitivity_summary": {
+    "Normal Visual Crop": {
+      "CER": 3.8221,
+      "Char_Acc": 0.0,
+      "Predictions": [
+        "<pad>. et al., s.a. and n.d.</s>",
+        "<pad>. et al., s.r. and n.d.</s>",
+        "<pad>. et al., s.c. and d.</s></s></s>",
+        "<pad>. et a l'infrastructure</s></s></s></s></s>"
+      ]
+    },
+    "Zeroed Visual Features": {
+      "CER": 3.8883,
+      "Char_Acc": 0.0,
+      "Predictions": [
+        "<pad>. et al., s.r. and d.l</s></s>",
+        "<pad>. et al., s.r. and n.d.</s>",
+        "<pad>. et al., s.c. and d.</s></s></s>",
+        "<pad>. et a l'infrastructuration</s></s></s>"
+      ]
+    },
+    "Spatially Shuffled Crop": {
+      "CER": 3.8221,
+      "Char_Acc": 0.0,
+      "Predictions": [
+        "<pad>. et al., s.a. and n.d.</s>",
+        "<pad>. et al., s.r. and n.d.</s>",
+        "<pad>. et al., s.c. and d.</s></s></s>",
+        "<pad>. et a l'infrastructure</s></s></s></s></s>"
+      ]
+    },
+    "Substituted Sample Crop": {
+      "CER": 3.7633,
+      "Char_Acc": 0.0,
+      "Predictions": [
+        "<pad>. et al., s.a. and n.d.</s>",
+        "<pad>. et al., s.r. and n.d.</s>",
+        "<pad>. et al., s.c. and d.</s></s></s>",
+        "<pad>. et a l'infrastructuration</s></s></s>"
+      ]
+    }
+  }
+}

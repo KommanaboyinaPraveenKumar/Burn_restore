@@ -1,0 +1,10 @@
+Value of Information in Noncooperative Games and Strategic Networks
+Nils Bertschinger, David H. Wolpert, and Eckehard Olbrich
+Abstract. We consider the value of information in finite noncooperative games.
+In single-agent decision problems, additional information can never harm the agent.
+In multi-agent strategic settings, however, more information can alter equilibrium strategies.
+This counter-intuitive phenomenon is closely related to the famous Braess paradox.
+We analyze Cournot oligopoly models and demonstrate when information proves harmful.
+Let theta denote the private payoff state distributed according to prior distribution P.
+Each player observes a noisy signal regarding theta before choosing an action vector.
+Finally, these standard deviations quantify the severity of coordination failures.

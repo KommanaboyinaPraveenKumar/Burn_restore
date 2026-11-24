@@ -1,0 +1,900 @@
+{
+  "title": "Phase 4 Comprehensive Prediction Quality Inspection",
+  "checkpoint": "checkpoints/best_checkpoint.pt",
+  "total_samples_evaluated": 30,
+  "macro_metrics": {
+    "mean_raw_cer": 2.0192,
+    "median_raw_cer": 1.6543,
+    "mean_normalized_cer": 2.0011,
+    "mean_wer": 4.5767,
+    "mean_character_accuracy": 0.009,
+    "mean_word_accuracy": 0.0,
+    "exact_match_rate": 0.0,
+    "budget_violation_rate": 0.7667
+  },
+  "pathological_pattern_summary": {
+    "pad_token_count": 30,
+    "eos_token_count": 25,
+    "sentinel_token_count": 9,
+    "repeated_phrase_count": 0,
+    "empty_prediction_count": 2,
+    "runaway_budget_violation_count": 23,
+    "pad_token_percentage": 100.0,
+    "eos_token_percentage": 83.3,
+    "sentinel_token_percentage": 30.0,
+    "runaway_violation_percentage": 76.7
+  },
+  "diagnostic_interpretation": "The model output predominantly consists of SentencePiece subwords and punctuation fragments conditioned on the incomplete prefix. Because the model was trained for only 3 smoke epochs on 4 training pages, it has learned initial tokenization anchoring (emitting valid English subwords rather than random bytes), but lacks sufficient gradient updates from an extensive document corpus to generate continuous semantic restorations.",
+  "detailed_sample_inspections": [
+    {
+      "sample_index": 1,
+      "page_stem": "sample_page_004",
+      "line_index": 0,
+      "surviving_prefix": "NON-DISCLOSURE AND RESTORATION TECHNOLOGY",
+      "ground_truth_target": "LICENSE AGREEMENT",
+      "target_character_count": 17,
+      "physical_character_budget": 20.86,
+      "raw_model_output": "<pad>., a - e s <unk> i'  and n o t</s>",
+      "restored_prediction": "<pad>., a - e s <unk> i'  and n o t</s>",
+      "generated_character_count": 39,
+      "metrics": {
+        "raw_cer": 2.2353,
+        "normalized_cer": 2.1765,
+        "wer": 5.5,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 2,
+      "page_stem": "sample_page_004",
+      "line_index": 1,
+      "surviving_prefix": "This Agreement is entered into by and between the Research",
+      "ground_truth_target": "Institute and Licensee.",
+      "target_character_count": 23,
+      "physical_character_budget": 20.86,
+      "raw_model_output": "<pad>., a - s <unk> i' and / __ e :</s>",
+      "restored_prediction": "<pad>., a - s <unk> i' and / __ e :</s>",
+      "generated_character_count": 39,
+      "metrics": {
+        "raw_cer": 1.3913,
+        "normalized_cer": 1.3913,
+        "wer": 3.3333,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 3,
+      "page_stem": "sample_page_004",
+      "line_index": 2,
+      "surviving_prefix": "1. Confidential Information. All proprietary models, weights, and",
+      "ground_truth_target": "dataset manifests",
+      "target_character_count": 17,
+      "physical_character_budget": 20.07,
+      "raw_model_output": "<pad>., - a s <unk> i o e  and <extra_id_1>.. the</s>",
+      "restored_prediction": "<pad>., - a s <unk> i o e  and",
+      "generated_character_count": 30,
+      "metrics": {
+        "raw_cer": 1.4706,
+        "normalized_cer": 1.4118,
+        "wer": 4.5,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 4,
+      "page_stem": "sample_page_004",
+      "line_index": 3,
+      "surviving_prefix": "shall be preserved with strict confidentiality and protected against",
+      "ground_truth_target": "unauthorized disclosure.",
+      "target_character_count": 24,
+      "physical_character_budget": 18.07,
+      "raw_model_output": "<pad>., - a s <unk> e i n'o t and</s>",
+      "restored_prediction": "<pad>., - a s <unk> e i n'o t and</s>",
+      "generated_character_count": 37,
+      "metrics": {
+        "raw_cer": 1.375,
+        "normalized_cer": 1.375,
+        "wer": 5.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 5,
+      "page_stem": "sample_page_004",
+      "line_index": 4,
+      "surviving_prefix": "2. Permitted Use. The framework shall be utilized solely for academic",
+      "ground_truth_target": "verification.",
+      "target_character_count": 13,
+      "physical_character_budget": 18.14,
+      "raw_model_output": "<pad>., a - e s <unk> i o n'  and</s>",
+      "restored_prediction": "<pad>., a - e s <unk> i o n'  and</s>",
+      "generated_character_count": 37,
+      "metrics": {
+        "raw_cer": 2.5385,
+        "normalized_cer": 2.4615,
+        "wer": 10.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 6,
+      "page_stem": "sample_page_004",
+      "line_index": 5,
+      "surviving_prefix": "3. Term and Termination. This license remains in full effect until",
+      "ground_truth_target": "formally terminated.",
+      "target_character_count": 20,
+      "physical_character_budget": 19.36,
+      "raw_model_output": "<pad>., a - e s <unk> n' and / : i</s>",
+      "restored_prediction": "<pad>., a - e s <unk> n' and / : i</s>",
+      "generated_character_count": 38,
+      "metrics": {
+        "raw_cer": 1.7,
+        "normalized_cer": 1.7,
+        "wer": 5.5,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 7,
+      "page_stem": "sample_page_004",
+      "line_index": 6,
+      "surviving_prefix": "IN WITNESS WHEREOF, the parties hereto have executed this Agreement",
+      "ground_truth_target": "as of the date below.",
+      "target_character_count": 21,
+      "physical_character_budget": 16.36,
+      "raw_model_output": "<pad>., a - e s <unk> n' and /</s>",
+      "restored_prediction": "<pad>., a - e s <unk> n' and /</s>",
+      "generated_character_count": 34,
+      "metrics": {
+        "raw_cer": 1.381,
+        "normalized_cer": 1.381,
+        "wer": 1.8,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 8,
+      "page_stem": "sample_page_002",
+      "line_index": 2,
+      "surviving_prefix": "Lemma 5.1. Suppose that the sequence of partial projections converges",
+      "ground_truth_target": "strongly to unity.",
+      "target_character_count": 18,
+      "physical_character_budget": 13.71,
+      "raw_model_output": "<pad>., a's - e : <unk> __ f</s>",
+      "restored_prediction": "<pad>., a's - e : <unk> __ f</s>",
+      "generated_character_count": 32,
+      "metrics": {
+        "raw_cer": 1.5556,
+        "normalized_cer": 1.5556,
+        "wer": 2.6667,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 9,
+      "page_stem": "sample_page_002",
+      "line_index": 3,
+      "surviving_prefix": "Then the corresponding sequence of spectral approximations satisfies inequality",
+      "ground_truth_target": "(18).",
+      "target_character_count": 5,
+      "physical_character_budget": 12.29,
+      "raw_model_output": "<pad> - a's, <unk>. : \u2019 n \u2013</s>",
+      "restored_prediction": "<pad> - a's, <unk>. : \u2019 n \u2013</s>",
+      "generated_character_count": 31,
+      "metrics": {
+        "raw_cer": 6.0,
+        "normalized_cer": 6.0,
+        "wer": 8.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 10,
+      "page_stem": "sample_page_003",
+      "line_index": 2,
+      "surviving_prefix": "Compound 4b demonstrated exceptional in vitro potency against",
+      "ground_truth_target": "the kinase domain.",
+      "target_character_count": 18,
+      "physical_character_budget": 22.43,
+      "raw_model_output": "<pad>. :, - e s a i o <unk> n t d  and</s>",
+      "restored_prediction": "<pad>. :, - e s a i o <unk> n t d  and</s>",
+      "generated_character_count": 42,
+      "metrics": {
+        "raw_cer": 1.9444,
+        "normalized_cer": 1.9444,
+        "wer": 4.3333,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 11,
+      "page_stem": "sample_page_003",
+      "line_index": 3,
+      "surviving_prefix": "Half-maximal inhibitory concentration (IC50) was determined to be",
+      "ground_truth_target": "4.2 nanomolar.",
+      "target_character_count": 14,
+      "physical_character_budget": 21.21,
+      "raw_model_output": "<pad>., a - e s <unk> t :'o d n ;  and</s>",
+      "restored_prediction": "<pad>., a - e s <unk> t :'o d n ;  and</s>",
+      "generated_character_count": 42,
+      "metrics": {
+        "raw_cer": 2.6429,
+        "normalized_cer": 2.5714,
+        "wer": 6.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 12,
+      "page_stem": "sample_page_003",
+      "line_index": 4,
+      "surviving_prefix": "Liquid chromatography mass spectrometry confirmed plasma stability",
+      "ground_truth_target": "exceeding four hours.",
+      "target_character_count": 21,
+      "physical_character_budget": 17.64,
+      "raw_model_output": "<pad>., - e s a i o t : <unk>   and</s>",
+      "restored_prediction": "<pad>., - e s a i o t : <unk>   and</s>",
+      "generated_character_count": 39,
+      "metrics": {
+        "raw_cer": 1.5714,
+        "normalized_cer": 1.4762,
+        "wer": 3.6667,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 13,
+      "page_stem": "sample_page_003",
+      "line_index": 5,
+      "surviving_prefix": "Metabolic degradation yielded two primary hydroxylated metabolites in",
+      "ground_truth_target": "microsomal assays.",
+      "target_character_count": 18,
+      "physical_character_budget": 19.79,
+      "raw_model_output": "<pad>., - e s a i o d <unk> t : '</s>",
+      "restored_prediction": "<pad>., - e s a i o d <unk> t : '</s>",
+      "generated_character_count": 37,
+      "metrics": {
+        "raw_cer": 1.8333,
+        "normalized_cer": 1.8333,
+        "wer": 6.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 14,
+      "page_stem": "sample_page_003",
+      "line_index": 6,
+      "surviving_prefix": "No significant inhibition of cytochrome P450 isoforms was observed",
+      "ground_truth_target": "below ten micromolar.",
+      "target_character_count": 21,
+      "physical_character_budget": 22.21,
+      "raw_model_output": "<pad>., a - e s : <unk> o i t  and  '</s>",
+      "restored_prediction": "<pad>., a - e s : <unk> o i t  and  '</s>",
+      "generated_character_count": 41,
+      "metrics": {
+        "raw_cer": 1.7143,
+        "normalized_cer": 1.619,
+        "wer": 4.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 15,
+      "page_stem": "sample_page_003",
+      "line_index": 7,
+      "surviving_prefix": "These findings establish compound 4b as a viable candidate for",
+      "ground_truth_target": "preclinical evaluation.",
+      "target_character_count": 23,
+      "physical_character_budget": 21.43,
+      "raw_model_output": "<pad>. : a, - s'e i <unk> t d n \u2019   and</s>",
+      "restored_prediction": "<pad>. : a, - s'e i <unk> t d n \u2019   and</s>",
+      "generated_character_count": 43,
+      "metrics": {
+        "raw_cer": 1.6087,
+        "normalized_cer": 1.5217,
+        "wer": 6.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 16,
+      "page_stem": "sample_page_005",
+      "line_index": 0,
+      "surviving_prefix": "On the Solvability of Non-Linear Boundary Value Problems in Fluid",
+      "ground_truth_target": "Dynamics",
+      "target_character_count": 8,
+      "physical_character_budget": 18.0,
+      "raw_model_output": "<pad><extra_id_0> <extra_id_1>. <unk><extra_id_2> - <extra_id_3> <extra_id_4> <extra_id_5> <extra_id_6> <extra_id_7> <extra_id_8> <extra_id_9> <extra_id_10> <extra_id_11> <extra_id_12> <extra_id_13>",
+      "restored_prediction": "",
+      "generated_character_count": 0,
+      "metrics": {
+        "raw_cer": 1.0,
+        "normalized_cer": 1.0,
+        "wer": 1.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": false,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": true,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 17,
+      "page_stem": "sample_page_005",
+      "line_index": 1,
+      "surviving_prefix": "Consider the stationary Navier-Stokes equations governing incompressible",
+      "ground_truth_target": "viscous flow:",
+      "target_character_count": 13,
+      "physical_character_budget": 18.57,
+      "raw_model_output": "<pad>., a - e s <unk> o :'i __ f</s>",
+      "restored_prediction": "<pad>., a - e s <unk> o :'i __ f</s>",
+      "generated_character_count": 36,
+      "metrics": {
+        "raw_cer": 2.4615,
+        "normalized_cer": 2.4615,
+        "wer": 5.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 18,
+      "page_stem": "sample_page_005",
+      "line_index": 5,
+      "surviving_prefix": "The regularity of pressure p follows from the classical de Rham",
+      "ground_truth_target": "decomposition theorem.",
+      "target_character_count": 22,
+      "physical_character_budget": 19.0,
+      "raw_model_output": "<pad>., a - e s <unk> t :'o f i _</s>",
+      "restored_prediction": "<pad>., a - e s <unk> t :'o f i _</s>",
+      "generated_character_count": 37,
+      "metrics": {
+        "raw_cer": 1.4545,
+        "normalized_cer": 1.4545,
+        "wer": 5.5,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 19,
+      "page_stem": "sample_page_005",
+      "line_index": 6,
+      "surviving_prefix": "Numerical simulations were performed using quadratic Lagrange finite",
+      "ground_truth_target": "elements.",
+      "target_character_count": 9,
+      "physical_character_budget": 19.0,
+      "raw_model_output": "<pad><extra_id_0>..<extra_id_1> :<extra_id_2>.<extra_id_3>.<extra_id_4> -<extra_id_5>. <extra_id_6>.<extra_id_7>.<extra_id_8> <extra_id_9>.<extra_id_10>.<extra_id_11>.<extra_id_12>.<extra_id_13>",
+      "restored_prediction": "..",
+      "generated_character_count": 2,
+      "metrics": {
+        "raw_cer": 0.8889,
+        "normalized_cer": 0.8889,
+        "wer": 1.0,
+        "character_accuracy": 0.1111,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": false,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 20,
+      "page_stem": "sample_page_001",
+      "line_index": 3,
+      "surviving_prefix": "In single-agent decision problems, additional information can never harm the",
+      "ground_truth_target": "agent.",
+      "target_character_count": 6,
+      "physical_character_budget": 14.36,
+      "raw_model_output": "<pad><extra_id_0> a broader definition</s>",
+      "restored_prediction": "a broader definition</s>",
+      "generated_character_count": 24,
+      "metrics": {
+        "raw_cer": 3.3333,
+        "normalized_cer": 3.3333,
+        "wer": 3.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 21,
+      "page_stem": "sample_page_001",
+      "line_index": 4,
+      "surviving_prefix": "In multi-agent strategic settings, however, more information can alter equilibrium",
+      "ground_truth_target": "strategies.",
+      "target_character_count": 11,
+      "physical_character_budget": 14.36,
+      "raw_model_output": "<pad><extra_id_0>,<extra_id_1> the<extra_id_2>. <unk> <extra_id_3> \u2013<extra_id_4> <extra_id_5> \u2014<extra_id_6> <extra_id_7> <extra_id_8> <extra_id_9>.<extra_id_10> and</s>",
+      "restored_prediction": ",",
+      "generated_character_count": 1,
+      "metrics": {
+        "raw_cer": 1.0,
+        "normalized_cer": 1.0,
+        "wer": 1.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 22,
+      "page_stem": "sample_page_001",
+      "line_index": 5,
+      "surviving_prefix": "This counter-intuitive phenomenon is closely related to the famous Braess",
+      "ground_truth_target": "paradox.",
+      "target_character_count": 8,
+      "physical_character_budget": 15.21,
+      "raw_model_output": "<pad>., a - e s <unk> n : i '</s>",
+      "restored_prediction": "<pad>., a - e s <unk> n : i '</s>",
+      "generated_character_count": 33,
+      "metrics": {
+        "raw_cer": 3.75,
+        "normalized_cer": 3.75,
+        "wer": 10.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 23,
+      "page_stem": "sample_page_001",
+      "line_index": 6,
+      "surviving_prefix": "We analyze Cournot oligopoly models and demonstrate when information",
+      "ground_truth_target": "proves harmful.",
+      "target_character_count": 15,
+      "physical_character_budget": 16.71,
+      "raw_model_output": "<pad><extra_id_0> a<extra_id_1>,<extra_id_2>,<extra_id_3>,<extra_id_4> and<extra_id_5>. <unk><extra_id_6> \u2013<extra_id_7> <extra_id_8> -<extra_id_9> \u2014<extra_id_10>.<extra_id_11> the</s>",
+      "restored_prediction": "a",
+      "generated_character_count": 1,
+      "metrics": {
+        "raw_cer": 0.9333,
+        "normalized_cer": 0.9333,
+        "wer": 1.0,
+        "character_accuracy": 0.0667,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 24,
+      "page_stem": "sample_page_001",
+      "line_index": 7,
+      "surviving_prefix": "Let theta denote the private payoff state distributed according to prior",
+      "ground_truth_target": "distribution P.",
+      "target_character_count": 15,
+      "physical_character_budget": 18.57,
+      "raw_model_output": "<pad>, a - e s. : <unk> n \u2019\u2019 and</s>",
+      "restored_prediction": "<pad>, a - e s. : <unk> n \u2019\u2019 and</s>",
+      "generated_character_count": 36,
+      "metrics": {
+        "raw_cer": 2.0667,
+        "normalized_cer": 2.0667,
+        "wer": 5.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 25,
+      "page_stem": "sample_page_001",
+      "line_index": 8,
+      "surviving_prefix": "Each player observes a noisy signal regarding theta before choosing an",
+      "ground_truth_target": "action vector.",
+      "target_character_count": 14,
+      "physical_character_budget": 18.0,
+      "raw_model_output": "<pad><extra_id_0>,<extra_id_1> and<extra_id_2>.<extra_id_3> \u2013<extra_id_4> <extra_id_5> <unk><extra_id_6> <extra_id_7> <extra_id_8> <extra_id_9> a<extra_id_10>.<extra_id_11>.<extra_id_12> -<extra_id_13>",
+      "restored_prediction": ",",
+      "generated_character_count": 1,
+      "metrics": {
+        "raw_cer": 1.0,
+        "normalized_cer": 1.0,
+        "wer": 1.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": false,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 26,
+      "page_stem": "sample_page_001",
+      "line_index": 9,
+      "surviving_prefix": "Finally, these standard deviations quantify the severity of coordination",
+      "ground_truth_target": "failures.",
+      "target_character_count": 9,
+      "physical_character_budget": 20.0,
+      "raw_model_output": "<pad>., a - s \u2013 e : <unk> n \u2019\u2019 i '</s>",
+      "restored_prediction": "<pad>., a - s \u2013 e : <unk> n \u2019\u2019 i '</s>",
+      "generated_character_count": 38,
+      "metrics": {
+        "raw_cer": 3.8889,
+        "normalized_cer": 3.8889,
+        "wer": 12.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 27,
+      "page_stem": "sample_page_006",
+      "line_index": 1,
+      "surviving_prefix": "The restoration of damaged papyri presents profound epigraphic",
+      "ground_truth_target": "challenges.",
+      "target_character_count": 11,
+      "physical_character_budget": 16.21,
+      "raw_model_output": "<pad><extra_id_0>.<extra_id_1>. <unk><extra_id_2>.<extra_id_3>.<extra_id_4>.<extra_id_5>.<extra_id_6>.<extra_id_7>.<extra_id_8>.<extra_id_9>.<extra_id_10>.<extra_id_11>.<extra_id_12>.<extra_id_13>.<extra_id_14>",
+      "restored_prediction": ".",
+      "generated_character_count": 1,
+      "metrics": {
+        "raw_cer": 0.9091,
+        "normalized_cer": 0.9091,
+        "wer": 1.0,
+        "character_accuracy": 0.0909,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": false,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 28,
+      "page_stem": "sample_page_006",
+      "line_index": 2,
+      "surviving_prefix": "Where mechanical abrasion or scorch damage has obliterated the margin",
+      "ground_truth_target": "glyphs,",
+      "target_character_count": 7,
+      "physical_character_budget": 16.21,
+      "raw_model_output": "<pad>., i et a s - o re en</s>",
+      "restored_prediction": "<pad>., i et a s - o re en</s>",
+      "generated_character_count": 30,
+      "metrics": {
+        "raw_cer": 4.1429,
+        "normalized_cer": 4.1429,
+        "wer": 9.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 29,
+      "page_stem": "sample_page_006",
+      "line_index": 4,
+      "surviving_prefix": "Careful microscopic examination reveals surviving ink filaments under",
+      "ground_truth_target": "infrared lighting.",
+      "target_character_count": 18,
+      "physical_character_budget": 16.21,
+      "raw_model_output": "<pad><extra_id_0> <extra_id_1>.<extra_id_2>.<extra_id_3>. <extra_id_4> : <extra_id_5> <extra_id_6> <extra_id_7> <extra_id_8> -<extra_id_9> <unk><extra_id_10> <extra_id_11>.<extra_id_12> ",
+      "restored_prediction": "",
+      "generated_character_count": 0,
+      "metrics": {
+        "raw_cer": 1.0,
+        "normalized_cer": 1.0,
+        "wer": 1.0,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": false,
+        "has_t5_sentinel_tokens": true,
+        "has_repeated_phrases": false,
+        "is_empty": true,
+        "is_runaway_generation": false,
+        "has_target_character_overlap": false
+      }
+    },
+    {
+      "sample_index": 30,
+      "page_stem": "sample_page_006",
+      "line_index": 5,
+      "surviving_prefix": "Reconstruction proceeds by matching letter spacing against known",
+      "ground_truth_target": "scribal hands.",
+      "target_character_count": 14,
+      "physical_character_budget": 16.21,
+      "raw_model_output": "<pad>., i e a s tt er o en</s>",
+      "restored_prediction": "<pad>., i e a s tt er o en</s>",
+      "generated_character_count": 30,
+      "metrics": {
+        "raw_cer": 1.7857,
+        "normalized_cer": 1.7857,
+        "wer": 4.5,
+        "character_accuracy": 0.0,
+        "word_accuracy": 0.0,
+        "exact_match_line": 0
+      },
+      "pathological_patterns": {
+        "has_pad_token": true,
+        "has_eos_token": true,
+        "has_t5_sentinel_tokens": false,
+        "has_repeated_phrases": false,
+        "is_empty": false,
+        "is_runaway_generation": true,
+        "has_target_character_overlap": false
+      }
+    }
+  ]
+}

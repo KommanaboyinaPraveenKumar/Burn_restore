@@ -11,7 +11,7 @@ data/
 *.zip
 
 # Model Checkpoints / Weights (>100MB exceeds GitHub limits)
-checkpoints/*.pt
+checkpoints/**/*.pt
 checkpoints/*.pth
 checkpoints/*.bin
 checkpoints/*.safetensors
@@ -31,3 +31,7 @@ env/
 .DS_Store
 Thumbs.db
 .idea/
+
+# Generated evaluation outputs (line_eval*.json are kept: the README cites them)
+results/smoke_eval.json
+results/test_integration_output/

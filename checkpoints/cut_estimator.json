@@ -1,0 +1,39 @@
+{
+  "ub_ratio": 1.1391725402810324,
+  "ub_add": 1.0,
+  "coverage": 0.99,
+  "report": {
+    "val": {
+      "n": 3961,
+      "offset_mae_px": {
+        "fixed": 7.01,
+        "predicted": 0.99
+      },
+      "estimate_mae_chars": {
+        "fixed_cut": 2.536,
+        "predicted_cut": 2.246,
+        "oracle_cut": 2.245
+      },
+      "truth_exceeds_old_rule(b+2)": 0.0611,
+      "truth_within_upper": 0.9899,
+      "mean_upper_slack_chars": 4.7,
+      "nominal_cut_upper_slack_chars": 5.72
+    },
+    "test": {
+      "n": 6145,
+      "offset_mae_px": {
+        "fixed": 7.26,
+        "predicted": 0.96
+      },
+      "estimate_mae_chars": {
+        "fixed_cut": 2.477,
+        "predicted_cut": 2.154,
+        "oracle_cut": 2.149
+      },
+      "truth_exceeds_old_rule(b+2)": 0.0755,
+      "truth_within_upper": 0.988,
+      "mean_upper_slack_chars": 4.57,
+      "nominal_cut_upper_slack_chars": 5.53
+    }
+  }
+}

@@ -8,7 +8,7 @@ log a warning and return ``None`` so the caller can skip that sample.
 """
 
 import warnings
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
@@ -36,8 +36,10 @@ def compute_ssim(img_a: np.ndarray, img_b: np.ndarray) -> Optional[float]:
     """Structural Similarity Index. Falls back gracefully if scikit-image
     is unavailable or inputs are degenerate (too small, mismatched, etc.)."""
     try:
-        from skimage.metrics import structural_similarity as ssim
-    except ImportError:
+        import importlib
+        skimage_metrics = importlib.import_module("skimage.metrics")
+        ssim = getattr(skimage_metrics, "structural_similarity")
+    except Exception:
         warnings.warn("[metrics] scikit-image not installed; SSIM skipped.")
         return None
     try:
@@ -58,8 +60,27 @@ def compute_ssim(img_a: np.ndarray, img_b: np.ndarray) -> Optional[float]:
 
 
 # ---------------------------------------------------------------------- #
-# Text metrics
+# Text normalization & helpers
 # ---------------------------------------------------------------------- #
+import unicodedata
+
+def normalize_text(text: str) -> str:
+    """Decomposes LaTeX/PDF ligatures (fi, fl, ffi) and normalizes curly quotes,
+    dashes, and typographical variants so edit distance measures true semantic content
+    rather than unicode encoding differences."""
+    if not text:
+        return ""
+    # Unicode NFKD decomposition: \ufb01 ('fi') -> 'f' + 'i'
+    s = unicodedata.normalize('NFKD', text)
+    # Typography normalization
+    s = s.replace('\u2019', "'").replace('\u2018', "'")
+    s = s.replace('\u201c', '"').replace('\u201d', '"')
+    s = s.replace('\u2014', "-").replace('\u2013', "-").replace('\u2212', "-")
+    # Collapse multiple whitespaces
+    s = " ".join(s.split())
+    return s.strip()
+
+
 def _levenshtein(a: str, b: str) -> int:
     """Classic O(len(a)*len(b)) edit-distance dynamic program (no external
     dependency required)."""
@@ -78,11 +99,31 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[m]
 
 
+def _levenshtein_tokens(a: List[str], b: List[str]) -> int:
+    """Token-level / word-level Levenshtein edit distance."""
+    n, m = len(a), len(b)
+    if n == 0:
+        return m
+    if m == 0:
+        return n
+    prev = list(range(m + 1))
+    for i in range(1, n + 1):
+        curr = [i] + [0] * m
+        for j in range(1, m + 1):
+            cost = 0 if a[i - 1] == b[j - 1] else 1
+            curr[j] = min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost)
+        prev = curr
+    return prev[m]
+
+
+# ---------------------------------------------------------------------- #
+# Text metrics (CER, WER, Token Accuracy, Character & Word Accuracy)
+# ---------------------------------------------------------------------- #
 def compute_cer(pred_text: str, target_text: str) -> Optional[float]:
     """Character Error Rate = edit_distance / max(1, len(target))."""
     try:
         if len(target_text) == 0:
-            return None if len(pred_text) == 0 else 1.0
+            return 0.0 if len(pred_text) == 0 else 1.0
         dist = _levenshtein(pred_text, target_text)
         return dist / max(len(target_text), 1)
     except Exception as exc:  # pragma: no cover - defensive guard
@@ -90,25 +131,220 @@ def compute_cer(pred_text: str, target_text: str) -> Optional[float]:
         return None
 
 
+def compute_wer(pred_text: str, target_text: str) -> Optional[float]:
+    """Word Error Rate = edit_distance(pred_words, target_words) / max(1, len(target_words)).
+    Strictly accounts for insertions, deletions, and substitutions at word level."""
+    try:
+        norm_pred = normalize_text(pred_text)
+        norm_target = normalize_text(target_text)
+        p_words = norm_pred.split()
+        t_words = norm_target.split()
+        if len(t_words) == 0:
+            return 0.0 if len(p_words) == 0 else 1.0
+        dist = _levenshtein_tokens(p_words, t_words)
+        return float(dist / len(t_words))
+    except Exception as exc:  # pragma: no cover - defensive guard
+        warnings.warn(f"[metrics] WER computation failed gracefully: {exc}")
+        return None
+
+
+def compute_character_accuracy(pred_text: str, target_text: str) -> float:
+    """Edit-distance-derived character accuracy: 1.0 - CER, clamped to [0.0, 1.0].
+    Strictly distinct from position-based character accuracy."""
+    norm_pred = normalize_text(pred_text)
+    norm_target = normalize_text(target_text)
+    if not norm_target:
+        return 1.0 if not norm_pred else 0.0
+    cer = compute_cer(norm_pred, norm_target)
+    return float(max(0.0, 1.0 - (cer if cer is not None else 1.0)))
+
+
+def compute_position_character_accuracy(pred_text: str, target_text: str) -> float:
+    """Position-based character accuracy: computes exact character matches at identical
+    indices divided by max(len(pred), len(target)). Penalizes misalignment shifts.
+    Never interchangeable with Levenshtein-derived character accuracy."""
+    norm_p = normalize_text(pred_text)
+    norm_t = normalize_text(target_text)
+    max_len = max(len(norm_p), len(norm_t))
+    if max_len == 0:
+        return 1.0
+    min_len = min(len(norm_p), len(norm_t))
+    matches = sum(1 for i in range(min_len) if norm_p[i] == norm_t[i])
+    return float(matches / max_len)
+
+
+def compute_detailed_levenshtein_rates(pred_text: str, target_text: str) -> Dict[str, float]:
+    """Computes exact counts and rates of insertions, deletions, and substitutions
+    relative to target length:
+      insertion_rate = insertions / max(1, len(target))
+      deletion_rate = deletions / max(1, len(target))
+      substitution_rate = substitutions / max(1, len(target))
+    """
+    p_norm = normalize_text(pred_text)
+    t_norm = normalize_text(target_text)
+    n, m = len(p_norm), len(t_norm)
+
+    dp = np.zeros((n + 1, m + 1), dtype=int)
+    for i in range(n + 1):
+        dp[i, 0] = i
+    for j in range(m + 1):
+        dp[0, j] = j
+
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            cost = 0 if p_norm[i - 1] == t_norm[j - 1] else 1
+            dp[i, j] = min(dp[i - 1, j] + 1, dp[i, j - 1] + 1, dp[i - 1, j - 1] + cost)
+
+    i, j = n, m
+    insertions = 0
+    deletions = 0
+    substitutions = 0
+    matches = 0
+
+    while i > 0 or j > 0:
+        if i > 0 and j > 0 and dp[i, j] == dp[i - 1, j - 1] and p_norm[i - 1] == t_norm[j - 1]:
+            matches += 1
+            i -= 1
+            j -= 1
+        elif i > 0 and j > 0 and dp[i, j] == dp[i - 1, j - 1] + 1:
+            substitutions += 1
+            i -= 1
+            j -= 1
+        elif i > 0 and dp[i, j] == dp[i - 1, j] + 1:
+            insertions += 1
+            i -= 1
+        else:
+            deletions += 1
+            j -= 1
+
+    denom = max(1, m)
+    return {
+        "matches": matches,
+        "insertions": insertions,
+        "deletions": deletions,
+        "substitutions": substitutions,
+        "total_edits": insertions + deletions + substitutions,
+        "insertion_rate": round(float(insertions / denom), 4),
+        "deletion_rate": round(float(deletions / denom), 4),
+        "substitution_rate": round(float(substitutions / denom), 4),
+    }
+
+
+def compute_physical_grounding_metrics(
+    pred_text: str,
+    target_text: str,
+    budget: float,
+    buffer: float = 2.0,
+) -> Dict[str, Any]:
+    """Computes physical budget compliance, excess characters, and over/under generation."""
+    pred_len = len(normalize_text(pred_text))
+    targ_len = len(normalize_text(target_text))
+
+    excess = max(0.0, float(pred_len - (budget + buffer)))
+    is_violation = excess > 0.0
+
+    len_diff = pred_len - targ_len
+    over_gen = len_diff > 2
+    under_gen = len_diff < -2
+
+    # Visually supported character estimate (character matches supported by visual crop length)
+    rates = compute_detailed_levenshtein_rates(pred_text, target_text)
+    vis_supported_rate = round(float(rates["matches"] / max(1, targ_len)), 4)
+
+    return {
+        "budget_violation": is_violation,
+        "budget_excess_chars": round(excess, 2),
+        "over_generated": over_gen,
+        "under_generated": under_gen,
+        "length_difference": len_diff,
+        "visually_supported_rate": vis_supported_rate,
+        "eos_compliant": "<extra_id" not in pred_text and "<pad>" not in pred_text,
+    }
+
+
+def compute_region_bounded_psnr_ssim(
+    clean_img: np.ndarray,
+    restored_img: np.ndarray,
+    burn_x_start: int,
+) -> Dict[str, Optional[float]]:
+    """Calculates PSNR and SSIM bounded strictly to the restoration region (x >= burn_x_start).
+    Ensures undamaged document content does not artificially inflate image restoration scores."""
+    if clean_img.shape != restored_img.shape:
+        return {"bounded_psnr": None, "bounded_ssim": None}
+
+    w = clean_img.shape[1]
+    x0 = max(0, min(burn_x_start, w - 10))
+    region_clean = clean_img[:, x0:]
+    region_restored = restored_img[:, x0:]
+
+    psnr = compute_psnr(region_clean, region_restored)
+    ssim = compute_ssim(region_clean, region_restored)
+    return {"bounded_psnr": psnr, "bounded_ssim": ssim}
+
+
+def compute_word_accuracy(pred_text: str, target_text: str) -> float:
+    """Word-level accuracy: 1.0 - WER, clamped to [0.0, 1.0]."""
+    wer = compute_wer(pred_text, target_text)
+    return float(max(0.0, 1.0 - (wer if wer is not None else 1.0)))
+
+
+def compute_exact_match_line_accuracy(pred_text: str, target_text: str) -> float:
+    """Exact-match line accuracy: 1.0 if normalized strings match identically, else 0.0."""
+    norm_pred = normalize_text(pred_text).strip().lower()
+    norm_target = normalize_text(target_text).strip().lower()
+    return 1.0 if norm_pred == norm_target else 0.0
+
+
+def compute_exact_match_document_accuracy(pred_lines: List[str], target_lines: List[str]) -> float:
+    """Exact-match document accuracy: 1.0 if all lines match identically, else 0.0."""
+    if len(pred_lines) != len(target_lines) or len(target_lines) == 0:
+        return 0.0
+    for p, t in zip(pred_lines, target_lines):
+        if normalize_text(p).strip().lower() != normalize_text(t).strip().lower():
+            return 0.0
+    return 1.0
+
+
 def compute_token_accuracy(pred_ids: torch.Tensor, target_ids: torch.Tensor, pad_id: int) -> Optional[float]:
-    """Token‑level accuracy ignoring padding positions.
-    Truncates both sequences to the shorter length, masks out padding tokens in the
-    target, and returns the fraction of correct predictions as a float in [0, 1].
-    Returns ``None`` if there are no non‑pad tokens.
+    """Token-level accuracy evaluating against the entire non-padding target sequence.
+    
+    Fixes the Phase 0 min_len truncation flaw:
+    Previously, sequences were sliced to min_len, so predicting only the first token
+    of a 15-token target returned 100% accuracy.
+    
+    Now:
+      1. Strips pad tokens from both sequences.
+      2. Compares token-by-token.
+      3. Denominator is max(len(target_tokens), len(pred_tokens)).
+      4. Missing target tokens and extra inserted tokens are strictly penalized.
+    Returns float in [0.0, 1.0], or None if target is empty.
     """
     try:
-        # Align lengths
-        min_len = min(pred_ids.shape[0], target_ids.shape[0])
-        pred = pred_ids[:min_len]
-        target = target_ids[:min_len]
-        # Mask out padding tokens in the target
-        mask = target != pad_id
-        if mask.sum().item() == 0:
-            return None
-        correct = (pred == target) & mask
-        # Compute proportion and ensure it does not exceed 1.0 due to numerical issues
-        acc = correct.sum().float() / mask.sum().float()
-        return float(min(acc.item(), 1.0))
+        # Handle 1D or 2D inputs
+        if pred_ids.dim() > 1:
+            pred_ids = pred_ids.squeeze()
+        if target_ids.dim() > 1:
+            target_ids = target_ids.squeeze()
+
+        # Extract non-pad tokens
+        target_tokens = target_ids[target_ids != pad_id]
+        pred_tokens = pred_ids[pred_ids != pad_id]
+
+        target_len = target_tokens.size(0)
+        pred_len = pred_tokens.size(0)
+
+        if target_len == 0:
+            return 1.0 if pred_len == 0 else 0.0
+
+        min_len = min(pred_len, target_len)
+        max_len = max(pred_len, target_len)
+
+        if min_len == 0:
+            return 0.0
+
+        matches = (pred_tokens[:min_len] == target_tokens[:min_len]).sum().float().item()
+        acc = matches / float(max_len)
+        return float(min(max(acc, 0.0), 1.0))
     except Exception as exc:  # pragma: no cover - defensive guard
         warnings.warn(f"[metrics] Token accuracy computation failed gracefully: {exc}")
         return None
@@ -219,26 +455,9 @@ def extract_infill_text(raw_decoded: str) -> str:
 
 
 # ---------------------------------------------------------------------- #
-# Option 1: Literature-Aligned Normalization & Multi-Candidate Metrics
+# Literature-Aligned Multi-Candidate Metrics & UCSM
 # (Ref: Google DeepMind Ithaca & CVPR 2024 DocRevive UCSM)
 # ---------------------------------------------------------------------- #
-import unicodedata
-
-def normalize_text(text: str) -> str:
-    """Decomposes LaTeX/PDF ligatures (fi, fl, ffi) and normalizes curly quotes,
-    dashes, and typographical variants so edit distance measures true semantic content
-    rather than unicode encoding differences."""
-    if not text:
-        return ""
-    # Unicode NFKD decomposition: \ufb01 ('fi') -> 'f' + 'i'
-    s = unicodedata.normalize('NFKD', text)
-    # Typography normalization
-    s = s.replace('\u2019', "'").replace('\u2018', "'")
-    s = s.replace('\u201c', '"').replace('\u201d', '"')
-    s = s.replace('\u2014', "-").replace('\u2013', "-").replace('\u2212', "-")
-    # Collapse multiple whitespaces
-    s = " ".join(s.split())
-    return s.strip()
 
 
 def compute_normalized_cer(pred_text: str, target_text: str) -> Optional[float]:
@@ -288,5 +507,143 @@ def compute_ucsm(
     # 3. Composite UCSM
     ucsm = 0.35 * sim_edit + 0.35 * rouge + 0.15 * bleu + 0.15 * sim_len
     return float(np.clip(ucsm, 0.0, 1.0))
+
+
+# ---------------------------------------------------------------------- #
+# Canonical Corpus-Level Evaluation Protocol
+# ---------------------------------------------------------------------- #
+def compute_corpus_evaluation(
+    predictions: List[str],
+    targets: List[str],
+    budgets: Optional[List[float]] = None,
+    margin_buffer: float = 2.0,
+) -> Dict[str, Any]:
+    """Authoritative, canonical corpus evaluation protocol for the benchmark.
+    
+    Computes both:
+      1. Micro-averaged corpus metrics:
+         Corpus CER = sum(edit_dist_char) / sum(target_chars)
+         Corpus WER = sum(edit_dist_word) / sum(target_words)
+      2. Macro-averaged sample metrics:
+         Macro CER = mean(sample_cer)
+         Macro WER = mean(sample_wer)
+      3. Bounded accuracy, exact match, BLEU-4, ROUGE-L, and independent
+         decoder-level vs post-processed budget violation rates.
+    """
+    assert len(predictions) == len(targets), (
+        f"Length mismatch: {len(predictions)} predictions vs {len(targets)} targets."
+    )
+    n = len(targets)
+    if n == 0:
+        return {
+            "sample_count": 0,
+            "corpus_cer": 0.0,
+            "corpus_wer": 0.0,
+            "macro_cer": 0.0,
+            "macro_wer": 0.0,
+            "char_accuracy": 0.0,
+            "exact_match_rate": 0.0,
+            "bleu_4": 0.0,
+            "rouge_l": 0.0,
+            "decoder_budget_violation_rate": 0.0,
+        }
+
+    total_char_dist = 0
+    total_target_chars = 0
+    total_word_dist = 0
+    total_target_words = 0
+
+    sample_cers: List[float] = []
+    sample_wers: List[float] = []
+    char_accuracies: List[float] = []
+    word_accuracies: List[float] = []
+    exact_matches: List[float] = []
+    bleu_scores: List[float] = []
+    rouge_scores: List[float] = []
+    decoder_violations: int = 0
+    word_snapped_violations: int = 0
+
+    for i in range(n):
+        pred = predictions[i]
+        targ = targets[i]
+        norm_p = normalize_text(pred)
+        norm_t = normalize_text(targ)
+
+        # Character-level
+        c_dist = _levenshtein(norm_p, norm_t)
+        c_denom = len(norm_t)
+        total_char_dist += c_dist
+        total_target_chars += c_denom
+
+        s_cer = float(c_dist / max(1, c_denom)) if c_denom > 0 else (0.0 if len(norm_p) == 0 else 1.0)
+        sample_cers.append(s_cer)
+        char_accuracies.append(max(0.0, 1.0 - min(1.0, s_cer)))
+
+        # Word-level
+        p_words = norm_p.split()
+        t_words = norm_t.split()
+        w_dist = _levenshtein_tokens(p_words, t_words)
+        w_denom = len(t_words)
+        total_word_dist += w_dist
+        total_target_words += w_denom
+
+        s_wer = float(w_dist / max(1, w_denom)) if w_denom > 0 else (0.0 if len(p_words) == 0 else 1.0)
+        sample_wers.append(s_wer)
+        word_accuracies.append(max(0.0, 1.0 - min(1.0, s_wer)))
+
+        # Exact match
+        em = 1.0 if norm_p.lower() == norm_t.lower() else 0.0
+        exact_matches.append(em)
+
+        # BLEU & ROUGE
+        bleu = compute_bleu(norm_p, norm_t) or 0.0
+        rouge = compute_rouge_l(norm_p, norm_t) or 0.0
+        bleu_scores.append(bleu)
+        rouge_scores.append(rouge)
+
+        # Physical budget evaluation
+        if budgets is not None and i < len(budgets) and budgets[i] is not None:
+            b = float(budgets[i])
+            if b > 0:
+                # Decoder-level raw length check
+                if len(norm_p) > (b + margin_buffer):
+                    decoder_violations += 1
+
+                # Word-snapped length check
+                # Simulate snapping to nearest whitespace within budget
+                if len(norm_p) <= (b + margin_buffer):
+                    snapped = norm_p
+                else:
+                    truncated = norm_p[: int(b)]
+                    last_space = truncated.rfind(" ")
+                    snapped = truncated[:last_space].strip() if last_space > 0 else truncated.strip()
+
+                if len(snapped) > (b + margin_buffer):
+                    word_snapped_violations += 1
+
+    corpus_cer = float(total_char_dist / max(1, total_target_chars))
+    corpus_wer = float(total_word_dist / max(1, total_target_words))
+
+    evaluated_budgets = n if (budgets is not None and len(budgets) > 0) else 0
+
+    return {
+        "sample_count": n,
+        "total_target_characters": total_target_chars,
+        "total_target_words": total_target_words,
+        "total_char_edit_distance": total_char_dist,
+        "total_word_edit_distance": total_word_dist,
+        "corpus_cer": round(corpus_cer, 4),
+        "corpus_wer": round(corpus_wer, 4),
+        "macro_cer": round(float(np.mean(sample_cers)), 4),
+        "macro_wer": round(float(np.mean(sample_wers)), 4),
+        "char_accuracy_bounded": round(float(np.mean(char_accuracies)), 4),
+        "word_accuracy_bounded": round(float(np.mean(word_accuracies)), 4),
+        "exact_match_rate": round(float(np.mean(exact_matches)), 4),
+        "mean_bleu_4": round(float(np.mean(bleu_scores)), 4),
+        "mean_rouge_l": round(float(np.mean(rouge_scores)), 4),
+        "decoder_budget_violation_rate": round(float(decoder_violations / max(1, evaluated_budgets)), 4) if evaluated_budgets else 0.0,
+        "word_snapped_budget_violation_rate": round(float(word_snapped_violations / max(1, evaluated_budgets)), 4) if evaluated_budgets else 0.0,
+    }
+
 
 

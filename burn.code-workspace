@@ -1,8 +1,24 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": ".."
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.analysis.extraPaths": [
+      "./Burn_restore",
+      "./scripts",
+      "./tests",
+      "."
+    ],
+    "python.autoComplete.extraPaths": [
+      "./Burn_restore",
+      "./scripts",
+      "./tests",
+      "."
+    ]
+  }
 }

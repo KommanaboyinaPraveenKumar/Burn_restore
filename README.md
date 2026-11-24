@@ -1,165 +1,465 @@
-# Grounded Side-Burnt Document Text Restoration
+# Side-Burnt Text Lines: What the Image Can Read vs. What Context Can Only Suggest
 
-A research framework for restoring text pages burned along the outer (right)
-edge, combining a **Global Context Engine** (a language model reading the
-surviving text) with a **Local Forensic Eye** (a vision encoder reading the
-microscopic "ghost strokes" at the jagged burn border), so the model cannot
-hallucinate text that does not physically fit the remaining pixel evidence.
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+[![PyTorch 2.x](https://img.shields.io/badge/PyTorch-2.x-ee4c2c.svg)](https://pytorch.org/)
+[![Status: Research Prototype](https://img.shields.io/badge/Status-Research%20Prototype-blueviolet.svg)](#8-limitations)
 
-## Project layout
+When a page burns along its side margin, every line loses its ending. Two very
+different things are lost:
 
-```
-grounded_doc_restorer/
-├── config.py              # single shared configuration dataclass
-├── dataset_generator.py   # Component 1: synthetic side-burn generator
-├── model.py               # Component 2: dual-stream model + fusion + grounding
-├── dataset.py             # Component 3a: PyTorch Dataset (dynamic corruption)
-├── train.py               # Component 3b: executable training loop
-├── metrics.py             # PSNR / SSIM / CER / token accuracy (fail-safe)
-└── requirements.txt
-```
+1. **A few characters at the burn edge that are faded but still have visible
+   strokes.** Recovering these is a *recognition* problem, and the image can
+   genuinely help.
+2. **Everything past that edge, which is physically gone.** No model can
+   *restore* this text. It can only *suggest* plausible completions from the
+   surrounding lines, the way an epigrapher proposes readings for a gap in an
+   inscription (cf. Pythia/Ithaca, Assael et al.).
 
-## Installation
+This project builds a multimodal model for side-burnt text lines and evaluates
+it with the two parts **kept separate**: READ (visible strokes) and INFERRED
+(fully burnt). For the inferred part it reports ranked hypotheses, how likely
+the model finds the true text, and how trustworthy its confidence is, not just a
+single "restored" string scored by CER.
 
-```bash
-pip install -r requirements.txt
-```
+![Five random held-out test lines: burn-edge crop, true ending split into READ and INFERRED, and the model's top-3 suggestions](assets/figures/examples.png)
 
-## Expected input data
+*Five randomly drawn held-out test lines (seed 0, not cherry-picked), full t5-base model vs. the
+text-only baseline, decoded under the calibrated upper budget. The model often gets the READ
+characters and the kind of continuation right (`'t to her.'` at rank 3, `', the'` endings) while the
+burnt words themselves are guesses. Regenerate with `python scripts/make_readme_figures.py`.*
 
-A folder of clean page images and a folder of matching transcripts, paired by
-filename stem, with **one line of text per physical line on the page**:
-
-```
-data/images/page_001.png      data/texts/page_001.txt
-data/images/page_002.png      data/texts/page_002.txt
-```
-
-## Usage
-
-Generate a static corrupted dataset for inspection:
-
-```bash
-python dataset_generator.py --images data/images --texts data/texts --out data/burnt
-```
-
-Train (corruption is re-synthesized on the fly every epoch):
-
-```bash
-python train.py --images data/images --texts data/texts --epochs 10 --batch_size 4
-```
+> **What this is not:** a forensic tool that recovers burnt text. All reported
+> results are on synthetic burns of rendered book pages. A protocol for testing
+> on genuinely burnt paper is included (Â§6) but has not been run yet.
 
 ---
 
-## Component 1 — Synthetic Side-Burn Generator
+## 1. Task
 
-`SideBurnGenerator` produces physically plausible fire damage rather than a
-clean crop:
-
-* **Jagged, non-linear boundary.** A Gaussian random walk is smoothed with a
-  moving-average kernel to produce an organic scorch edge (`_generate_jagged_boundary`),
-  with the burned width sampled per-page between 15% and 30% of page width.
-* **Ghost-stroke fade.** Within a configurable transition band before the
-  boundary, pixels are alpha-blended toward a dark charcoal value, so glyphs
-  crossing the threshold degrade into low-contrast residue before reaching
-  full `(0,0,0)` obliteration. Gaussian scorch noise is injected *only* inside
-  the damaged region.
-* **Outputs.** The corrupted image, a binary burn mask, the burn bounding box,
-  the per-row missing-width profile, the surviving (healthy) text, and the
-  ground-truth clipped line-endings.
-
-**Documented assumption:** without per-character bounding boxes in the source
-data, the kept/clipped text split is estimated *proportionally* — the fraction
-of a line's width surviving the jagged boundary is applied to that line's
-character count, then snapped to the nearest whitespace so the ground truth
-stays word-aligned. Text lines are located by a horizontal ink-projection
-profile, with a uniform-split fallback when band detection disagrees with the
-transcript line count.
-
-## Component 2 — Dual-Stream Model
-
-`GroundedDocumentRestorer` composes four submodules:
-
-| Module | Role |
-|---|---|
-| `GlobalContextEncoder` | DistilBERT over the surviving page text → linguistic context `(B, T, E)` |
-| `LocalForensicEncoder` | ResNet-34 with the pooling head removed → **spatial** feature grid flattened to visual tokens `(B, h·w, E)` |
-| `CrossModalFusion` | Multi-head cross-attention: text tokens query the burn-edge visual tokens |
-| `SpatialAlignmentGate` | Converts burn geometry into a decoding budget |
-| `TransformerDecoderHead` | Autoregressive decoder over the fused memory |
-
-The forensic encoder deliberately keeps the spatial feature map instead of
-global-pooling it, so cross-attention can localize *which* ghost stroke
-supports which linguistic hypothesis. A globally-pooled visual vector is
-additionally broadcast and gated back into every memory position, so the
-decoder always retains direct access to the overall stroke evidence.
-
-### The grounding constraint
-
-`SpatialAlignmentGate` enforces that predictions fit the available pixel
-footprint. The burn mask's per-row missing-width profile is binned into a
-fixed-length vector, averaged, and divided by an average glyph width to yield
-a per-sample **character budget**. An escalating additive bias is then applied
-to the EOS logit once decoding runs past that budget:
+Each example is one severed line (v3 prompt):
 
 ```
-bias(step) = relu(step - budget) * alignment_penalty_weight
+previous: <line -2> || <line -1>          (visible starts of the two lines above)
+line:     <visible prefix of this line><extra_id_0>
+next:     <line +1> || <line +2>
+length:   <estimated number of missing characters>
+image:    128x256 crop centred on the burn edge (200 px left, 56 px right)
+target:   the missing ending, e.g.  "ed to"
+                                     ^^ READ (faint strokes in the crop)
+                                       ^^^ INFERRED (fully burnt)
 ```
 
-This is applied identically during training (shaping the loss surface) and
-generation (halting decode). A soft bias is used rather than a hard truncation
-so gradients continue to flow and the model *learns* the length prior instead
-of merely being clipped at inference.
+The prompt, crop, budget and target are produced by one module,
+[`line_data.py`](line_data.py), which training, evaluation and inference all
+share. The older v2 prompt (one line of context, no length) is still supported
+so that earlier checkpoints load and evaluate unchanged.
 
-Verified behaviour — budget and output length scale with physical burn width:
+## 2. Data (v3)
 
-| Missing width | Char budget | Generated length (cap 30) |
+[`scripts/build_line_dataset.py --version v3`](scripts/build_line_dataset.py)
+
+* **Text:** 57 public-domain Project Gutenberg books, **split by book**
+  (train 47 / val 4 / test 6). No test book or author is seen in training.
+* **Layout:** paragraphs with indented first lines, paragraph-final short
+  lines (5% of severed lines), hyphenated line breaks (â‰ˆ10%) and justified text.
+  Rendered with 16 serif and sans fonts at 18â€“28 pt, with varied margins, line
+  spacing, paper tone and ink.
+* **Burn:** a jagged side boundary with a randomised appearance. The fade width
+  (30â€“80 px) and the shape of the fade curve vary, and each burn adds a brown
+  scorch halo, paper texture, noise, blur and JPEG compression. Lines are split
+  at **character level**, with the cut where the fade reaches 50% opacity.
+* **READ / INFERRED annotation:** a target character counts as READ if its
+  centre lies before the point where the fade reaches 80% opacity. 90% of test
+  lines have at least one READ character (mean â‰ˆ 1.6); most of each target is
+  INFERRED.
+* **Context noise:** in training, half the samples get simulated OCR errors in
+  their context lines (character confusions, deletions, insertions, up to 4%).
+  This is because real context would come from OCR of damaged paper, not from
+  ground truth.
+
+| split | pages | severed lines |
 |---|---|---|
-| 28 px | 2.0 | 5 |
-| 140 px | 10.0 | 13 |
-| 560 px | 40.0 | 31 |
+| train | 5000 | 98,176 |
+| val   | 200  | 3,961  |
+| test  | 300  | 6,145  |
 
-## Component 3 — Dataset and Training Loop
+The earlier v2 set (35 books, clean layout, one fixed fade) is in `data/lines`
+and its results are kept in Â§5.5 for comparison.
 
-`SideBurnDocumentDataset` re-runs the generator on **every** `__getitem__`,
-so a page is never seen with the same burn pattern twice — the corruption
-itself is the augmentation. Each item yields tokenized context, tokenized
-target, the ImageNet-normalized burn crop, and the binned mask profile;
-raw strings are carried through a custom `collate_fn` for logging.
+## 3. Model
 
-`train.py` wires the pieces into a standard teacher-forced loop: shifted
-cross-entropy over the clipped-text tokens (padding ignored), AdamW, gradient
-clipping, periodic token-accuracy logging, and a periodic qualitative decode
-with CER, wrapped so a single bad sample can never abort a long run.
+`ForensicT5Restorer` in [`model.py`](model.py):
 
-## Validation performed
+| part | role |
+|---|---|
+| t5-small (60M) or t5-base (220M) encoder-decoder | language prior, span infilling |
+| multi-scale ResNet-34 â†’ **128 visual tokens** (8Ã—16 grid; layer4 upsampled and fused with layer3) | stroke evidence at the burn edge |
+| **residual gated cross-attention** (Flamingo-style) | text tokens attend to visual tokens |
+| **CTC reading head** on stride-8 ResNet features (BiGRU, 95 printable ASCII characters + blank) | vision-only transcription of the text visible in the crop |
+| contrastive stroke aligner | InfoNCE between ghost-zone features and READ characters only |
+| cut estimator (small CNN, separate from the restorer) | predicts where the legible text ends, for the character budget |
+| physical budget logits processor | never lets an ending exceed the calibrated upper budget |
 
-All modules were executed, not just syntax-checked:
+**Design choices**
 
-* Generator run on synthetic pages — burn renders with the intended jagged
-  edge and ghost fade; text clipping verified correct (`"...jumps over"` /
-  `"the lazy dog"`).
-* Model forward and `generate()` verified for tensor shape correctness.
-* Alignment gate verified to scale budget and output length with burn width.
-* `Dataset` + `DataLoader` + `collate_fn` verified for shape and batching.
-* Full training loop run for 2 epochs; loss descended 4.18 → 3.13.
-* Metrics verified on both normal and degenerate inputs (shape mismatch,
-  sub-window images, empty targets, all-padding batches) — these return
-  `None` with a warning rather than raising.
+* **Fusion.** Pretrained T5 embeddings pass through **unchanged**. Visual
+  evidence is *added* through tanh gates that start at zero, and visual tokens
+  are rescaled to T5's embedding RMS. At initialisation the model is exactly
+  pretrained T5, so the image can only add information. The first version
+  (`fusion_style="legacy"`, still loadable) normalised and shrank the text
+  embeddings, which damaged the language prior and cancelled the visual gain.
+* **Finer grid.** The coarse 4Ã—8 grid gave each visual token â‰ˆ32 px of width,
+  about two characters. The 8Ã—16 grid gives about one character per token.
+* **Reading head.** Trained with CTC on the text actually visible in the crop
+  (`lambda_read` = 0.3). This forces the vision encoder to learn real glyph
+  recognition. It also gives the UI a vision-only reading that is independent
+  of the language model.
+* **Contrastive loss on READ characters only.** Aligning image features with
+  text that is not in the image would train the encoder to hallucinate.
+* **Length hint.** The estimated number of missing characters goes into the
+  prompt, so the model can plan for the gap, not only be cut off by the budget
+  processor.
+* **Calibrated upper budget.** The number of missing characters is estimated
+  from geometry: the gap from the cut to the right text edge, divided by the
+  prefix's average glyph width. This is a *median-type* estimate. The glyph
+  widths of the missing text are unknown, and justified lines run to the
+  margin, so 30% of true v3 endings are longer than it. The old decoder still
+  penalised anything past estimate + 2 characters. That rule cut off 7.6% of the
+  *correct* endings, yet only forced a stop 7 characters past the estimate.
+  The fix ([`scripts/train_cut_estimator.py`](scripts/train_cut_estimator.py)):
+  1. A small CNN predicts the cut position from the crop. Its error is 0.96 px,
+     against 7.3 px for the old fixed 27 px offset, and the resulting estimate is
+     as accurate as one using the true cut.
+  2. The upper bound `1.139 Ã— estimate + 1` is calibrated on validation so that
+     99% of true endings fit (98.8% on test).
+  3. Decoding enforces it exactly. Each step masks every token that would push
+     the ending past the bound, and nothing may follow the span-closing sentinel.
 
-> Note: the smoke tests used a small locally-built tokenizer and randomly
-> initialized backbones because the test sandbox had no network access to
-> the Hugging Face Hub. On a connected machine `config.text_model_name` and
-> `pretrained_vision=True` load the real pretrained weights unchanged.
+  The prompt's length hint keeps the formula the checkpoints were trained with.
+  Retraining with the calibrated estimate in the prompt barely changed the
+  results (Â§5.5).
 
-## Tuning notes
+**Training** ([`train.py`](train.py)) has two stages: stage 1 freezes T5 for one
+epoch; stage 2 fine-tunes everything with per-group learning rates (fusion gates
+10Ã—). It uses bf16 autocast, batch 16, and early stopping on validation CER.
+t5-small runs for 5 epochs (â‰ˆ21 min/epoch on one consumer GPU). t5-base runs for 3 epochs with
+gradient checkpointing (4.6 GiB peak). The text-only baselines use the same data, prompts and
+schedule, with no image and no reading head.
 
-* `avg_char_width_px` should be calibrated to your corpus's rendering DPI and
-  font size; it directly sets the strictness of the grounding constraint.
-* `alignment_penalty_weight` trades fluency against physical fidelity — raise
-  it if the model over-generates past the burn edge.
-* `transition_zone_px` controls how much ghost-stroke evidence the forensic
-  stream receives. Too narrow and Stream B has nothing to read; too wide and
-  the task becomes trivially easy.
-* Consider freezing the DistilBERT encoder for the first epochs so the
-  randomly-initialized fusion and decoder do not corrupt pretrained weights.
+## 4. Evaluation protocol
+
+[`scripts/evaluate_lines.py`](scripts/evaluate_lines.py), run on all 6,145 v3
+test lines. Every system uses the same beam search (k = 5) with the budget
+processor on, and the prompt style it was trained with.
+
+| metric | measures |
+|---|---|
+| **READ acc** | top-1 starts with the exact READ characters (lines with â‰¥1 READ char) |
+| **INFERRED CER** | CER on the rest (positional approximation) |
+| CER / EM | whole target, single reference |
+| **EM@5, 1st-word@5** | is the truth among the 5 ranked hypotheses? |
+| **bits/char** | âˆ’logâ‚‚ p(true target) per character, teacher-forced; lower = the model finds the truth more likely |
+| **CTC read acc / CER** | vision-only reading head vs. the text visible in the crop |
+| **AUROC, top-25% acc** | does the model's confidence (P(first word)) separate right from wrong first words? |
+| **ECE / Brier** | calibration of that confidence; raw, and after Platt scaling fitted on 1,000 validation lines |
+| budget viol. | top-1 longer than the calibrated upper budget (98.8% of true endings fit it) |
+| overlong | top-1 more than 3 characters longer than the true ending |
+
+Systems: empty prediction, zero-shot t5-small, fine-tuned **text-only**, the
+**full** model, the full model with a **blank** or **mismatched** image
+(ablations), the full model with **OCR-noised context** (3% character error
+rate, fixed seed), and the v2 model on v3 data. Rows marked *old budget* decode
+with the previous rule (point estimate, soft penalty). This gives a direct
+comparison, and the image ablations use it too: given a blank image the model
+is out of distribution and would otherwise ramble until it hits the hard
+ceiling. The significance tests are
+paired bootstrap tests (B = 1000) on the same lines.
+
+## 5. Results (held-out test books, 6,145 lines)
+
+Full output: [`results/line_eval_v3.json`](results/line_eval_v3.json)
+(t5-small) and [`results/line_eval_v3_base.json`](results/line_eval_v3_base.json)
+(t5-base). Reliability plots are saved next to each file.
+
+### 5.1 Main table
+
+| system | READ acc â†‘ | READ @5 â†‘ | INFERRED CER â†“ | CER â†“ | EM â†‘ | EM@5 â†‘ | 1st word â†‘ | 1st word @5 â†‘ | bits/char â†“ | budget viol. â†“ | overlong â†“ |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| empty | 0 | 0 | 1.000 | 1.000 | 0 | 0 | 0 | 0 | â€“ | 0 | 0 |
+| zero-shot t5-small | 0.113 | 0.120 | 1.040 | 1.015 | 0.001 | 0.002 | 0.060 | 0.065 | 4.27 | 0 | 44.8% |
+| v2 full, on v3 data | 0.378 | 0.496 | 0.822 | 0.767 | 0.034 | 0.058 | 0.176 | 0.262 | 2.06 | 0 | 1.5% |
+| text-only, t5-small | 0.232 | 0.357 | 0.815 | 0.775 | 0.037 | 0.063 | 0.166 | 0.250 | 1.85 | 0 | 1.8% |
+| **full, t5-small** | **0.700** | **0.812** | 0.768 | 0.699 | 0.069 | 0.118 | 0.401 | 0.523 | 1.57 | 0 | 1.9% |
+| text-only, t5-base | 0.361 | 0.518 | 0.741 | 0.702 | 0.078 | 0.132 | 0.293 | 0.414 | 1.44 | 0 | 2.7% |
+| **full, t5-base** | 0.660 | 0.783 | **0.717** | **0.656** | **0.103** | **0.174** | **0.418** | **0.553** | **1.31** | 0 | 2.4% |
+
+### 5.2 Budget fix: old rule vs calibrated upper bound
+
+Same checkpoints, same test lines; only the decoding budget differs.
+
+| system | budget | CER â†“ | INFERRED CER â†“ | EM â†‘ | READ acc | overlong â†“ | viol. (upper bound) â†“ |
+|---|---|---|---|---|---|---|---|
+| text-only, t5-small | old rule | 0.810 | 0.853 | 0.029 | 0.231 | 8.7% | 8.4% |
+| | **upper bound** | **0.775** | **0.815** | **0.037** | 0.232 | **1.8%** | **0%** |
+| full, t5-small | old rule | 0.755 | 0.827 | 0.048 | 0.701 | 12.2% | 11.7% |
+| | **upper bound** | **0.699** | **0.768** | **0.069** | 0.700 | **1.9%** | **0%** |
+| text-only, t5-base | old rule | 0.795 | 0.841 | 0.052 | 0.349 | 20.4% | 20.1% |
+| | **upper bound** | **0.702** | **0.741** | **0.078** | 0.361 | **2.7%** | **0%** |
+| full, t5-base | old rule | 0.744 | 0.810 | 0.068 | 0.653 | 18.7% | 18.3% |
+| | **upper bound** | **0.656** | **0.717** | **0.103** | 0.660 | **2.4%** | **0%** |
+
+All CER and INFERRED CER differences are p < 0.001 (paired bootstrap). The
+bits/char numbers are identical because they are computed teacher-forced, so
+they don't depend on decoding. On a 300-line subset (t5-base full), removing the
+"stop after the span-closing sentinel" rule leaves the gain intact (CER 0.654
+vs 0.728). So the gain comes from the bound itself.
+
+### 5.3 Ablations and robustness
+
+| system | READ acc | INFERRED CER | CER | bits/char | CTC read acc / CER |
+|---|---|---|---|---|---|
+| full, t5-small (old budget) | 0.701 | 0.827 | 0.755 | 1.57 | 0.707 / 0.029 |
+| â€¦ blank image (old budget) | 0.159 | 0.823 | 0.796 | 3.06 | 0 / 1.0 |
+| â€¦ mismatched image (old budget) | 0.072 | 0.873 | 0.846 | 2.26 | 0.032 / 0.856 |
+| full, t5-small | 0.700 | 0.768 | 0.699 | 1.57 | 0.707 / 0.029 |
+| â€¦ OCR-noised context | 0.696 | 0.790 | 0.720 | 1.64 | (unchanged) |
+| full, t5-base (old budget) | 0.653 | 0.810 | 0.744 | 1.31 | 0.651 / 0.041 |
+| â€¦ blank image (old budget) | 0.277 | 0.779 | 0.748 | 2.15 | 0 / 1.0 |
+| full, t5-base | 0.660 | 0.717 | 0.656 | 1.31 | 0.651 / 0.041 |
+| â€¦ OCR-noised context | 0.644 | 0.749 | 0.686 | 1.41 | (unchanged) |
+
+Paired tests (negative = first system better):
+
+| comparison | Î” CER | Î” READ error | Î” INFERRED CER | Î” bits/char |
+|---|---|---|---|---|
+| small full vs small text-only | âˆ’0.076*** | âˆ’0.468*** | âˆ’0.047*** | âˆ’0.279*** |
+| base full vs base text-only | âˆ’0.046*** | âˆ’0.298*** | âˆ’0.024*** | âˆ’0.128*** |
+| base full vs small full | âˆ’0.043*** | +0.040 (small better) | âˆ’0.051*** | âˆ’0.255*** |
+| small full vs v2 full (on v3 data) | âˆ’0.068*** | âˆ’0.322*** | âˆ’0.054*** | âˆ’0.491*** |
+| small full vs blank image (both old budget) | âˆ’0.041*** | âˆ’0.542*** | +0.004 (n.s.) | âˆ’1.49*** |
+| small full, noisy vs clean context | +0.021 | +0.004 | +0.022 | +0.071 |
+
+\*\*\* p < 0.001
+
+**Confidence and calibration**
+
+| system | AUROC â†‘ | 1st-word acc, most confident 25% â†‘ | ECE raw â†“ | ECE after Platt |
+|---|---|---|---|---|
+| text-only, t5-small | 0.841 | 0.441 | 0.017 | 0.014 |
+| **full, t5-small** | **0.896** | **0.897** | 0.037 | 0.077 |
+| text-only, t5-base | 0.840 | 0.696 | 0.033 | 0.046 |
+| full, t5-base | 0.866 | 0.876 | 0.029 | 0.079 |
+
+<img src="assets/figures/reliability_v3_base.png" alt="Reliability diagram of first-word confidence" width="520">
+
+*Reliability of the first-word confidence on the test books (t5-base, and t5-small as `small_*`): predicted probability vs.
+observed accuracy, raw and after Platt scaling.*
+
+Results from before the budget fix are kept in
+[`results/pre_budget_fix/`](results/pre_budget_fix/).
+
+### 5.4 What the numbers say
+
+1. **The image reads the visible characters.** With t5-small, READ accuracy
+   rises from 23% (text-only) to 70%. A blank image drops it to 16% and a
+   mismatched image to 7%, so the model uses *this line's* strokes. The
+   vision-only reading head transcribes the visible text with 0.03 CER; with a
+   mismatched image it falls to chance.
+2. **The image does not recover the burnt part.** With the image blanked
+   (both decoded with the old budget), INFERRED CER stays the same for
+   t5-small (0.823 vs 0.827, n.s.) and gets *better* for t5-base (0.779 vs
+   0.810). This is partly because blank-image outputs are shorter, which the
+   positional INFERRED CER rewards. The INFERRED gain of full over text-only
+   comes from correctly read word starts giving better continuations, not from
+   seeing burnt text.
+3. **The budget fix was the largest single gain for the guessing part.** With a
+   calibrated upper bound enforced exactly, overlong endings fall from 9â€“20% to
+   about 2%, and INFERRED CER improves by 0.04â€“0.10 for every model (Â§5.2). The old
+   rule was wrong in both directions. It penalised 7.6% of *correct* endings,
+   but only forced a stop 7 characters past its estimate, so models ran long.
+   The gain is bigger for t5-base, which tends to write longer endings.
+4. **A larger language model helps the guessing.** t5-base improves bits/char
+   (1.57 â†’ 1.31), EM@5 (0.118 â†’ 0.174) and INFERRED CER (0.768 â†’ 0.717) over
+   t5-small. With only 3 epochs, its vision side is less trained: its READ
+   accuracy (0.66) and CTC reading (0.65) are below t5-small's (0.70 / 0.71).
+5. **Confidence is useful.** When the t5-small full model is in its most
+   confident quarter, the first word is right 90% of the time (text-only: 44%),
+   with AUROC 0.90. In v2 the AUROC was only 0.69. A UI can show confident
+   suggestions and flag the rest.
+6. **Calibration: raw is better than Platt here.** The raw P(first word) is
+   already reasonably calibrated (ECE 0.03â€“0.04, slightly overconfident in the
+   middle). Platt scaling fitted on the validation books made it *worse* on the
+   test books. The validation set is only 4 books, and the confidenceâ€“accuracy
+   relation shifts between books. Report the raw confidence.
+7. **Robust to noisy context.** 3% OCR errors in the context lines cost â‰ˆ2â€“3
+   CER points, and the gap between full and text-only stays the same.
+8. **v3 data is harder.** The v2 model's READ accuracy falls from 0.68 on v2
+   data to 0.38 on v3. The variable fade, halo and layout make it a stricter
+   test, and the v3 model beats v2 on it on every axis.
+9. **Layout.** For the t5-small full model, hyphenated lines are slightly easier
+   (CER 0.68 vs 0.70) and paragraph-final lines slightly harder (0.71 vs 0.70).
+
+### 5.5 Tried: the calibrated estimate in the prompt (v3e)
+
+The checkpoints above were trained with the old length-hint formula in the
+prompt. A second round (`--prompt_style v3e`) retrained all four models with the
+cut-estimator's estimate in the prompt instead, keeping the same data, schedule
+and upper bound. Full output:
+[`results/line_eval_v3e.json`](results/line_eval_v3e.json) and
+[`results/line_eval_v3e_base.json`](results/line_eval_v3e_base.json).
+
+| system | prompt | READ acc | INFERRED CER | CER | EM | bits/char |
+|---|---|---|---|---|---|---|
+| text-only, t5-small | v3 | **0.232** | **0.815** | **0.775** | **0.037** | **1.85** |
+| | v3e | 0.177 | 0.828 | 0.789 | 0.033 | 1.93 |
+| full, t5-small | v3 | 0.700 | 0.768 | 0.699 | 0.069 | 1.57 |
+| | v3e | **0.707** | **0.760** | **0.692** | 0.069 | 1.57 |
+| text-only, t5-base | v3 | 0.361 | 0.741 | 0.702 | 0.078 | 1.44 |
+| | v3e | **0.391** | **0.733** | **0.694** | **0.083** | **1.41** |
+| full, t5-base | v3 | 0.660 | 0.717 | 0.656 | 0.103 | 1.31 |
+| | v3e | **0.672** | 0.716 | 0.655 | **0.105** | 1.31 |
+
+For the full models the change is small: âˆ’0.008 CER with t5-small (p < 0.001)
+and âˆ’0.002 with t5-base (p = 0.17, not significant). The text-only models move
+in opposite directions (worse with t5-small, better with t5-base). The prompt's
+length hint is not where the remaining error is, so the v3 checkpoints stay the
+main configuration. The upper bound alone already removes most overlong endings.
+
+### 5.6 Earlier results (v2 data, t5-small)
+
+On the v2 test set (5,854 lines, clean layout, fixed fade; see
+[`results/line_eval.json`](results/line_eval.json)), the v2 full model reached
+READ acc 0.677, INFERRED CER 0.831, CER 0.744, EM@5 0.141 and bits/char 1.56,
+compared with 0.184 / 0.856 / 0.809 / 0.065 / 1.91 for text-only. The legacy-fusion v1
+model only tied text-only on CER (0.807); see
+[`results/line_eval_v1_legacy_fusion.json`](results/line_eval_v1_legacy_fusion.json).
+
+## 6. Real-damage test (protocol, not yet run)
+
+Synthetic burns are the main threat to validity, so the repository includes a
+small real test:
+
+```bash
+# 1. render 4 pages from held-out TEST books at print resolution + annotation template
+python scripts/make_real_test_pages.py --n_pages 4 --out real_test
+# 2. print real_test/page_*.png (fit to page width)
+# 3. scorch the RIGHT edge of each sheet so line endings are lost and a band of
+#    partly legible ink remains. Do this outdoors or over a sink, with water at
+#    hand, and never leave burning paper unattended.
+# 4. photograph or scan each sheet flat; save as real_test/photo_<n>.jpg
+# 5. in real_test/annotations.json, for each damaged line fill in
+#      "legible": text readable with confidence, "faint": partly visible chars after it
+# 6. evaluate
+python scripts/evaluate_real.py --dir real_test \
+    --ckpt checkpoints/v3_full/best_checkpoint.pt \
+    --text_only_ckpt checkpoints/v3_text_only/best_checkpoint.pt
+```
+
+The ground truth is known because we printed it. The script rescales each photo
+so its line pitch matches training scale, finds the burn edge with the burn
+detector, and reports READ accuracy, INFERRED CER, CER, EM, EM@5 and the CTC
+reading. The results go to `results/real_eval.json`. The pipeline was checked
+end to end on a software-burnt, downscaled and blurred page. No real photos have
+been evaluated yet.
+
+## 7. Usage
+
+```bash
+# environment (Windows example; CUDA wheel for torch, see requirements.txt)
+python -m venv .venv && .venv\Scripts\activate
+pip install -r requirements.txt
+
+# 1. data (downloads Gutenberg text, renders and burns pages; ~10 GB for v3)
+python scripts/build_line_dataset.py --version v3 --train_pages 5000 --val_pages 200 \
+    --test_pages 300 --out_dir data/lines_v3
+
+# 2. train (t5-small; add --text_model t5-base --gradient_checkpointing for t5-base)
+python train.py --data_dir data/lines_v3 --epochs 5 --warmup_epochs 1 --batch_size 16 \
+    --val_limit 800 --patience 2 --ckpt_dir checkpoints/v3_full
+python train.py --data_dir data/lines_v3 --epochs 5 --batch_size 16 --val_limit 800 \
+    --patience 2 --ckpt_dir checkpoints/v3_text_only --text_only
+
+# 3. evaluate (+ calibration and OCR-noise variants)
+python scripts/evaluate_lines.py --data_dir data/lines_v3 \
+    --full_ckpt checkpoints/v3_full/best_checkpoint.pt \
+    --text_only_ckpt checkpoints/v3_text_only/best_checkpoint.pt \
+    --calib_n 1000 --context_noise 0.03 --out results/line_eval_v3.json
+# (needs checkpoints/cut_estimator.pt for the calibrated upper budget:)
+python scripts/train_cut_estimator.py --data_dir data/lines_v3 --out checkpoints/cut_estimator.pt
+
+# tests
+python -m pytest -q
+
+# demo API + web UI (http://127.0.0.1:8000/): upload a page, paste its surviving text
+# (one printed line per line) -> top suggestion, alternatives, vision-only reading.
+# Serves checkpoints/v3_base_full by default; set BURN_CKPT to use another checkpoint.
+python -m api.main
+# CLI on a page image
+python scripts/restore_document.py --help
+```
+
+![Web demo on a synthetic burnt page from a held-out book: detected burn edge, pasted surviving text, per-line suggestions](assets/figures/ui_demo.png)
+
+*Web demo (t5-base, CPU) on a synthetic burnt page from a held-out test book. The text in the
+paste box is the page's printed text up to the burn, taken from the generator (i.e. a perfect
+transcription, not OCR); the model never saw this book in training.*
+
+[`scripts/run_v3.cmd`](scripts/run_v3.cmd) runs both rounds (t5-small and t5-base,
+full and text-only, plus evaluation) unattended on Windows;
+[`scripts/run_budget_eval.cmd`](scripts/run_budget_eval.cmd) re-evaluates both rounds with the calibrated upper budget.
+[`scripts/run_reframe.cmd`](scripts/run_reframe.cmd) reproduces the v2 results.
+
+## 8. Limitations
+
+* **Synthetic burns only.** The v3 burns are randomised (fade, halo, texture,
+  blur, JPEG), but they still come from our own simulator. Real charring
+  (curling, edge loss, carbonised ink that shows in infrared) can look
+  different. The Â§6 protocol is the missing experiment.
+* **Inferred text is a guess.** CER around 0.8 on the inferred part mostly
+  reflects that the text is unrecoverable, not a model bug. Outputs should be
+  presented as ranked suggestions with confidence, never as the document's
+  content. The UI says so.
+* **The page demo has no OCR.** The model needs the surviving text of the line and
+  its neighbours, which the user pastes into the UI (or passes as `page_text` /
+  `page_transcripts`). Without it the model sees only the crop and its suggestions are poor.
+  Pasted lines are paired with detected text lines top to bottom; the UI warns if the counts
+  differ. On synthetic pages the detector finds 99.5% of severed lines with the burn edge
+  â‰ˆ5 px from the truth, and its line count matches the printed lines on 117/120 pages
+  (`scripts/validate_burn_detector.py`).
+* **Simulated OCR noise.** Context noise is a character-level model of OCR errors,
+  not the output of a real OCR engine on damaged paper.
+* **Length estimation.** The upper budget is calibrated for 99% coverage on
+  synthetic pages. About 1.2% of true endings are still longer than it and get
+  truncated. The cut estimator has only seen simulated burns, and the bound
+  assumes symmetric page margins.
+* **Calibration across books.** Platt scaling fitted on 4 validation books did
+  not transfer; a larger, more varied calibration set would be needed.
+* **t5-base under-trained.** t5-base got 3 epochs because of compute limits.
+  Its weaker READ accuracy suggests the vision side needs longer training.
+
+The documents in [`archive/`](archive/) (the old `docs/`, `report.*`,
+`PROGRESS_REPORT.md`, â€¦) describe an earlier 6-page prototype whose checkpoint
+was essentially untrained. **Their numbers are superseded by Â§5.**
+
+## 9. Repository map
+
+```
+line_data.py               single preprocessing contract (prompts v2/v3, layout, burns, crop, budget, READ split, OCR noise)
+model.py                   ForensicT5Restorer, ResidualGatedFusion, CTCReadingHead, CutOffsetRegressor, budget processor
+dataset.py                 LineCacheDataset (memmap crops) + collator
+train.py                   two-stage training
+scripts/build_line_dataset.py   data generation (--version v2|v3)
+scripts/evaluate_lines.py       held-out evaluation, ablations, calibration, bootstrap tests
+scripts/train_cut_estimator.py  cut-position CNN + calibrated upper character budget
+scripts/make_real_test_pages.py, evaluate_real.py   real-damage protocol
+scripts/make_readme_figures.py  README example figure; scripts/validate_burn_detector.py  page detector vs ground truth
+scripts/annotate_visibility.py  READ annotation for the v2 cache
+inference/                 page-level engine: burn detector, budget estimator
+api/                       FastAPI demo + static web UI
+tests/                     pytest suite
+archive/                   superseded prototype docs, reports and scripts (not maintained)
+results/                   line_eval_v3*.json (current), pre_budget_fix/, line_eval.json (v2), line_eval_v1_legacy_fusion.json
+```
+
+License: code under the [MIT License](LICENSE). The training text comes from public-domain
+Project Gutenberg books; the rendered pages are synthetic.

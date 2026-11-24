@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "created_at": "2026-11-08T21:28:36.627278",
+    "seed": 42,
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15,
+    "total_documents": 6,
+    "counts": {
+      "train": 4,
+      "val": 1,
+      "test": 1
+    }
+  },
+  "manifest_path": "data\\splits.json",
+  "total_documents": 6,
+  "is_fixture": true,
+  "readiness_status": "FIXTURE_MODE_ONLY (Debugging & Smoke-testing, Not for full training)",
+  "warning": "CRITICAL NOTICE: Current dataset consists of the 6-page synthetic fixture. It is mathematically sufficient to verify loss convergence, backward gradients, AMP mixed precision, checkpointing, and scheduler step mechanics. However, full-scale generalizable restoration training requires the full OPRB corpus.",
+  "train_split": {
+    "split_name": "train",
+    "document_count": 4,
+    "target_length": {
+      "min": 5,
+      "max": 36,
+      "mean": 17.75,
+      "median": 15.0,
+      "std": 12.07
+    },
+    "character_budget": {
+      "min": 12.79,
+      "max": 23.14,
+      "mean": 18.09,
+      "std": 3.75
+    },
+    "alignment_confidence": {
+      "min": 0.85,
+      "max": 0.85,
+      "mean": 0.85
+    },
+    "damage_status_breakdown": {
+      "severed": 4
+    }
+  },
+  "val_split": {
+    "split_name": "val",
+    "document_count": 1,
+    "target_length": {
+      "min": 47,
+      "max": 47,
+      "mean": 47.0,
+      "median": 47.0,
+      "std": 0.0
+    },
+    "character_budget": {
+      "min": 18.29,
+      "max": 18.29,
+      "mean": 18.29,
+      "std": 0.0
+    },
+    "alignment_confidence": {
+      "min": 0.5,
+      "max": 0.5,
+      "mean": 0.5
+    },
+    "damage_status_breakdown": {
+      "severed": 1
+    }
+  },
+  "test_split": {
+    "split_name": "test",
+    "document_count": 1,
+    "target_length": {
+      "min": 11,
+      "max": 11,
+      "mean": 11.0,
+      "median": 11.0,
+      "std": 0.0
+    },
+    "character_budget": {
+      "min": 16.86,
+      "max": 16.86,
+      "mean": 16.86,
+      "std": 0.0
+    },
+    "alignment_confidence": {
+      "min": 0.85,
+      "max": 0.85,
+      "mean": 0.85
+    },
+    "damage_status_breakdown": {
+      "severed": 1
+    }
+  }
+}

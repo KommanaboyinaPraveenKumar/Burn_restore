@@ -1,0 +1,7 @@
+NON-DISCLOSURE AND RESTORATION TECHNOLOGY LICENSE AGREEMENT
+This Agreement is entered into by and between the Research Institute and Licensee.
+1. Confidential Information. All proprietary models, weights, and dataset manifests
+shall be preserved with strict confidentiality and protected against unauthorized disclosure.
+2. Permitted Use. The framework shall be utilized solely for academic verification.
+3. Term and Termination. This license remains in full effect until formally terminated.
+IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date below.

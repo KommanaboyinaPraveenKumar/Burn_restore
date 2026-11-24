@@ -1,7 +1,12 @@
 import sys, cv2, os, numpy as np
+from pathlib import Path
+
+_burn_dir = Path(__file__).resolve().parent
+if str(_burn_dir) not in sys.path:
+    sys.path.insert(0, str(_burn_dir))
+
 sys.stdout.reconfigure(encoding='utf-8')
 from dataset_generator import SideBurnGenerator
-
 from config import Config
 
 cfg = Config()
@@ -10,13 +15,20 @@ gen = SideBurnGenerator(cfg)
 img_dir = 'data/oprb_train/img'
 txt_dir = 'data/oprb_train/cleaned_texts'
 
+# Fallback to self-contained mini-dataset fixture if OPRB is not downloaded
+if not os.path.isdir(img_dir):
+    img_dir = 'tests/fixtures/mini_dataset/clean_images'
+    txt_dir = 'tests/fixtures/mini_dataset/clean_texts'
+
+fname = ""
+img_path = ""
 for root, _, files in os.walk(img_dir):
     for f in files:
         if f.lower().endswith(('.png', '.jpg')):
             fname = f
             img_path = os.path.join(root, f)
             break
-    if 'img_path' in locals():
+    if img_path:
         break
 
 txt_path = os.path.join(txt_dir, os.path.splitext(fname)[0] + '.txt')

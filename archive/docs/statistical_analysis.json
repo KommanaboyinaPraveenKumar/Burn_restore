@@ -1,0 +1,30 @@
+{
+  "comparison_protocol": "Paired Bootstrap (1000 resamples, 95% CI) and Paired Permutation Test",
+  "full_model_vs_text_only": {
+    "n_samples": 10,
+    "mean_difference": -0.149,
+    "ci_lower_95": -0.3671,
+    "ci_upper_95": 0.0087,
+    "p_value": 0.173,
+    "statistically_significant_05": false,
+    "cohens_d": -0.481
+  },
+  "full_model_vs_legacy_prefix": {
+    "n_samples": 10,
+    "mean_difference": -0.149,
+    "ci_lower_95": -0.3671,
+    "ci_upper_95": 0.0087,
+    "p_value": 0.173,
+    "statistically_significant_05": false,
+    "cohens_d": -0.481
+  },
+  "full_model_vs_heuristic_ocr": {
+    "n_samples": 10,
+    "mean_difference": 1.2163,
+    "ci_lower_95": 0.6134,
+    "ci_upper_95": 2.2285,
+    "p_value": 0.0,
+    "statistically_significant_05": true,
+    "cohens_d": 0.8804
+  }
+}

@@ -1,0 +1,2666 @@
+{
+  "n_lines": 6145,
+  "data_dir": "data/lines_v3",
+  "split": "test",
+  "top_k": 5,
+  "context_noise": 0.0,
+  "prompt_styles": {
+    "text_only": "v3",
+    "text_only_soft": "v3",
+    "full": "v3",
+    "full_soft": "v3",
+    "full_zero_img": "v3",
+    "full_shuf_img": "v3",
+    "small_full": "v3",
+    "llm_only": "precomputed (Qwen/Qwen2.5-1.5B)",
+    "ocr_llm": "precomputed (Qwen/Qwen2.5-1.5B)"
+  },
+  "systems": {
+    "empty": {
+      "corpus_cer": 1.0,
+      "corpus_cer_95ci": [
+        1.0,
+        1.0
+      ],
+      "macro_wer": 1.0,
+      "exact_match": 0.0,
+      "first_word_acc": 0.0,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.0,
+      "mean_len_error": -13.8174,
+      "overlong_vs_truth": 0.0,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.0,
+      "read_acc_95ci": [
+        0.0,
+        0.0
+      ],
+      "read_cer": 1.0,
+      "read_acc_at_k": 0.0,
+      "ctc_read_acc": null,
+      "ctc_cer": null,
+      "inferred_cer": 1.0,
+      "exact_match_at_k": 0.0,
+      "first_word_acc_at_k": 0.0,
+      "oracle_cer_at_k": 1.0,
+      "bits_per_char": null,
+      "auroc_conf_first_word": null,
+      "first_word_acc_top25pct_conf": null
+    },
+    "text_only": {
+      "corpus_cer": 0.7019,
+      "corpus_cer_95ci": [
+        0.696,
+        0.7074
+      ],
+      "macro_wer": 0.8055,
+      "exact_match": 0.0779,
+      "first_word_acc": 0.2928,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.0231,
+      "mean_len_error": -5.5058,
+      "overlong_vs_truth": 0.0272,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.361,
+      "read_acc_95ci": [
+        0.3486,
+        0.3738
+      ],
+      "read_cer": 0.5953,
+      "read_acc_at_k": 0.5185,
+      "ctc_read_acc": null,
+      "ctc_cer": null,
+      "inferred_cer": 0.7405,
+      "exact_match_at_k": 0.1317,
+      "first_word_acc_at_k": 0.4142,
+      "oracle_cer_at_k": 0.5778,
+      "bits_per_char": 1.4431,
+      "auroc_conf_first_word": 0.8402,
+      "first_word_acc_top25pct_conf": 0.696
+    },
+    "text_only_soft": {
+      "corpus_cer": 0.7955,
+      "corpus_cer_95ci": [
+        0.7878,
+        0.8025
+      ],
+      "macro_wer": 0.9663,
+      "exact_match": 0.0524,
+      "first_word_acc": 0.275,
+      "budget_violation_rate": 0.2005,
+      "budget_violation_rate_old_rule": 0.2042,
+      "mean_len_error": -3.744,
+      "overlong_vs_truth": 0.2039,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.3488,
+      "read_acc_95ci": [
+        0.3365,
+        0.3617
+      ],
+      "read_cer": 0.6045,
+      "read_acc_at_k": 0.513,
+      "ctc_read_acc": null,
+      "ctc_cer": null,
+      "inferred_cer": 0.8411,
+      "exact_match_at_k": 0.1238,
+      "first_word_acc_at_k": 0.4076,
+      "oracle_cer_at_k": 0.5903,
+      "bits_per_char": 1.4431,
+      "auroc_conf_first_word": 0.8519,
+      "first_word_acc_top25pct_conf": 0.6823
+    },
+    "full": {
+      "corpus_cer": 0.6563,
+      "corpus_cer_95ci": [
+        0.6503,
+        0.6619
+      ],
+      "macro_wer": 0.7442,
+      "exact_match": 0.1035,
+      "first_word_acc": 0.4184,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.0225,
+      "mean_len_error": -5.4231,
+      "overlong_vs_truth": 0.0236,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.6597,
+      "read_acc_95ci": [
+        0.6473,
+        0.6714
+      ],
+      "read_cer": 0.3017,
+      "read_acc_at_k": 0.7827,
+      "ctc_read_acc": 0.6512,
+      "ctc_cer": 0.0408,
+      "inferred_cer": 0.717,
+      "exact_match_at_k": 0.1741,
+      "first_word_acc_at_k": 0.5535,
+      "oracle_cer_at_k": 0.5256,
+      "bits_per_char": 1.3148,
+      "auroc_conf_first_word": 0.8655,
+      "first_word_acc_top25pct_conf": 0.8763
+    },
+    "full_soft": {
+      "corpus_cer": 0.7439,
+      "corpus_cer_95ci": [
+        0.7368,
+        0.7513
+      ],
+      "macro_wer": 0.8934,
+      "exact_match": 0.0675,
+      "first_word_acc": 0.402,
+      "budget_violation_rate": 0.1831,
+      "budget_violation_rate_old_rule": 0.1878,
+      "mean_len_error": -3.7832,
+      "overlong_vs_truth": 0.1867,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.6532,
+      "read_acc_95ci": [
+        0.6408,
+        0.6649
+      ],
+      "read_cer": 0.3064,
+      "read_acc_at_k": 0.778,
+      "ctc_read_acc": 0.6512,
+      "ctc_cer": 0.0408,
+      "inferred_cer": 0.8101,
+      "exact_match_at_k": 0.1642,
+      "first_word_acc_at_k": 0.5473,
+      "oracle_cer_at_k": 0.5359,
+      "bits_per_char": 1.3148,
+      "auroc_conf_first_word": 0.8758,
+      "first_word_acc_top25pct_conf": 0.8724
+    },
+    "full_zero_img": {
+      "corpus_cer": 0.7476,
+      "corpus_cer_95ci": [
+        0.7414,
+        0.754
+      ],
+      "macro_wer": 0.9139,
+      "exact_match": 0.0465,
+      "first_word_acc": 0.2055,
+      "budget_violation_rate": 0.0985,
+      "budget_violation_rate_old_rule": 0.0936,
+      "mean_len_error": -4.353,
+      "overlong_vs_truth": 0.1072,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.2773,
+      "read_acc_95ci": [
+        0.2658,
+        0.289
+      ],
+      "read_cer": 0.6823,
+      "read_acc_at_k": 0.3165,
+      "ctc_read_acc": 0.0,
+      "ctc_cer": 1.0,
+      "inferred_cer": 0.7794,
+      "exact_match_at_k": 0.0695,
+      "first_word_acc_at_k": 0.2434,
+      "oracle_cer_at_k": 0.6858,
+      "bits_per_char": 2.1499,
+      "auroc_conf_first_word": 0.8474,
+      "first_word_acc_top25pct_conf": 0.543
+    },
+    "full_shuf_img": {
+      "corpus_cer": 0.8145,
+      "corpus_cer_95ci": [
+        0.8082,
+        0.8218
+      ],
+      "macro_wer": 1.0096,
+      "exact_match": 0.0317,
+      "first_word_acc": 0.1469,
+      "budget_violation_rate": 0.185,
+      "budget_violation_rate_old_rule": 0.1881,
+      "mean_len_error": -3.9964,
+      "overlong_vs_truth": 0.1904,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.1889,
+      "read_acc_95ci": [
+        0.1786,
+        0.1995
+      ],
+      "read_cer": 0.7702,
+      "read_acc_at_k": 0.2877,
+      "ctc_read_acc": 0.0324,
+      "ctc_cer": 0.8517,
+      "inferred_cer": 0.8472,
+      "exact_match_at_k": 0.0835,
+      "first_word_acc_at_k": 0.2332,
+      "oracle_cer_at_k": 0.6216,
+      "bits_per_char": 1.6281,
+      "auroc_conf_first_word": 0.7853,
+      "first_word_acc_top25pct_conf": 0.3496
+    },
+    "small_full": {
+      "corpus_cer": 0.6991,
+      "corpus_cer_95ci": [
+        0.6942,
+        0.7039
+      ],
+      "macro_wer": 0.7927,
+      "exact_match": 0.069,
+      "first_word_acc": 0.4005,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.0127,
+      "mean_len_error": -6.4763,
+      "overlong_vs_truth": 0.0189,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.6999,
+      "read_acc_95ci": [
+        0.6878,
+        0.7119
+      ],
+      "read_cer": 0.262,
+      "read_acc_at_k": 0.8118,
+      "ctc_read_acc": 0.7069,
+      "ctc_cer": 0.0287,
+      "inferred_cer": 0.7681,
+      "exact_match_at_k": 0.1177,
+      "first_word_acc_at_k": 0.5229,
+      "oracle_cer_at_k": 0.5743,
+      "bits_per_char": 1.5694,
+      "auroc_conf_first_word": 0.8964,
+      "first_word_acc_top25pct_conf": 0.8971
+    },
+    "llm_only": {
+      "corpus_cer": 0.9691,
+      "corpus_cer_95ci": [
+        0.9634,
+        0.9751
+      ],
+      "macro_wer": 1.2137,
+      "exact_match": 0.0037,
+      "first_word_acc": 0.0757,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.2903,
+      "mean_len_error": -2.2644,
+      "overlong_vs_truth": 0.2807,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.1268,
+      "read_acc_95ci": [
+        0.1176,
+        0.1356
+      ],
+      "read_cer": 0.8533,
+      "read_acc_at_k": 0.1417,
+      "ctc_read_acc": null,
+      "ctc_cer": null,
+      "inferred_cer": 0.9884,
+      "exact_match_at_k": 0.0044,
+      "first_word_acc_at_k": 0.0846,
+      "oracle_cer_at_k": 0.9507,
+      "bits_per_char": null,
+      "auroc_conf_first_word": 0.0,
+      "first_word_acc_top25pct_conf": null
+    },
+    "ocr_llm": {
+      "corpus_cer": 0.8761,
+      "corpus_cer_95ci": [
+        0.87,
+        0.8828
+      ],
+      "macro_wer": 1.2381,
+      "exact_match": 0.0137,
+      "first_word_acc": 0.3862,
+      "budget_violation_rate": 0.0,
+      "budget_violation_rate_old_rule": 0.4119,
+      "mean_len_error": 1.7201,
+      "overlong_vs_truth": 0.3782,
+      "read_lines_frac": 0.9038,
+      "read_acc": 0.6574,
+      "read_acc_95ci": [
+        0.6446,
+        0.6698
+      ],
+      "read_cer": 0.2691,
+      "read_acc_at_k": 0.6656,
+      "ctc_read_acc": 0.24,
+      "ctc_cer": 0.0984,
+      "inferred_cer": 0.9478,
+      "exact_match_at_k": 0.0143,
+      "first_word_acc_at_k": 0.3971,
+      "oracle_cer_at_k": 0.8562,
+      "bits_per_char": null,
+      "auroc_conf_first_word": 0.0,
+      "first_word_acc_top25pct_conf": null
+    }
+  },
+  "comparisons": {
+    "full_vs_text_only": {
+      "cer": [
+        -0.0456,
+        0.0
+      ],
+      "read_err": [
+        -0.2984,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.0235,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.1282,
+        0.0
+      ]
+    },
+    "full_soft_vs_full_zero_img": {
+      "cer": [
+        -0.0038,
+        0.143
+      ],
+      "read_err": [
+        -0.3759,
+        0.0
+      ],
+      "inferred_cer": [
+        0.0306,
+        1.0
+      ],
+      "bits_per_char": [
+        -0.8351,
+        0.0
+      ]
+    },
+    "full_soft_vs_full_shuf_img": {
+      "cer": [
+        -0.0708,
+        0.0
+      ],
+      "read_err": [
+        -0.4641,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.037,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.3135,
+        0.0
+      ]
+    },
+    "full_vs_full_soft": {
+      "cer": [
+        -0.0876,
+        0.0
+      ],
+      "read_err": [
+        -0.0065,
+        0.001
+      ],
+      "inferred_cer": [
+        -0.0933,
+        0.0
+      ],
+      "bits_per_char": [
+        0.0,
+        1.0
+      ]
+    },
+    "text_only_vs_text_only_soft": {
+      "cer": [
+        -0.0936,
+        0.0
+      ],
+      "read_err": [
+        -0.0122,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.1006,
+        0.0
+      ],
+      "bits_per_char": [
+        0.0,
+        1.0
+      ]
+    },
+    "full_vs_empty": {
+      "cer": [
+        -0.3437,
+        0.0
+      ],
+      "read_err": [
+        -0.6595,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.2831,
+        0.0
+      ]
+    },
+    "text_only_vs_empty": {
+      "cer": [
+        -0.2981,
+        0.0
+      ],
+      "read_err": [
+        -0.3611,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.2596,
+        0.0
+      ]
+    },
+    "full_vs_small_full": {
+      "cer": [
+        -0.0428,
+        0.0
+      ],
+      "read_err": [
+        0.0404,
+        1.0
+      ],
+      "inferred_cer": [
+        -0.0512,
+        0.0
+      ],
+      "bits_per_char": [
+        -0.2546,
+        0.0
+      ]
+    },
+    "full_vs_llm_only": {
+      "cer": [
+        -0.3129,
+        0.0
+      ],
+      "read_err": [
+        -0.5326,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.2716,
+        0.0
+      ]
+    },
+    "text_only_vs_llm_only": {
+      "cer": [
+        -0.2673,
+        0.0
+      ],
+      "read_err": [
+        -0.2342,
+        0.0
+      ],
+      "inferred_cer": [
+        -0.2481,
+        0.0
+      ]
+    },
+    "full_vs_ocr_llm": {
+      "cer": [
+        -0.2198,
+        0.0
+      ],
+      "read_err": [
+        -0.0021,
+        0.384
+      ],
+      "inferred_cer": [
+        -0.2309,
+        0.0
+      ]
+    },
+    "text_only_vs_ocr_llm": {
+      "cer": [
+        -0.1742,
+        0.0
+      ],
+      "read_err": [
+        0.2963,
+        1.0
+      ],
+      "inferred_cer": [
+        -0.2075,
+        0.0
+      ]
+    }
+  },
+  "calibration": {},
+  "budget": {
+    "mode": "hard",
+    "upper": {
+      "ub_ratio": 1.1391725402810324,
+      "ub_add": 1.0
+    },
+    "truth_within_upper": 0.9879576891781936,
+    "truth_violates_old_rule": 0.07550854353132629
+  },
+  "breakdown": {
+    "text_only_para_end": {
+      "n": 275,
+      "cer": 0.7502,
+      "cer_rest": 0.7003,
+      "viol": 0.0,
+      "viol_rest": 0.0
+    },
+    "full_para_end": {
+      "n": 275,
+      "cer": 0.6681,
+      "cer_rest": 0.6559,
+      "viol": 0.0,
+      "viol_rest": 0.0
+    },
+    "text_only_hyphenated": {
+      "n": 584,
+      "cer": 0.7034,
+      "cer_rest": 0.7017,
+      "viol": 0.0,
+      "viol_rest": 0.0
+    },
+    "full_hyphenated": {
+      "n": 584,
+      "cer": 0.6543,
+      "cer_rest": 0.6565,
+      "viol": 0.0,
+      "viol_rest": 0.0
+    }
+  },
+  "samples": [
+    {
+      "prefix": "Indulging in these solemn speculations, and thinking about his debts, an",
+      "target": "d his son Jim at",
+      "read": "d",
+      "inferred": " his son Jim at",
+      "text_only": [
+        "d Frank at",
+        "d his sons, John at",
+        "d his parents at",
+        "d his wife, Mary at",
+        "d his sons at"
+      ],
+      "text_only_soft": [
+        "d his parents, John at",
+        "d Frank at",
+        "d his parents at",
+        "d his sons at",
+        "d his sons, George at"
+      ],
+      "full": [
+        "deds, at the",
+        "deds, he stayed at",
+        "deds, he was at",
+        "deds, he sat at",
+        "deds, he sat in"
+      ],
+      "full_soft": [
+        "deds, at the",
+        "deds, he sat down with",
+        "deds, he stayed at",
+        "deds, he was at",
+        "deds, he sat at"
+      ],
+      "full_zero_img": [
+        "n he was at",
+        "s of his parents at the",
+        "s about his parents at",
+        "s of his parents at",
+        "n he was at the"
+      ],
+      "full_shuf_img": [
+        "d the money he had received",
+        "d the money he received",
+        "d the money he gave to",
+        "d his parents at",
+        "d the money he paid at"
+      ],
+      "small_full": [
+        "d he was at",
+        "d looking at the",
+        "d a few years at",
+        "d he had a friend,",
+        "d he was a student,"
+      ],
+      "llm_only": [
+        "idea suddenly occur",
+        "idea occurred to hi",
+        "idea occurred to hi",
+        "idea occurred to hi",
+        "idea occurred to hi"
+      ],
+      "ocr_llm": [
+        "d the state of his",
+        "d the state of the",
+        "d the debts of othe",
+        "d the future, and t",
+        "d the future, and t"
+      ],
+      "ctc_full": " about his debts, and"
+    },
+    {
+      "prefix": "College, and Frank at Woolwich, and the four girls, who were no beauties, po",
+      "target": "or things, and",
+      "read": "o",
+      "inferred": "r things, and",
+      "text_only": [
+        "rt that they",
+        "ut he",
+        "wn that they",
+        "ssibly",
+        "wned they"
+      ],
+      "text_only_soft": [
+        "rt that they",
+        "ut he",
+        "wn that they",
+        "ssibly",
+        "wned they"
+      ],
+      "full": [
+        "oked that they",
+        "ssibly",
+        "oked at him, and",
+        "oked at him, who",
+        "oked at him, that"
+      ],
+      "full_soft": [
+        "oked at the thought that",
+        "oked that they",
+        "ssibly",
+        "oked at him, and",
+        "oked at him, that"
+      ],
+      "full_zero_img": [
+        "ned that they",
+        "ssibly",
+        "ssibly",
+        "ned that they",
+        "ssibly"
+      ],
+      "full_shuf_img": [
+        "ddering that they probably",
+        "ddering that they",
+        "ddered that they",
+        "dited that they",
+        "dered that they"
+      ],
+      "small_full": [
+        "oked that he",
+        "oked that they",
+        "od that he",
+        "oking that he",
+        "ok that he"
+      ],
+      "llm_only": [
+        "oh-poohed him, and",
+        "oh-poohed the whole",
+        "oh-poohed the whole",
+        "oh-poohed the whole",
+        "oh-poohed the whole"
+      ],
+      "ocr_llm": [
+        "or wretches, who ha",
+        "or wretches, but wh",
+        "or wretches, but wh",
+        "or wretches, but wh",
+        "or wretches, but wh"
+      ],
+      "ctc_full": "vere no beauties, poo"
+    },
+    {
+      "prefix": "would not have a penny but what they got from the aunt's expected legacy, t",
+      "target": "he Rector and",
+      "read": "h",
+      "inferred": "e Rector and",
+      "text_only": [
+        "hat he and",
+        "hat",
+        "o be sure that",
+        "oo, and",
+        "o be sure"
+      ],
+      "text_only_soft": [
+        "hat he and",
+        "hat",
+        "o be sure that",
+        "oo, and",
+        "o be sure"
+      ],
+      "full": [
+        "he man and",
+        "he father and",
+        "he boy and",
+        "he he and",
+        "hen"
+      ],
+      "full_soft": [
+        "he man and",
+        "he father and",
+        "he boy and",
+        "he he and",
+        "hen"
+      ],
+      "full_zero_img": [
+        "o say that",
+        "o say that",
+        "o say that",
+        "oo, and",
+        "oo, and"
+      ],
+      "full_shuf_img": [
+        "o which",
+        "o say that",
+        "oo which",
+        "oo, and",
+        "oo,"
+      ],
+      "small_full": [
+        "he time",
+        "he way",
+        "he father and",
+        "he mother of",
+        "he sounded like"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "he sum of 10,000 a",
+        "he sum of 10,000, w",
+        "he sum of 10,000 fr",
+        "he sum of 10,000 po",
+        "he sum of 10,000 po"
+      ],
+      "ctc_full": "s expected legacy, th"
+    },
+    {
+      "prefix": "\"Pitt can't be such an infernal villain as to sell the reversion of the l",
+      "target": "iving. And that",
+      "read": "i",
+      "inferred": "ving. And that",
+      "text_only": [
+        "oyal",
+        "ot of the",
+        "ittle",
+        "ot of",
+        "ots of"
+      ],
+      "text_only_soft": [
+        "oyal",
+        "ot of the",
+        "ittle",
+        "ot of",
+        "ots of"
+      ],
+      "full": [
+        "iving",
+        "ittle",
+        "ist",
+        "iving-room",
+        "iving,"
+      ],
+      "full_soft": [
+        "iving",
+        "ittle",
+        "ist",
+        "iving-room",
+        "iving,"
+      ],
+      "full_zero_img": [
+        "oyal",
+        "oyal",
+        "oyal",
+        "oyal",
+        "oyal"
+      ],
+      "full_shuf_img": [
+        "he",
+        "ead. The",
+        "eaved",
+        "eading",
+        "ead to the"
+      ],
+      "small_full": [
+        "ive. The",
+        "iving",
+        "ivel. The",
+        "ivel, but the",
+        "ive of the"
+      ],
+      "llm_only": [
+        "ivery to me,\" she said to",
+        "ivery to me,\" she said to",
+        "ivery to me,\" she said to",
+        "ivery to me,\" she said to",
+        "ivery to me,\" she said to"
+      ],
+      "ocr_llm": [
+        "ist to me,\" she said to he",
+        "ist to me,\" she said to he",
+        "ist to me,\" she said to he",
+        "ist to me,\" she said to he",
+        "ist to me,\" she said to he"
+      ],
+      "ctc_full": "he reversion of the liv"
+    },
+    {
+      "prefix": "Methodist milksop of an eldest son looks to Parliament,\" continued M",
+      "target": "r. Crawley, after a",
+      "read": "r",
+      "inferred": ". Crawley, after a",
+      "text_only": [
+        "s. Crawley without a",
+        "r. Crawley without",
+        "s. Crawley without",
+        "rs. Crawley without",
+        "rs. Crawley, without"
+      ],
+      "text_only_soft": [
+        "s. Crawley without a",
+        "r. Crawley without",
+        "s. Crawley without",
+        "rs. Crawley without",
+        "rs. Crawley, without"
+      ],
+      "full": [
+        "r. Crawley without a",
+        "r. Crawley without",
+        "rs. Crawley without",
+        "rs Crawley without",
+        "rs. Crawley, without"
+      ],
+      "full_soft": [
+        "r. Crawley without a",
+        "r. Crawley without",
+        "rs. Crawley without",
+        "rs Crawley without",
+        "rs. Crawley, without"
+      ],
+      "full_zero_img": [
+        "s. Crawley without a",
+        "s. Crawley without a",
+        "s. Crawley without a",
+        "s. Crawley without a",
+        "s. Crawley without a"
+      ],
+      "full_shuf_img": [
+        "ir Crawley without a",
+        "ir Crawley without",
+        "irs Crawley without",
+        "ir Crawley, without",
+        "irror Crawley without"
+      ],
+      "small_full": [
+        "r. Rector's",
+        "r. Crawley in a",
+        "r. Crawley's",
+        "rs. Crawley's",
+        "rs. Rector's"
+      ],
+      "llm_only": [
+        ". D'Artagnan, who had been",
+        ". D'Artagnan, in a tone of",
+        ". D'Artagnan, with a smile",
+        ". D'Artagnan, with a smile",
+        ". D'Artagnan, with a smile"
+      ],
+      "ocr_llm": [
+        "r. Poirot. \"I don't know w",
+        "r. Poirot. \"I don't know w",
+        "r. Poirot. \"I don't know w",
+        "r. Poirot. \"I don't know w",
+        "r. Poirot. \"I don't know w"
+      ],
+      "ctc_full": "ment,\" continued M"
+    },
+    {
+      "prefix": "\"Sir Pitt Crawley will do anything,\" said the Rector's wife. \"We must",
+      "target": "get Miss Crawley to",
+      "read": "",
+      "inferred": "get Miss Crawley to",
+      "text_only": [
+        "not",
+        "try to",
+        "n't",
+        "try and",
+        "make him promise it and"
+      ],
+      "text_only_soft": [
+        "not",
+        "try to",
+        "n't",
+        "try and",
+        "make him promise something"
+      ],
+      "full": [
+        "go and",
+        "go to him and",
+        "gether to",
+        "gether",
+        "get him to"
+      ],
+      "full_soft": [
+        "go and",
+        "go to him and",
+        "gether to",
+        "gether",
+        "get him to"
+      ],
+      "full_zero_img": [
+        "n't",
+        "n't",
+        "n't",
+        "n't",
+        "n't"
+      ],
+      "full_shuf_img": [
+        "try to",
+        "re to",
+        "re not",
+        "re",
+        "not"
+      ],
+      "small_full": [
+        "get him to",
+        "try to",
+        "get to",
+        "give him a chance to",
+        "give him a chance and"
+      ],
+      "llm_only": [
+        "do anything,\" said the",
+        "n't let him,\" said the",
+        "have him,\" said the Rec",
+        "have him,\" said the Rec",
+        "have him,\" said the Rec"
+      ],
+      "ocr_llm": [
+        "not be too hard on him,",
+        "not be too hasty,\" said",
+        "not be hasty,\" said the",
+        "not be hasty,\" said the",
+        "not be hasty,\" said the"
+      ],
+      "ctc_full": "or's wife. \"We must g"
+    },
+    {
+      "prefix": "\"Pitt will promise anything,\" replied the brother. \"He promised he'",
+      "target": "d pay my college bills,",
+      "read": "d",
+      "inferred": " pay my college bills,",
+      "text_only": [
+        "d die",
+        "d give me the house",
+        "d leave",
+        "d give me the land",
+        "d give me his house"
+      ],
+      "text_only_soft": [
+        "d die",
+        "d give me the house",
+        "d leave",
+        "d give me the land",
+        "d give me his house"
+      ],
+      "full": [
+        "d give me a house",
+        "d give me a house",
+        "d give me the house",
+        "d give me his house",
+        "d give me a new house"
+      ],
+      "full_soft": [
+        "d give me a house",
+        "d give me a house",
+        "d give me the house",
+        "d give me his house",
+        "d give me a new house"
+      ],
+      "full_zero_img": [
+        "d marry me",
+        "d marry me",
+        "d marry me",
+        "d marry me",
+        "d marry me"
+      ],
+      "full_shuf_img": [
+        "d marry me",
+        "d give me the house",
+        "d give me his house",
+        "d give me the land",
+        "d take over the house"
+      ],
+      "small_full": [
+        "d do anything",
+        "d do nothing",
+        "d make it to James",
+        "d make it to him",
+        "d do anything to James"
+      ],
+      "llm_only": [
+        "d do anything for me, and",
+        "d do anything for me, and",
+        "d do anything for me, and",
+        "d do anything for me, and",
+        "d do anything for me, and"
+      ],
+      "ocr_llm": [
+        "d like to see me, and he'",
+        "d like to see James, and",
+        "d like to see James, and",
+        "d like to see James, and",
+        "d like to see James, and"
+      ],
+      "ctc_full": ". \"He promised hed"
+    },
+    {
+      "prefix": "when my father died; he promised he'd build the new wing to the Rect",
+      "target": "ory; he promised he'd",
+      "read": "o",
+      "inferred": "ry; he promised he'd",
+      "text_only": [
+        "e; he promised he'd",
+        "e; he promised to",
+        "ain; he promised to",
+        "ainment; he promised to",
+        "e; he promised he'll"
+      ],
+      "text_only_soft": [
+        "e; he promised he'd",
+        "e; he promised to",
+        "ain; he promised to",
+        "ainment; he promised to",
+        "e; he promised he'll"
+      ],
+      "full": [
+        "orium; he promised to",
+        "or; he promised he'd",
+        "om; he promised to",
+        "orium, and",
+        "om; he promised he would"
+      ],
+      "full_soft": [
+        "orium; he promised to",
+        "or; he promised he'd",
+        "om; he promised to",
+        "orium, and",
+        "om; he promised he would"
+      ],
+      "full_zero_img": [
+        "ue; he promised he'd",
+        "ue; he promised he'd",
+        "ue; he promised he'd",
+        "ue; he promised he'd",
+        "ue; he promised he'd"
+      ],
+      "full_shuf_img": [
+        "d; he promised to",
+        "d; he promised he would",
+        "e; he promised to",
+        "d, and",
+        "d and"
+      ],
+      "small_full": [
+        "ot, and",
+        "toy--and",
+        "toy, and",
+        "oto, and",
+        "ote,"
+      ],
+      "llm_only": [
+        "ory; he promised he'",
+        "ory, and he promised he'",
+        "ory, and he promised he'",
+        "ory, and he promised he'",
+        "ory, and he promised he'"
+      ],
+      "ocr_llm": [
+        "o",
+        "o",
+        "o",
+        "o",
+        "o"
+      ],
+      "ctc_full": "ew wing to the Recto"
+    },
+    {
+      "prefix": "let me have Jibb's field and the Six-acre Meadow--and much he executed",
+      "target": "his promises! And",
+      "read": "",
+      "inferred": "his promises! And",
+      "text_only": [
+        ". I say",
+        ". I say",
+        ". But",
+        ". But",
+        ". And"
+      ],
+      "text_only_soft": [
+        ". I say",
+        ". I say",
+        ". But",
+        ". But",
+        ". And"
+      ],
+      "full": [
+        ". I say",
+        ". But",
+        ". And",
+        ". Now",
+        ". And"
+      ],
+      "full_soft": [
+        ". I say",
+        ". But",
+        ". And",
+        ". Now",
+        ". And"
+      ],
+      "full_zero_img": [
+        "s. I say",
+        ". I say",
+        ". I say",
+        "s. I say",
+        "s. I say"
+      ],
+      "full_shuf_img": [
+        "it. I say",
+        "it. But",
+        "on me. But",
+        "it. And",
+        "on me. And"
+      ],
+      "small_full": [
+        "him. But",
+        "him. And",
+        "his son. But",
+        "his son. And",
+        "his son--and"
+      ],
+      "llm_only": [
+        ", but he never built the",
+        ". He promised he'd build",
+        ". He promised he'd build",
+        ". He promised he'd build",
+        ". He promised he'd build"
+      ],
+      "ocr_llm": [
+        ". He built the new wing,",
+        ". He built the new wing;",
+        ". He built the new wing;",
+        ". He built the new wing;",
+        ". He built the new wing;"
+      ],
+      "ctc_full": "d much he executed "
+    },
+    {
+      "prefix": "it's to this man's son--this scoundrel, gambler, swindler, murderer of a",
+      "target": "Rawdon Crawley, that",
+      "read": "",
+      "inferred": "Rawdon Crawley, that",
+      "text_only": [
+        "man.",
+        "nother--that",
+        "nother.",
+        "nother--where",
+        "nother man."
+      ],
+      "text_only_soft": [
+        "man.",
+        "nother--that",
+        "nother.",
+        "nother--where",
+        "nother man."
+      ],
+      "full": [
+        "friend.",
+        "kind.",
+        "friend, where",
+        "lways.",
+        "friend, and"
+      ],
+      "full_soft": [
+        "friend.",
+        "kind.",
+        "friend, where",
+        "lways.",
+        "friend, and"
+      ],
+      "full_zero_img": [
+        "nother--that",
+        "nother--that",
+        "nother--that",
+        "nother--that",
+        "nother--that"
+      ],
+      "full_shuf_img": [
+        "dversity--that",
+        "dversity.",
+        "dolescence.",
+        "dversity--where",
+        "dolescence, where"
+      ],
+      "small_full": [
+        "man.",
+        "man, and",
+        "young woman, and",
+        "young girl, and",
+        "friend, and"
+      ],
+      "llm_only": [
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that"
+      ],
+      "ocr_llm": [
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that",
+        "man's wife and child--that"
+      ],
+      "ctc_full": "dler, murderer of a "
+    },
+    {
+      "prefix": "Matilda leaves the bulk of her money. I say it's un-Christian. By Jove, ",
+      "target": "it is. The infamous dog",
+      "read": "it",
+      "inferred": " is. The infamous dog",
+      "text_only": [
+        "he",
+        "I say he",
+        "this man",
+        "I say, he",
+        "who"
+      ],
+      "text_only_soft": [
+        "he",
+        "I say he",
+        "this man",
+        "I say, he",
+        "who"
+      ],
+      "full": [
+        "he",
+        "it's a man who",
+        "I say he",
+        "it's not. He",
+        "it"
+      ],
+      "full_soft": [
+        "he",
+        "it's a man who",
+        "I say he",
+        "it's not. He",
+        "it"
+      ],
+      "full_zero_img": [
+        "he",
+        "he",
+        "he",
+        "he",
+        "he"
+      ],
+      "full_shuf_img": [
+        "he",
+        "I say he",
+        "my dear, he",
+        "this man",
+        "the man"
+      ],
+      "small_full": [
+        "it's to him that he",
+        "it",
+        "it's a man who",
+        "it's to him. He",
+        "it's to him, he"
+      ],
+      "llm_only": [
+        "100,000,000,000",
+        "100,000,000 a year, and",
+        "100,000 dollars is a lot of",
+        "100,000 dollars is a great d",
+        "100,000 dollars is a great d"
+      ],
+      "ocr_llm": [
+        "Inc. I say it's un-Christian",
+        "Inc. I say it's un-Christian",
+        "Inc. I say it's un-Christian",
+        "Inc. I say it's un-Christian",
+        "Inc. I say it's un-Christian"
+      ],
+      "ctc_full": "hristian. By Jove, it"
+    },
+    {
+      "prefix": "\"Hush, my dearest love! we're in Sir Pitt's grounds,\" interposed his",
+      "target": "wife.",
+      "read": "",
+      "inferred": "wife.",
+      "text_only": [
+        "wife.",
+        "mother.",
+        "friend.",
+        "daughter.",
+        "s."
+      ],
+      "text_only_soft": [
+        "wife.",
+        "mother.",
+        "friend.",
+        "daughter.",
+        "s."
+      ],
+      "full": [
+        "s.",
+        "sister.",
+        "wife.",
+        "mother.",
+        "friend."
+      ],
+      "full_soft": [
+        "s.",
+        "sister.",
+        "wife.",
+        "mother.",
+        "friend."
+      ],
+      "full_zero_img": [
+        "wife.",
+        "wife.",
+        "mother.",
+        "s.",
+        "s."
+      ],
+      "full_shuf_img": [
+        "s.",
+        "mother.",
+        "wife.",
+        "friend.",
+        "sing."
+      ],
+      "small_full": [
+        "head.",
+        "father.",
+        "brother.",
+        "wife.",
+        "s."
+      ],
+      "llm_only": [
+        "sister, \"and you mustn't s",
+        "sister, who had been liste",
+        "sister, who had been liste",
+        "sister, who had been liste",
+        "sister, who had been liste"
+      ],
+      "ocr_llm": [
+        "sister, \"and you mustn't s",
+        "sister, who had been liste",
+        "sister, who had been liste",
+        "sister, who had been liste",
+        "sister, who had been liste"
+      ],
+      "ctc_full": "nds,\" interposed his "
+    },
+    {
+      "prefix": "\"I say he has got every vice, Mrs. Crawley. Don't Ma'am, bully me.",
+      "target": "Didn't he shoot",
+      "read": "",
+      "inferred": "Didn't he shoot",
+      "text_only": [
+        "Did he rob",
+        "Isn't he",
+        "Didn't he kill",
+        "Didn't he steal",
+        "Did he rob young"
+      ],
+      "text_only_soft": [
+        "Did he rob",
+        "Isn't he",
+        "Didn't he kill",
+        "Didn't he steal",
+        "Did he rob young"
+      ],
+      "full": [
+        "What's wrong with",
+        "Did he rob",
+        "What about",
+        "Was he",
+        "Is he"
+      ],
+      "full_soft": [
+        "What's wrong with",
+        "Did he rob",
+        "What about",
+        "Was he",
+        "Is he"
+      ],
+      "full_zero_img": [
+        "Isn't he a",
+        "Isn't he a",
+        "Didn't he rob",
+        "Isn't he a",
+        "Didn't he rob"
+      ],
+      "full_shuf_img": [
+        "What's wrong with",
+        "Was he",
+        "What about",
+        "Is he",
+        "Was he a"
+      ],
+      "small_full": [
+        "Is he",
+        "I'm",
+        "Do you know",
+        "Is it",
+        "Is he the"
+      ],
+      "llm_only": [
+        "I say he has got every vi",
+        "He has got every vice exc",
+        "He's got every vice excep",
+        "He's got every vice excep",
+        "He's got every vice excep"
+      ],
+      "ocr_llm": [
+        "I say he has got every vi",
+        "He has got every vice exc",
+        "He's got every vice excep",
+        "He's got every vice excep",
+        "He's got every vice excep"
+      ],
+      "ctc_full": "t Malam, bully me. I"
+    },
+    {
+      "prefix": "Captain Marker? Didn't he rob young Lord Dovedale at the Cocoa-T",
+      "target": "ree? Didn't he cross the",
+      "read": "re",
+      "inferred": "e? Didn't he cross the",
+      "text_only": [
+        "aylor, in a",
+        "aylor's? I remember the",
+        "aylor, in the",
+        "ea? I remember the",
+        "aylor's, and a"
+      ],
+      "text_only_soft": [
+        "aylor, in a",
+        "aylor's? I remember the",
+        "aylor, in the",
+        "ea? I remember the",
+        "aylor's, and a"
+      ],
+      "full": [
+        "ee? I remember the",
+        "ea? I remember the",
+        "ee? I saw the",
+        "ea? I saw the",
+        "eacock"
+      ],
+      "full_soft": [
+        "ee? I remember the",
+        "ea? I remember the",
+        "ee? I saw the",
+        "ea? I saw the",
+        "eacock"
+      ],
+      "full_zero_img": [
+        "aylor",
+        "aylor",
+        "aylor",
+        "aylor's? I remember the",
+        "aylor's? I remember the"
+      ],
+      "full_shuf_img": [
+        "? There was a",
+        "? I remember the",
+        "? I saw a",
+        "? I remember a",
+        "? The"
+      ],
+      "small_full": [
+        "eacher's",
+        "ea, and the",
+        "eas, and the",
+        "ea-Tea-",
+        "ea-Teacher"
+      ],
+      "llm_only": [
+        "rees?\" \"I don't know what",
+        "rees?\" \"I don't think so,",
+        "rees?\" \"I don't know,\" sa",
+        "rees?\" \"I don't believe h",
+        "rees?\" \"I don't believe h"
+      ],
+      "ocr_llm": [
+        "ale at the Cocoa-Theatre?",
+        "ale at the Cocoa-Theatre?",
+        "ale at the Cocoa-Theatre?",
+        "ale at the Cocoa-Theatre?",
+        "ale at the Cocoa-Theatre?"
+      ],
+      "ctc_full": "lale at the Cocoa-Tr"
+    },
+    {
+      "prefix": "fight between Bill Soames and the Cheshire Trump, by which I lost fo",
+      "target": "rty pound? You know",
+      "read": "rt",
+      "inferred": "y pound? You know",
+      "text_only": [
+        "llowing him? Well,",
+        "r a year? Well,",
+        "llowing him?\" I say",
+        "llowing him? I think",
+        "r a year? I think"
+      ],
+      "text_only_soft": [
+        "llowing him? Well,",
+        "r a year? Well,",
+        "llowing him?\" I say",
+        "llowing him? I think",
+        "r a year? I think"
+      ],
+      "full": [
+        "r him? Well,",
+        "r a year? Well,",
+        "r him? I think",
+        "r him? I say",
+        "r a year? I think"
+      ],
+      "full_soft": [
+        "r him? Well,",
+        "r a year? Well,",
+        "r him? I think",
+        "r him? I say",
+        "r a year? I think"
+      ],
+      "full_zero_img": [
+        "r a year? Yes,",
+        "r a year? Yes,",
+        "r a year? Yes,",
+        "r a year? Yes,",
+        "r a year? Yes,"
+      ],
+      "full_shuf_img": [
+        "e? Well,",
+        "e? I think",
+        "e? I say",
+        "e?\" I say",
+        "e? Well, I think"
+      ],
+      "small_full": [
+        "ry, as",
+        "rt me, as",
+        "rts, as",
+        "rts? Well,",
+        "rts? And"
+      ],
+      "llm_only": [
+        "als and a horse, and a gr",
+        "als and a horse, and had",
+        "als and a horse, and had",
+        "als and a horse, and had",
+        "als and a horse, and had"
+      ],
+      "ocr_llm": [
+        "r the first time in my li",
+        "r the first time in my li",
+        "r the first time in my li",
+        "r the first time in my li",
+        "r the first time in my li"
+      ],
+      "ctc_full": ", by which I lost for"
+    },
+    {
+      "prefix": "he did; and as for the women, why, you heard that before me, in my ow",
+      "target": "n magistrate's room.\"",
+      "read": "n",
+      "inferred": " magistrate's room.\"",
+      "text_only": [
+        "es?\"",
+        "enings?\"",
+        "ens?\"",
+        "en?",
+        "enings?"
+      ],
+      "text_only_soft": [
+        "es?\"",
+        "enings?\"",
+        "ens?\"",
+        "en?",
+        "enings?"
+      ],
+      "full": [
+        "n?\"",
+        "ns?\"",
+        "ne?\"",
+        "ning?\"",
+        "n?"
+      ],
+      "full_soft": [
+        "n?\"",
+        "ns?\"",
+        "ne?\"",
+        "ning?\"",
+        "n?"
+      ],
+      "full_zero_img": [
+        "ns?\"",
+        "ns?\"",
+        "ns?\"",
+        "ns?\"",
+        "ns?\""
+      ],
+      "full_shuf_img": [
+        "r?\"",
+        "rs?\"",
+        "rt?\"",
+        "rs? \"",
+        "rs?"
+      ],
+      "small_full": [
+        "nness?",
+        "ns?",
+        "ns?\"",
+        "nness?\"",
+        "ning?"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "n house, when I was a yo",
+        "n house, when I was a yo",
+        "n house, when I was a yo",
+        "n house, when I was a yo",
+        "n house, when I was a yo"
+      ],
+      "ctc_full": "efore me, in my ow"
+    },
+    {
+      "prefix": "\"For heaven's sake, Mr. Crawley,\" said the lady, \"spare me the detail",
+      "target": "s.\"",
+      "read": "s.",
+      "inferred": "\"",
+      "text_only": [
+        "s.\"",
+        "s!\"",
+        ".\"",
+        "!\"",
+        "s of this.\""
+      ],
+      "text_only_soft": [
+        "s.\"",
+        "s!\"",
+        ".\"",
+        "!\"",
+        "s of this.\""
+      ],
+      "full": [
+        "s.\"",
+        "s!\"",
+        ".\"",
+        "s of the fight.\"",
+        "s of this fight.\""
+      ],
+      "full_soft": [
+        "s.\"",
+        "s!\"",
+        ".\"",
+        "s of the fight.\"",
+        "s of this fight.\""
+      ],
+      "full_zero_img": [
+        "s.\"",
+        "s.\"",
+        "s.\"",
+        "s.\"",
+        "s.\""
+      ],
+      "full_shuf_img": [
+        "s.\"",
+        ".\"",
+        "!\"",
+        "s!\"",
+        "s of this.\""
+      ],
+      "small_full": [
+        ".\"",
+        "?\"",
+        ".\"",
+        ",\" and",
+        ""
+      ],
+      "llm_only": [
+        ".\"",
+        ".\"",
+        ".\"",
+        ".\"",
+        ".\""
+      ],
+      "ocr_llm": [
+        "s. I don't want to know",
+        "s. I don't want to hear",
+        "s. I don't want to hear",
+        "s. I don't want to hear",
+        "s. I don't want to hear"
+      ],
+      "ctc_full": "spare me the details"
+    },
+    {
+      "prefix": "\"And you ask this villain into your house!\" continued the exasperat",
+      "target": "ed Rector. \"You, the",
+      "read": "e",
+      "inferred": "d Rector. \"You, the",
+      "text_only": [
+        "ion of the",
+        "ed",
+        "e",
+        "ing",
+        "ive"
+      ],
+      "text_only_soft": [
+        "ion of the",
+        "ed",
+        "e",
+        "ing",
+        "ive"
+      ],
+      "full": [
+        "ed",
+        "e of the",
+        "e--the",
+        "e of a",
+        "ed young"
+      ],
+      "full_soft": [
+        "ed",
+        "e of the",
+        "e--the",
+        "e of a",
+        "ed young"
+      ],
+      "full_zero_img": [
+        "ion of the",
+        "ion of the",
+        "ion of the",
+        "ion of the",
+        "ion of the"
+      ],
+      "full_shuf_img": [
+        "ed",
+        "ion of the",
+        "e of the",
+        "s of the",
+        "e of a"
+      ],
+      "small_full": [
+        "ed",
+        "er of the",
+        "er, the",
+        "er. The",
+        "er. \"You are the"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "e .. \"Yes, I do,\" said Mr",
+        "e .. \"I do not ask him in",
+        "e .. \"I do not ask him in",
+        "e .. \"I do not ask him in",
+        "e .. \"I do not ask him in"
+      ],
+      "ctc_full": "inued the exasperate"
+    },
+    {
+      "prefix": "mother of a young family--the wife of a clergyman of the Church of Eng",
+      "target": "land. By Jove!\"",
+      "read": "l",
+      "inferred": "and. By Jove!\"",
+      "text_only": [
+        "land.",
+        "eland.",
+        "ery.",
+        "land--with a smile.",
+        "land, England."
+      ],
+      "text_only_soft": [
+        "land.",
+        "eland.",
+        "ery.",
+        "land--with a smile.",
+        "land, England."
+      ],
+      "full": [
+        "land.",
+        "gy.",
+        "g.",
+        "y.",
+        "ght."
+      ],
+      "full_soft": [
+        "land.",
+        "gy.",
+        "g.",
+        "y.",
+        "ght."
+      ],
+      "full_zero_img": [
+        "land.",
+        "land.",
+        "land.",
+        "land.",
+        "land."
+      ],
+      "full_shuf_img": [
+        "eland.",
+        "eeland.",
+        "ery.",
+        "ees.",
+        "eston."
+      ],
+      "small_full": [
+        "ht.",
+        "hht.",
+        "ht.\"",
+        "hh.",
+        "hton."
+      ],
+      "llm_only": [
+        "lan",
+        "lan",
+        "lan",
+        "lan",
+        "lan"
+      ],
+      "ocr_llm": [
+        "le",
+        "le",
+        "le",
+        "le",
+        "le"
+      ],
+      "ctc_full": "f the Church of Eng"
+    },
+    {
+      "prefix": "\"Well, Ma'am, fool or not--and I don't say, Martha, I'm so clever as you ",
+      "target": "are, I never did.",
+      "read": "a",
+      "inferred": "re, I never did.",
+      "text_only": [
+        "are.",
+        ".",
+        "are!",
+        ".",
+        "are. I'll go."
+      ],
+      "text_only_soft": [
+        "are.",
+        ".",
+        "are!",
+        ".",
+        "are. I'll go."
+      ],
+      "full": [
+        "are.",
+        "aint.",
+        "and I are.",
+        "are!",
+        "ain."
+      ],
+      "full_soft": [
+        "are.",
+        "aint.",
+        "and I are.",
+        "are!",
+        "ain."
+      ],
+      "full_zero_img": [
+        "n't.",
+        "are.",
+        "n't.",
+        "are.",
+        "n't."
+      ],
+      "full_shuf_img": [
+        "'re.",
+        ".",
+        "gh.",
+        "are.",
+        "d think."
+      ],
+      "small_full": [
+        "are.\"",
+        "are.",
+        "am.\"",
+        "can.",
+        "are!\""
+      ],
+      "llm_only": [
+        "1 think I am--I'll",
+        "1 think I am--well,",
+        "1 think I am--I don",
+        "1 think I am--at an",
+        "1 think I am--at an"
+      ],
+      "ocr_llm": [
+        "are--I'll tell you",
+        "are--at any rate, I",
+        "are--at any rate, I",
+        "are--at any rate, I",
+        "are--at any rate, I"
+      ],
+      "ctc_full": "m so clever as you a"
+    },
+    {
+      "prefix": "But I won't meet Rawdon Crawley, that's flat. I'll go over to Huddleston, that",
+      "target": "I will, and see",
+      "read": "",
+      "inferred": "I will, and see",
+      "text_only": [
+        "'s",
+        "'s flat.\"",
+        "'s flat,",
+        "'s a",
+        "'s flat."
+      ],
+      "text_only_soft": [
+        "'s",
+        "'s flat.\"",
+        "'s flat,",
+        "'s a",
+        "'s flat."
+      ],
+      "full": [
+        "'s",
+        "'s",
+        "t's",
+        "'s a",
+        "'s a"
+      ],
+      "full_soft": [
+        "'s",
+        "'s",
+        "t's",
+        "'s a",
+        "'s a"
+      ],
+      "full_zero_img": [
+        "'s",
+        "'s",
+        "'s",
+        "'s",
+        "'s"
+      ],
+      "full_shuf_img": [
+        "'s",
+        "'s a",
+        "'s flat.",
+        "'s flat.\"",
+        "'s flat,"
+      ],
+      "small_full": [
+        "'s flat.\"",
+        "'s flat.",
+        "t's flat.",
+        "t's flat.\"",
+        "t's flat,"
+      ],
+      "llm_only": [
+        "'s what I'll do.\"",
+        "'s what I'll do. I",
+        "'s what I'll do. I'",
+        "'s what I'll do. I'",
+        "'s what I'll do. I'"
+      ],
+      "ocr_llm": [
+        "'s what I'll do.\"",
+        "'s what I'll do. I",
+        "'s what I'll do. I'",
+        "'s what I'll do. I'",
+        "'s what I'll do. I'"
+      ],
+      "ctc_full": " to Hudleston, that"
+    },
+    {
+      "prefix": "\"I remember. It's not much changed,\" he answere",
+      "target": "d without",
+      "read": "d",
+      "inferred": " without",
+      "text_only": [
+        "d with",
+        "d, with",
+        "d, with a",
+        "d, with a",
+        "d, with a"
+      ],
+      "text_only_soft": [
+        "d with a little",
+        "d with a great",
+        "d with",
+        "d with a smile",
+        "d, with"
+      ],
+      "full": [
+        "d with",
+        "d, with",
+        "d in",
+        "d with an",
+        "d with a"
+      ],
+      "full_soft": [
+        "d with a little",
+        "d with",
+        "d with a great",
+        "d with a smile",
+        "d, with"
+      ],
+      "full_zero_img": [
+        "d with",
+        "d with",
+        "d with",
+        "d with",
+        "d with"
+      ],
+      "full_shuf_img": [
+        "t with a little",
+        "t with",
+        "t with a great",
+        "t with a smile",
+        "d with"
+      ],
+      "small_full": [
+        "d with",
+        "d his",
+        "d in his",
+        "d, with",
+        "d with a"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "d. \"No, i",
+        "d. \"No, i",
+        "d. \"No, i",
+        "d. \"No, i",
+        "d. \"No, i"
+      ],
+      "ctc_full": "d,\" he answered"
+    },
+    {
+      "prefix": "\"What Jo would give for a sight of that famous speck!\" sa",
+      "target": "id Amy, fe-",
+      "read": "id",
+      "inferred": " Amy, fe-",
+      "text_only": [
+        "ys Jo, kne-",
+        "ys Jo, dro-",
+        "ys he, kne-",
+        "ys Jo, fe-",
+        "ys Jo, knea-"
+      ],
+      "text_only_soft": [
+        "ys Jo, kne-",
+        "ys Jo, dro-",
+        "ys he, kne-",
+        "ys Jo, knea-",
+        "ys Jo, who was"
+      ],
+      "full": [
+        "d he, fa-",
+        "d Jo, fa-",
+        "d he, fe-",
+        "d he, squea-",
+        "d he, stif-"
+      ],
+      "full_soft": [
+        "d he, fa-",
+        "d Jo, fa-",
+        "d he, fe-",
+        "d he, squea-",
+        "d he, stif-"
+      ],
+      "full_zero_img": [
+        "nt he, kne-",
+        "nt he, kne-",
+        "nt he, fa-",
+        "nt he, fa-",
+        "nt he, fa-"
+      ],
+      "full_shuf_img": [
+        "d he, fa-",
+        "d he, kne-",
+        "d Jo, fa-",
+        "d he, fe-",
+        "d he, stif-"
+      ],
+      "small_full": [
+        "id Jo, shri-",
+        "id he sa-",
+        "id he, shri-",
+        "id he was st",
+        "id he was sa"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "id another.",
+        "id the other",
+        "id she, with",
+        "id she, with",
+        "id she, with"
+      ],
+      "ctc_full": "mous speck\" said"
+    },
+    {
+      "prefix": "\"Yes,\" was all he said, but he turned and strained his eyes",
+      "target": "to see the",
+      "read": "t",
+      "inferred": "o see the",
+      "text_only": [
+        "to see the",
+        "to the",
+        ", and saw an",
+        "at the",
+        ". \"That"
+      ],
+      "text_only_soft": [
+        "to see the",
+        "to the",
+        ", and saw an",
+        "at the",
+        ". \"That"
+      ],
+      "full": [
+        "to the",
+        "to see the",
+        "at the",
+        "to see that",
+        "t to the"
+      ],
+      "full_soft": [
+        "to see that little",
+        "to the",
+        "to see the",
+        "at the",
+        "to see that"
+      ],
+      "full_zero_img": [
+        "on the",
+        "on the",
+        ", and saw an",
+        "on the",
+        "on the"
+      ],
+      "full_shuf_img": [
+        "d to the",
+        "d to see the",
+        "d at the",
+        "d upon the",
+        "d, and saw that"
+      ],
+      "small_full": [
+        "to the",
+        "to see the",
+        "to see an",
+        "to an",
+        ""
+      ],
+      "llm_only": [
+        "as far as th",
+        "as far as th",
+        "as far as th",
+        "as far as th",
+        "as far as th"
+      ],
+      "ocr_llm": [
+        "as far as th",
+        "as far as th",
+        "as far as th",
+        "as far as th",
+        "as far as th"
+      ],
+      "ctc_full": "strained his eyes t"
+    },
+    {
+      "prefix": "island which a greater usurper than even Napoleon now made ",
+      "target": "interesting",
+      "read": "in",
+      "inferred": "teresting",
+      "text_only": [
+        "a place",
+        "himself",
+        "a man of",
+        "to be",
+        "a king"
+      ],
+      "text_only_soft": [
+        "a man of himself",
+        "a place",
+        "himself",
+        "a man of",
+        "to be"
+      ],
+      "full": [
+        "n",
+        "in the world",
+        "in his mind,",
+        "in the past,",
+        "in his time,"
+      ],
+      "full_soft": [
+        "in the world stood",
+        "in the world was",
+        "in the world had",
+        "in the past was",
+        "in his time was"
+      ],
+      "full_zero_img": [
+        "s was",
+        "s was",
+        "s was",
+        "s, was",
+        "s, was"
+      ],
+      "full_shuf_img": [
+        "to be",
+        "it",
+        "s",
+        "t",
+        "s was"
+      ],
+      "small_full": [
+        "in",
+        "it",
+        "in her sight",
+        "in his eyes",
+        "in his sight"
+      ],
+      "llm_only": [
+        "100,000,000",
+        "100,000,000.",
+        "100,000,000,",
+        "10,000,000 o",
+        "10,000,000,0"
+      ],
+      "ocr_llm": [
+        "in the name",
+        "in the name",
+        "in the name",
+        "in the name",
+        "in the name"
+      ],
+      "ctc_full": "eon now made in"
+    },
+    {
+      "prefix": "\"Take a good look at it for her sake, and then come a",
+      "target": "nd tell me",
+      "read": "n",
+      "inferred": "d tell me",
+      "text_only": [
+        "nd see",
+        "nd tell me",
+        "nd tell her",
+        "nd tell us",
+        "nd do"
+      ],
+      "text_only_soft": [
+        "nd tell me about",
+        "nd tell me again",
+        "nd see",
+        "nd tell me",
+        "nd tell her"
+      ],
+      "full": [
+        "nd tell her",
+        "nd see",
+        "nd tell me",
+        "nd tell us",
+        "nd do"
+      ],
+      "full_soft": [
+        "nd tell her about",
+        "nd tell her exactly",
+        "nd tell her",
+        "nd see",
+        "nd tell me"
+      ],
+      "full_zero_img": [
+        "nd see",
+        "nd tell her",
+        "nd see",
+        "nd tell me",
+        "nd tell her"
+      ],
+      "full_shuf_img": [
+        "nd tell her about",
+        "nd tell her exactly",
+        "nd tell her",
+        "nd tell me",
+        "nd see"
+      ],
+      "small_full": [
+        "nd see",
+        "nd look at",
+        "look at",
+        "nd tell her",
+        "note of"
+      ],
+      "llm_only": [
+        "little near",
+        "little near",
+        "little near",
+        "little near",
+        "little near"
+      ],
+      "ocr_llm": [
+        "nd tell me",
+        "nd tell me",
+        "nd tell me",
+        "nd tell me",
+        "nd tell me"
+      ],
+      "ctc_full": "nd then come an"
+    },
+    {
+      "prefix": "what you have been doing with yourself all this while,\" said ",
+      "target": "Amy, seating",
+      "read": "A",
+      "inferred": "my, seating",
+      "text_only": [
+        "she to",
+        "he to",
+        "he, to",
+        "he, pointing to",
+        "he, pointing at"
+      ],
+      "text_only_soft": [
+        "she to",
+        "he to",
+        "he, to",
+        "he, pointing to",
+        "he, pointing at"
+      ],
+      "full": [
+        "she to",
+        "he to",
+        "he, to",
+        "she, to",
+        "he, pointing to"
+      ],
+      "full_soft": [
+        "she to",
+        "he to",
+        "he, to",
+        "she, to",
+        "he, pointing to"
+      ],
+      "full_zero_img": [
+        "he, to",
+        "he, to",
+        "he, to",
+        "he to",
+        "he to"
+      ],
+      "full_shuf_img": [
+        "he to",
+        "he, to",
+        "she to",
+        "he, looking at",
+        "the woman"
+      ],
+      "small_full": [
+        "a young woman",
+        "a young woman,",
+        "a young girl,",
+        "a woman,",
+        "a young girl, a"
+      ],
+      "llm_only": [
+        "____12____ of t",
+        "____10____ of t",
+        "____11____ of t",
+        "____11____ of t",
+        "____11____ of t"
+      ],
+      "ocr_llm": [
+        "is while, \" sai",
+        "is while, \" sai",
+        "is while, \" sai",
+        "is while, \" sai",
+        "is while, \" sai"
+      ],
+      "ctc_full": "his while,\" said A"
+    },
+    {
+      "prefix": "But she did not get it, for though he joined her and answ",
+      "target": "ered all her",
+      "read": "er",
+      "inferred": "ed all her",
+      "text_only": [
+        "e asked her",
+        "ound her",
+        "ayed her",
+        "e asked",
+        "ays"
+      ],
+      "text_only_soft": [
+        "e asked her",
+        "ound her",
+        "ayed her",
+        "e asked",
+        "ays"
+      ],
+      "full": [
+        "ered her",
+        "ered his",
+        "ered",
+        "ered her",
+        "ered his"
+      ],
+      "full_soft": [
+        "ered her",
+        "ered his",
+        "ered",
+        "ered her",
+        "ered his"
+      ],
+      "full_zero_img": [
+        "ned her",
+        "ned her",
+        "ned her",
+        "ned her",
+        "ned her"
+      ],
+      "full_shuf_img": [
+        "shed her",
+        "ssed her",
+        "ssed his",
+        "ished her",
+        "asted her"
+      ],
+      "small_full": [
+        "ered her",
+        "erted her",
+        "erked her",
+        "erred her",
+        "ert her"
+      ],
+      "llm_only": [
+        "ered her qu",
+        "ered all he",
+        "erevery que",
+        "erevery que",
+        "erevery que"
+      ],
+      "ocr_llm": [
+        "er her ques",
+        "er her, she",
+        "er her, she",
+        "er her, she",
+        "er her, she"
+      ],
+      "ctc_full": "d her and answer"
+    },
+    {
+      "prefix": "questions freely, she could only learn that he had rove",
+      "target": "d about the",
+      "read": "d",
+      "inferred": " about the",
+      "text_only": [
+        "d the",
+        "d to the",
+        "d across the",
+        "to the",
+        "d on the"
+      ],
+      "text_only_soft": [
+        "d the",
+        "d to the",
+        "d across the",
+        "to the",
+        "d on the"
+      ],
+      "full": [
+        "d the",
+        "d to the",
+        "d across the",
+        "d off to the",
+        "d on the"
+      ],
+      "full_soft": [
+        "d off to the Middle",
+        "d the",
+        "d to the",
+        "d off to the North",
+        "d off to the South"
+      ],
+      "full_zero_img": [
+        "d to the",
+        "d to the",
+        "d the",
+        "d to the",
+        "d to the"
+      ],
+      "full_shuf_img": [
+        "red the",
+        "d the",
+        "d to the",
+        "red to the",
+        "r the"
+      ],
+      "small_full": [
+        "d the",
+        "d to the",
+        "d her to the",
+        "d her in the",
+        "d a"
+      ],
+      "llm_only": [
+        "all over the",
+        "for a long ti",
+        "for a long ti",
+        "for a long ti",
+        "for a long ti"
+      ],
+      "ocr_llm": [
+        "d all over th",
+        "d all over th",
+        "d all over th",
+        "d all over th",
+        "d all over th"
+      ],
+      "ctc_full": "t he had roved "
+    },
+    {
+      "prefix": "Continent and been to Greece. So after idling away an hou",
+      "target": "r, they drove",
+      "read": "r,",
+      "inferred": " they drove",
+      "text_only": [
+        "ld, he came",
+        "sing, he came",
+        "ld, he went",
+        "r, he came",
+        "r, he went"
+      ],
+      "text_only_soft": [
+        "ld, he came",
+        "sing, he came",
+        "ld, he went",
+        "r, he came",
+        "r, he went"
+      ],
+      "full": [
+        "r, he came",
+        "r, he went",
+        ", he came",
+        ", he went",
+        "r, he came"
+      ],
+      "full_soft": [
+        "r, he came",
+        "r, he went",
+        ", he came",
+        ", he went",
+        "r, he came"
+      ],
+      "full_zero_img": [
+        "st, he came",
+        "st, he came",
+        "st, he came",
+        "st, he came",
+        "st, he came"
+      ],
+      "full_shuf_img": [
+        "d, he came",
+        "d, he went",
+        "d at",
+        "d he came",
+        "d he went"
+      ],
+      "small_full": [
+        "r, he went",
+        "r, he came",
+        "r, he was",
+        "r, he returned",
+        "r, he had come"
+      ],
+      "llm_only": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "ocr_llm": [
+        "r or two, she",
+        "r and a half,",
+        "r or two in th",
+        "r or two in th",
+        "r or two in th"
+      ],
+      "ctc_full": "g away an hour "
+    }
+  ]
+}

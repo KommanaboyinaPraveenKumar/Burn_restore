@@ -22,6 +22,8 @@ Systems
   full_zero_img    full model, crop replaced by zeros        (vision ablation)
   full_shuf_img    full model, crops shuffled within a batch (mismatched evidence)
   <name>           any extra checkpoint                      (--extra_ckpt NAME=PATH)
+  <name>           precomputed candidates, e.g. the OCR + LLM baseline
+                   (--extra_preds NAME=PATH:SYSTEM, see baseline_ocr_llm.py)
   *_ocr            text_only / full with OCR-style noise in the context
                    (--context_noise P, robustness to imperfect prefixes)
 
@@ -358,6 +360,8 @@ def main():
     ap.add_argument("--text_only_ckpt", default=None)
     ap.add_argument("--extra_ckpt", action="append", default=[],
                     help="Additional checkpoint as NAME=PATH (repeatable)")
+    ap.add_argument("--extra_preds", action="append", default=[],
+                    help="Precomputed candidates as NAME=PATH:SYSTEM (e.g. from baseline_ocr_llm.py; repeatable)")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--batch_size", type=int, default=32)
     ap.add_argument("--top_k", type=int, default=5)
@@ -478,6 +482,20 @@ def main():
         del m
         torch.cuda.empty_cache()
 
+    for spec in args.extra_preds:
+        name, rest = spec.split("=", 1)
+        path, system = rest.rsplit(":", 1)
+        P = json.loads(Path(path).read_text(encoding="utf-8"))
+        cands = P["systems"][system]
+        if len(cands) != len(recs):
+            raise ValueError(f"{name}: {len(cands)} predictions for {len(recs)} lines (use the same --limit)")
+        # OCR output stands in for the vision-only reading, so its READ score is comparable to the CTC head's
+        reading = P.get("ocr") if system.startswith("ocr") else None
+        results[name] = {"cands": [list(c)[: args.top_k] for c in cands], "scores": [], "nll": [],
+                         "ctc": reading or [], "fw_logp": []}
+        styles[name] = f"precomputed ({P.get('meta', {}).get('llm', '?')})"
+        print(f"  {name}: precomputed from {path} [{system}]")
+
     stats = {k: line_stats(v, raw_targets, vis, crop_texts, budgets, cfg.budget_margin_buffer, upper)
              for k, v in results.items()}
     report = {"n_lines": len(recs), "data_dir": args.data_dir, "split": args.split, "top_k": args.top_k,
@@ -510,6 +528,9 @@ def main():
              ("text_only", "t5_zero_shot"), ("full", "empty"), ("text_only", "empty"),
              ("full_ocr", "text_only_ocr"), ("full_ocr", "full"), ("text_only_ocr", "text_only")]
     pairs += [("full", spec.split("=", 1)[0]) for spec in args.extra_ckpt]
+    for spec in args.extra_preds:
+        nm = spec.split("=", 1)[0]
+        pairs += [("full", nm), ("text_only", nm)]
     hr = stats["empty"]["has_read"] > 0
     for a, b in pairs:
         if a in stats and b in stats:

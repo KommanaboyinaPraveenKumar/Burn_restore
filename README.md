@@ -30,7 +30,7 @@ burnt words themselves are guesses. Regenerate with `python scripts/make_readme_
 
 > **What this is not:** a forensic tool that recovers burnt text. All reported
 > results are on synthetic burns of rendered book pages. A protocol for testing
-> on genuinely burnt paper is included (Â§6) but has not been run yet.
+> on genuinely burnt paper is included (§6) but has not been run yet.
 
 ---
 
@@ -61,16 +61,16 @@ so that earlier checkpoints load and evaluate unchanged.
 * **Text:** 57 public-domain Project Gutenberg books, **split by book**
   (train 47 / val 4 / test 6). No test book or author is seen in training.
 * **Layout:** paragraphs with indented first lines, paragraph-final short
-  lines (5% of severed lines), hyphenated line breaks (â‰ˆ10%) and justified text.
-  Rendered with 16 serif and sans fonts at 18â€“28 pt, with varied margins, line
+  lines (5% of severed lines), hyphenated line breaks (≈10%) and justified text.
+  Rendered with 16 serif and sans fonts at 18–28 pt, with varied margins, line
   spacing, paper tone and ink.
 * **Burn:** a jagged side boundary with a randomised appearance. The fade width
-  (30â€“80 px) and the shape of the fade curve vary, and each burn adds a brown
+  (30–80 px) and the shape of the fade curve vary, and each burn adds a brown
   scorch halo, paper texture, noise, blur and JPEG compression. Lines are split
   at **character level**, with the cut where the fade reaches 50% opacity.
 * **READ / INFERRED annotation:** a target character counts as READ if its
   centre lies before the point where the fade reaches 80% opacity. 90% of test
-  lines have at least one READ character (mean â‰ˆ 1.6); most of each target is
+  lines have at least one READ character (mean ≈ 1.6); most of each target is
   INFERRED.
 * **Context noise:** in training, half the samples get simulated OCR errors in
   their context lines (character confusions, deletions, insertions, up to 4%).
@@ -84,7 +84,7 @@ so that earlier checkpoints load and evaluate unchanged.
 | test  | 300  | 6,145  |
 
 The earlier v2 set (35 books, clean layout, one fixed fade) is in `data/lines`
-and its results are kept in Â§5.5 for comparison.
+and its results are kept in §5.7 for comparison.
 
 ## 3. Model
 
@@ -93,7 +93,7 @@ and its results are kept in Â§5.5 for comparison.
 | part | role |
 |---|---|
 | t5-small (60M) or t5-base (220M) encoder-decoder | language prior, span infilling |
-| multi-scale ResNet-34 â†’ **128 visual tokens** (8Ã—16 grid; layer4 upsampled and fused with layer3) | stroke evidence at the burn edge |
+| multi-scale ResNet-34 → **128 visual tokens** (8×16 grid; layer4 upsampled and fused with layer3) | stroke evidence at the burn edge |
 | **residual gated cross-attention** (Flamingo-style) | text tokens attend to visual tokens |
 | **CTC reading head** on stride-8 ResNet features (BiGRU, 95 printable ASCII characters + blank) | vision-only transcription of the text visible in the crop |
 | contrastive stroke aligner | InfoNCE between ghost-zone features and READ characters only |
@@ -108,8 +108,8 @@ and its results are kept in Â§5.5 for comparison.
   pretrained T5, so the image can only add information. The first version
   (`fusion_style="legacy"`, still loadable) normalised and shrank the text
   embeddings, which damaged the language prior and cancelled the visual gain.
-* **Finer grid.** The coarse 4Ã—8 grid gave each visual token â‰ˆ32 px of width,
-  about two characters. The 8Ã—16 grid gives about one character per token.
+* **Finer grid.** The coarse 4×8 grid gave each visual token ≈32 px of width,
+  about two characters. The 8×16 grid gives about one character per token.
 * **Reading head.** Trained with CTC on the text actually visible in the crop
   (`lambda_read` = 0.3). This forces the vision encoder to learn real glyph
   recognition. It also gives the UI a vision-only reading that is independent
@@ -130,19 +130,19 @@ and its results are kept in Â§5.5 for comparison.
   1. A small CNN predicts the cut position from the crop. Its error is 0.96 px,
      against 7.3 px for the old fixed 27 px offset, and the resulting estimate is
      as accurate as one using the true cut.
-  2. The upper bound `1.139 Ã— estimate + 1` is calibrated on validation so that
+  2. The upper bound `1.139 × estimate + 1` is calibrated on validation so that
      99% of true endings fit (98.8% on test).
   3. Decoding enforces it exactly. Each step masks every token that would push
      the ending past the bound, and nothing may follow the span-closing sentinel.
 
   The prompt's length hint keeps the formula the checkpoints were trained with.
   Retraining with the calibrated estimate in the prompt barely changed the
-  results (Â§5.5).
+  results (§5.6).
 
 **Training** ([`train.py`](train.py)) has two stages: stage 1 freezes T5 for one
 epoch; stage 2 fine-tunes everything with per-group learning rates (fusion gates
-10Ã—). It uses bf16 autocast, batch 16, and early stopping on validation CER.
-t5-small runs for 5 epochs (â‰ˆ21 min/epoch on one consumer GPU). t5-base runs for 3 epochs with
+10×). It uses bf16 autocast, batch 16, and early stopping on validation CER.
+t5-small runs for 5 epochs (≈21 min/epoch on one consumer GPU). t5-base runs for 3 epochs with
 gradient checkpointing (4.6 GiB peak). The text-only baselines use the same data, prompts and
 schedule, with no image and no reading head.
 
@@ -154,11 +154,11 @@ processor on, and the prompt style it was trained with.
 
 | metric | measures |
 |---|---|
-| **READ acc** | top-1 starts with the exact READ characters (lines with â‰¥1 READ char) |
+| **READ acc** | top-1 starts with the exact READ characters (lines with ≥1 READ char) |
 | **INFERRED CER** | CER on the rest (positional approximation) |
 | CER / EM | whole target, single reference |
 | **EM@5, 1st-word@5** | is the truth among the 5 ranked hypotheses? |
-| **bits/char** | âˆ’logâ‚‚ p(true target) per character, teacher-forced; lower = the model finds the truth more likely |
+| **bits/char** | −log₂ p(true target) per character, teacher-forced; lower = the model finds the truth more likely |
 | **CTC read acc / CER** | vision-only reading head vs. the text visible in the crop |
 | **AUROC, top-25% acc** | does the model's confidence (P(first word)) separate right from wrong first words? |
 | **ECE / Brier** | calibration of that confidence; raw, and after Platt scaling fitted on 1,000 validation lines |
@@ -183,9 +183,9 @@ Full output: [`results/line_eval_v3.json`](results/line_eval_v3.json)
 
 ### 5.1 Main table
 
-| system | READ acc â†‘ | READ @5 â†‘ | INFERRED CER â†“ | CER â†“ | EM â†‘ | EM@5 â†‘ | 1st word â†‘ | 1st word @5 â†‘ | bits/char â†“ | budget viol. â†“ | overlong â†“ |
+| system | READ acc ↑ | READ @5 ↑ | INFERRED CER ↓ | CER ↓ | EM ↑ | EM@5 ↑ | 1st word ↑ | 1st word @5 ↑ | bits/char ↓ | budget viol. ↓ | overlong ↓ |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| empty | 0 | 0 | 1.000 | 1.000 | 0 | 0 | 0 | 0 | â€“ | 0 | 0 |
+| empty | 0 | 0 | 1.000 | 1.000 | 0 | 0 | 0 | 0 | – | 0 | 0 |
 | zero-shot t5-small | 0.113 | 0.120 | 1.040 | 1.015 | 0.001 | 0.002 | 0.060 | 0.065 | 4.27 | 0 | 44.8% |
 | v2 full, on v3 data | 0.378 | 0.496 | 0.822 | 0.767 | 0.034 | 0.058 | 0.176 | 0.262 | 2.06 | 0 | 1.5% |
 | text-only, t5-small | 0.232 | 0.357 | 0.815 | 0.775 | 0.037 | 0.063 | 0.166 | 0.250 | 1.85 | 0 | 1.8% |
@@ -197,7 +197,7 @@ Full output: [`results/line_eval_v3.json`](results/line_eval_v3.json)
 
 Same checkpoints, same test lines; only the decoding budget differs.
 
-| system | budget | CER â†“ | INFERRED CER â†“ | EM â†‘ | READ acc | overlong â†“ | viol. (upper bound) â†“ |
+| system | budget | CER ↓ | INFERRED CER ↓ | EM ↑ | READ acc | overlong ↓ | viol. (upper bound) ↓ |
 |---|---|---|---|---|---|---|---|
 | text-only, t5-small | old rule | 0.810 | 0.853 | 0.029 | 0.231 | 8.7% | 8.4% |
 | | **upper bound** | **0.775** | **0.815** | **0.037** | 0.232 | **1.8%** | **0%** |
@@ -219,31 +219,31 @@ vs 0.728). So the gain comes from the bound itself.
 | system | READ acc | INFERRED CER | CER | bits/char | CTC read acc / CER |
 |---|---|---|---|---|---|
 | full, t5-small (old budget) | 0.701 | 0.827 | 0.755 | 1.57 | 0.707 / 0.029 |
-| â€¦ blank image (old budget) | 0.159 | 0.823 | 0.796 | 3.06 | 0 / 1.0 |
-| â€¦ mismatched image (old budget) | 0.072 | 0.873 | 0.846 | 2.26 | 0.032 / 0.856 |
+| … blank image (old budget) | 0.159 | 0.823 | 0.796 | 3.06 | 0 / 1.0 |
+| … mismatched image (old budget) | 0.072 | 0.873 | 0.846 | 2.26 | 0.032 / 0.856 |
 | full, t5-small | 0.700 | 0.768 | 0.699 | 1.57 | 0.707 / 0.029 |
-| â€¦ OCR-noised context | 0.696 | 0.790 | 0.720 | 1.64 | (unchanged) |
+| … OCR-noised context | 0.696 | 0.790 | 0.720 | 1.64 | (unchanged) |
 | full, t5-base (old budget) | 0.653 | 0.810 | 0.744 | 1.31 | 0.651 / 0.041 |
-| â€¦ blank image (old budget) | 0.277 | 0.779 | 0.748 | 2.15 | 0 / 1.0 |
+| … blank image (old budget) | 0.277 | 0.779 | 0.748 | 2.15 | 0 / 1.0 |
 | full, t5-base | 0.660 | 0.717 | 0.656 | 1.31 | 0.651 / 0.041 |
-| â€¦ OCR-noised context | 0.644 | 0.749 | 0.686 | 1.41 | (unchanged) |
+| … OCR-noised context | 0.644 | 0.749 | 0.686 | 1.41 | (unchanged) |
 
 Paired tests (negative = first system better):
 
-| comparison | Î” CER | Î” READ error | Î” INFERRED CER | Î” bits/char |
+| comparison | Δ CER | Δ READ error | Δ INFERRED CER | Δ bits/char |
 |---|---|---|---|---|
-| small full vs small text-only | âˆ’0.076*** | âˆ’0.468*** | âˆ’0.047*** | âˆ’0.279*** |
-| base full vs base text-only | âˆ’0.046*** | âˆ’0.298*** | âˆ’0.024*** | âˆ’0.128*** |
-| base full vs small full | âˆ’0.043*** | +0.040 (small better) | âˆ’0.051*** | âˆ’0.255*** |
-| small full vs v2 full (on v3 data) | âˆ’0.068*** | âˆ’0.322*** | âˆ’0.054*** | âˆ’0.491*** |
-| small full vs blank image (both old budget) | âˆ’0.041*** | âˆ’0.542*** | +0.004 (n.s.) | âˆ’1.49*** |
+| small full vs small text-only | −0.076*** | −0.468*** | −0.047*** | −0.279*** |
+| base full vs base text-only | −0.046*** | −0.298*** | −0.024*** | −0.128*** |
+| base full vs small full | −0.043*** | +0.040 (small better) | −0.051*** | −0.255*** |
+| small full vs v2 full (on v3 data) | −0.068*** | −0.322*** | −0.054*** | −0.491*** |
+| small full vs blank image (both old budget) | −0.041*** | −0.542*** | +0.004 (n.s.) | −1.49*** |
 | small full, noisy vs clean context | +0.021 | +0.004 | +0.022 | +0.071 |
 
 \*\*\* p < 0.001
 
 **Confidence and calibration**
 
-| system | AUROC â†‘ | 1st-word acc, most confident 25% â†‘ | ECE raw â†“ | ECE after Platt |
+| system | AUROC ↑ | 1st-word acc, most confident 25% ↑ | ECE raw ↓ | ECE after Platt |
 |---|---|---|---|---|
 | text-only, t5-small | 0.841 | 0.441 | 0.017 | 0.014 |
 | **full, t5-small** | **0.896** | **0.897** | 0.037 | 0.077 |
@@ -273,13 +273,13 @@ Results from before the budget fix are kept in
    comes from correctly read word starts giving better continuations, not from
    seeing burnt text.
 3. **The budget fix was the largest single gain for the guessing part.** With a
-   calibrated upper bound enforced exactly, overlong endings fall from 9â€“20% to
-   about 2%, and INFERRED CER improves by 0.04â€“0.10 for every model (Â§5.2). The old
+   calibrated upper bound enforced exactly, overlong endings fall from 9–20% to
+   about 2%, and INFERRED CER improves by 0.04–0.10 for every model (§5.2). The old
    rule was wrong in both directions. It penalised 7.6% of *correct* endings,
    but only forced a stop 7 characters past its estimate, so models ran long.
    The gain is bigger for t5-base, which tends to write longer endings.
 4. **A larger language model helps the guessing.** t5-base improves bits/char
-   (1.57 â†’ 1.31), EM@5 (0.118 â†’ 0.174) and INFERRED CER (0.768 â†’ 0.717) over
+   (1.57 → 1.31), EM@5 (0.118 → 0.174) and INFERRED CER (0.768 → 0.717) over
    t5-small. With only 3 epochs, its vision side is less trained: its READ
    accuracy (0.66) and CTC reading (0.65) are below t5-small's (0.70 / 0.71).
 5. **Confidence is useful.** When the t5-small full model is in its most
@@ -287,11 +287,11 @@ Results from before the budget fix are kept in
    with AUROC 0.90. In v2 the AUROC was only 0.69. A UI can show confident
    suggestions and flag the rest.
 6. **Calibration: raw is better than Platt here.** The raw P(first word) is
-   already reasonably calibrated (ECE 0.03â€“0.04, slightly overconfident in the
+   already reasonably calibrated (ECE 0.03–0.04, slightly overconfident in the
    middle). Platt scaling fitted on the validation books made it *worse* on the
-   test books. The validation set is only 4 books, and the confidenceâ€“accuracy
+   test books. The validation set is only 4 books, and the confidence–accuracy
    relation shifts between books. Report the raw confidence.
-7. **Robust to noisy context.** 3% OCR errors in the context lines cost â‰ˆ2â€“3
+7. **Robust to noisy context.** 3% OCR errors in the context lines cost ≈2–3
    CER points, and the gap between full and text-only stays the same.
 8. **v3 data is harder.** The v2 model's READ accuracy falls from 0.68 on v2
    data to 0.38 on v3. The variable fade, halo and layout make it a stricter
@@ -299,7 +299,49 @@ Results from before the budget fix are kept in
 9. **Layout.** For the t5-small full model, hyphenated lines are slightly easier
    (CER 0.68 vs 0.70) and paragraph-final lines slightly harder (0.71 vs 0.70).
 
-### 5.5 Tried: the calibrated estimate in the prompt (v3e)
+### 5.5 External baseline: off-the-shelf OCR + a larger LLM
+
+To check that the gains are not an artefact of comparing only our own models, a
+baseline was built from pretrained parts with no training on this task
+(`scripts/baseline_ocr_llm.py`).
+
+**How the baseline works**
+- **OCR:** TrOCR base stage 1 reads the crop. It had the lowest CER on the
+  visible text of 150 test crops: 0.09, against 0.29 for Tesseract and 0.95 for
+  trocr-large-printed.
+- **READ guess:** whatever the OCR reads past the known prefix.
+- **Completion:** Qwen2.5-1.5B (about 7× t5-base) continues the context with
+  10 beams. Candidates are re-ranked by the likelihood of the next line.
+- **Length:** every candidate is cut to the same calibrated upper bound.
+
+Full output: [`results/line_eval_baseline.json`](results/line_eval_baseline.json).
+
+| system | READ acc | INFERRED CER | CER | EM | 1st word | 1st word @5 |
+|---|---|---|---|---|---|---|
+| LLM only (Qwen2.5-1.5B) | 0.127 | 0.988 | 0.969 | 0.004 | 0.076 | 0.085 |
+| OCR + LLM (TrOCR + Qwen) | 0.657 | 0.948 | 0.876 | 0.014 | 0.386 | 0.397 |
+| ours, text-only (t5-base) | 0.361 | 0.741 | 0.702 | 0.078 | 0.293 | 0.414 |
+| ours, full (t5-base) | **0.660** | **0.717** | **0.656** | **0.103** | **0.418** | **0.553** |
+
+**Reading the faded characters**
+- With OCR, the baseline reads the faded characters as well as our model does:
+  READ 0.657 vs 0.660, p = 0.38.
+- So this part of the task really is reading, and a strong OCR model can do it.
+
+**Guessing the burnt text**
+- Our model is much better at guessing the burnt text (p < 0.001 throughout):
+  - INFERRED CER: 0.717 vs 0.948;
+  - overall CER: 0.656 vs 0.876;
+  - exact matches: 10.3% vs 1.4%.
+- Without task training, the LLM tends to fill all the available space. 37.8% of
+  its endings are longer than the truth, against 2.4% for ours.
+
+**Text-only vs the LLM**
+- Even the text-only t5-base beats the LLM-only baseline on every measure.
+- Qwen may have seen Project Gutenberg text in pre-training, which would only
+  favour the baseline.
+
+### 5.6 Tried: the calibrated estimate in the prompt (v3e)
 
 The checkpoints above were trained with the old length-hint formula in the
 prompt. A second round (`--prompt_style v3e`) retrained all four models with the
@@ -319,13 +361,13 @@ and upper bound. Full output:
 | full, t5-base | v3 | 0.660 | 0.717 | 0.656 | 0.103 | 1.31 |
 | | v3e | **0.672** | 0.716 | 0.655 | **0.105** | 1.31 |
 
-For the full models the change is small: âˆ’0.008 CER with t5-small (p < 0.001)
-and âˆ’0.002 with t5-base (p = 0.17, not significant). The text-only models move
+For the full models the change is small: −0.008 CER with t5-small (p < 0.001)
+and −0.002 with t5-base (p = 0.17, not significant). The text-only models move
 in opposite directions (worse with t5-small, better with t5-base). The prompt's
 length hint is not where the remaining error is, so the v3 checkpoints stay the
 main configuration. The upper bound alone already removes most overlong endings.
 
-### 5.6 Earlier results (v2 data, t5-small)
+### 5.7 Earlier results (v2 data, t5-small)
 
 On the v2 test set (5,854 lines, clean layout, fixed fade; see
 [`results/line_eval.json`](results/line_eval.json)), the v2 full model reached
@@ -414,7 +456,7 @@ full and text-only, plus evaluation) unattended on Windows;
 * **Synthetic burns only.** The v3 burns are randomised (fade, halo, texture,
   blur, JPEG), but they still come from our own simulator. Real charring
   (curling, edge loss, carbonised ink that shows in infrared) can look
-  different. The Â§6 protocol is the missing experiment.
+  different. The §6 protocol is the missing experiment.
 * **Inferred text is a guess.** CER around 0.8 on the inferred part mostly
   reflects that the text is unrecoverable, not a model bug. Outputs should be
   presented as ranked suggestions with confidence, never as the document's
@@ -424,7 +466,7 @@ full and text-only, plus evaluation) unattended on Windows;
   `page_transcripts`). Without it the model sees only the crop and its suggestions are poor.
   Pasted lines are paired with detected text lines top to bottom; the UI warns if the counts
   differ. On synthetic pages the detector finds 99.5% of severed lines with the burn edge
-  â‰ˆ5 px from the truth, and its line count matches the printed lines on 117/120 pages
+  ≈5 px from the truth, and its line count matches the printed lines on 117/120 pages
   (`scripts/validate_burn_detector.py`).
 * **Simulated OCR noise.** Context noise is a character-level model of OCR errors,
   not the output of a real OCR engine on damaged paper.
@@ -438,8 +480,8 @@ full and text-only, plus evaluation) unattended on Windows;
   Its weaker READ accuracy suggests the vision side needs longer training.
 
 The documents in [`archive/`](archive/) (the old `docs/`, `report.*`,
-`PROGRESS_REPORT.md`, â€¦) describe an earlier 6-page prototype whose checkpoint
-was essentially untrained. **Their numbers are superseded by Â§5.**
+`PROGRESS_REPORT.md`, …) describe an earlier 6-page prototype whose checkpoint
+was essentially untrained. **Their numbers are superseded by §5.**
 
 ## 9. Repository map
 

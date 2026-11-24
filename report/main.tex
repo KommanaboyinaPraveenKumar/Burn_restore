@@ -1,0 +1,840 @@
+% =====================================================================
+%  UROP project report -- Side-burnt document line completion
+%  Compile with pdfLaTeX (Overleaf: upload the report/ folder, compile main.tex).
+%  Fill in the names below; everything else is generated from the project.
+% =====================================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+% ---------- people (edit these) ----------
+\newcommand{\ProjectTitle}{Side-Burnt Document Line Completion: Separating What the Image Can Read from What Context Can Only Suggest}
+\newcommand{\ShortTitle}{Side-Burnt Document Line Completion}
+\newcommand{\StudentA}{Student Name 1}\newcommand{\RegA}{AP00000000000}
+\newcommand{\StudentB}{Student Name 2}\newcommand{\RegB}{AP00000000000}
+\newcommand{\StudentC}{Student Name 3}\newcommand{\RegC}{AP00000000000}
+\newcommand{\GuideName}{Dr. UROP Guide Name}
+\newcommand{\HodName}{Dr. V M Manikandan}
+\newcommand{\SubmitMonth}{December 2026}
+\newcommand{\DeclDate}{\today}
+
+% ---------- packages ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newpxtext,newpxmath}      % Palatino, as in the department template
+\usepackage[left=1.25in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,multirow,array}
+\usepackage{caption,subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nottoc]{tocbibind}
+
+\graphicspath{{figures/}}
+\setstretch{1.4}
+\setlength{\parindent}{2em}
+\captionsetup{font=small,labelsep=colon}
+\definecolor{cblue}{HTML}{2A78D6}
+\definecolor{corange}{HTML}{EB6834}
+\definecolor{caqua}{HTML}{1BAF7A}
+\definecolor{cgray}{HTML}{8A8984}
+
+% Chapter headings centred: "Chapter n" over the upper-case title, as in the template
+\titleformat{\chapter}[display]{\centering\bfseries}{\Large\chaptertitlename\ \thechapter}{4pt}{\LARGE\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{30pt}{24pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{\MakeUppercase}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\newcommand{\logo}[1]{\IfFileExists{figures/srm_logo.png}{\includegraphics[width=#1]{srm_logo.png}}{\fbox{\parbox[c][#1][c]{#1}{\centering\footnotesize SRM logo\\(figures/srm\_logo.png)}}}}
+\newcommand{\READ}{\textsc{read}}
+\newcommand{\INF}{\textsc{inferred}}
+
+\begin{document}
+
+% =====================================================================
+%  Title page
+% =====================================================================
+\begin{titlepage}
+\centering\setstretch{1.25}
+{\large\bfseries \MakeUppercase{\ShortTitle}\par}
+\vspace{1.5em}
+Project Report Submitted to the\\
+SRM University-AP, Andhra Pradesh\\
+for the partial fulfillment of the requirements to award the degree of\par
+\vspace{1.2em}
+{\bfseries Bachelor of Technology\\ in\\ Computer Science \& Engineering\\ School of Engineering \& Sciences\par}
+\vspace{1.2em}
+submitted by\par\vspace{0.6em}
+{\bfseries \StudentA\ (\RegA)\\[0.3em] \StudentB\ (\RegB)\\[0.3em] \StudentC\ (\RegC)\par}
+\vspace{1.2em}
+Under the Guidance of\par\vspace{0.4em}
+{\bfseries \GuideName\par}
+\vspace{1.5em}
+\logo{3.2cm}\par
+\vspace{1.5em}
+{\large\bfseries Department of Computer Science \& Engineering\par}
+SRM University-AP\\ Neerukonda, Mangalgiri, Guntur\\ Amaravati, Andhra Pradesh - 522 240\\[0.3em]
+{\large \SubmitMonth\par}
+\end{titlepage}
+
+% =====================================================================
+%  Declaration / Certificate
+% =====================================================================
+\pagenumbering{arabic}\setcounter{page}{2}
+\chapter*{Declaration}
+I undersigned hereby declare that the project report \textbf{\ShortTitle} submitted for
+partial fulfillment of the requirements for the award of degree of Bachelor of Technology in
+the Computer Science \& Engineering, SRM University-AP, is a bonafide work done by me under
+supervision of \GuideName. This submission represents my ideas in my own words and where ideas
+or words of others have been included, I have adequately and accurately cited and referenced the
+original sources. I also declare that I have adhered to ethics of academic honesty and integrity
+and have not misrepresented or fabricated any data or idea or fact or source in my submission.
+I understand that any violation of the above will be a cause for disciplinary action by the
+institute and/or the University and can also evoke penal action from the sources which have thus
+not been properly cited or from whom proper permission has not been obtained. This report has not
+been previously formed the basis for the award of any degree of any other University.
+
+\vspace{3em}\noindent
+\begin{tabular}{@{}llll@{}}
+Place & : Amaravati & Date & : \DeclDate\\[0.6em]
+Name of student & : \StudentA & Signature & : \makebox[10em]{\dotfill}\\[0.6em]
+Name of student & : \StudentB & Signature & : \makebox[10em]{\dotfill}\\[0.6em]
+Name of student & : \StudentC & Signature & : \makebox[10em]{\dotfill}\\
+\end{tabular}
+
+\clearpage
+\thispagestyle{plain}
+\begin{center}\setstretch{1.25}
+{\large\bfseries DEPARTMENT OF COMPUTER SCIENCE \&\\ ENGINEERING\\ SRM University-AP\\
+Neerukonda, Mangalgiri, Guntur\\ Amaravati, Andhra Pradesh - 522 240\par}
+\vspace{1.5em}\logo{2.4cm}\par\vspace{1.5em}
+{\large\bfseries CERTIFICATE\par}
+\end{center}
+This is to certify that the report entitled \textbf{\ShortTitle} submitted by
+\textbf{\StudentA, \StudentB, \StudentC} to the SRM University-AP in partial fulfillment of
+the requirements for the award of the Degree of Bachelor of Technology in the Department of
+Computer Science \& Engineering is a bonafide record of the project work carried out under
+my/our guidance and supervision. This report in any form has not been submitted to any other
+University or Institute for any purpose.
+
+\vspace{5em}\noindent
+\begin{tabular}{@{}l@{\hspace{5em}}l@{}}
+Project Guide & Head of Department\\[0.5em]
+Name\ \ : \GuideName & Name\ \ : \HodName\\[0.5em]
+Signature: \dots\dots\dots\dots\dots & Signature: \dots\dots\dots\dots\dots\\
+\end{tabular}
+
+% =====================================================================
+%  Front matter
+% =====================================================================
+\clearpage\pagenumbering{roman}
+\chapter*{Acknowledgment}
+\addcontentsline{toc}{chapter}{ACKNOWLEDGMENT}
+We wish to record our indebtedness and thankfulness to all who helped us prepare this project
+report titled \textbf{\ShortTitle} and present it satisfactorily.
+
+We are especially thankful to our guide and supervisor \GuideName\ in the Department of Computer
+Science \& Engineering for valuable suggestions and critical inputs in the preparation of this
+report. We are also thankful to \HodName, Head of the Department of Computer Science \&
+Engineering, for encouragement.
+
+The texts used in this work come from Project Gutenberg, whose volunteers have made thousands of
+public-domain books freely available. Our friends in class have always been helpful, and we are
+grateful to them for patiently listening to our presentations on this project.
+
+\vspace{3em}
+\begin{flushright}\setstretch{1.2}
+\StudentA, \StudentB, \StudentC\\
+(Reg. No. \RegA, \RegB, \RegC)\\
+B.\,Tech.\\ Department of Computer Science \& Engineering\\ SRM University-AP
+\end{flushright}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+When the edge of a printed page burns, the ends of its lines are lost. Near the burn front
+the ink is not gone at once: a band of darkened paper still shows faded strokes, and beyond it
+the text is destroyed. Restoring such a line therefore mixes two very different problems.
+Characters whose strokes are still faintly visible can be \emph{read}; characters that are
+completely burnt can only be \emph{guessed} from the surrounding text. Systems that report a
+single ``restoration accuracy'' blur this distinction and invite over-confident claims.
+
+This project builds and evaluates a multimodal model for side-burnt line completion that keeps
+the two parts apart. Each target is split into a \READ\ part (visible strokes) and an \INF\ part
+(burnt). The model couples a T5 encoder--decoder, which sees the surviving text of the line and
+of two neighbouring lines on each side, with a ResNet-34 encoder over a crop of the burn edge,
+joined by zero-initialised gated cross-attention. A CTC reading head forces the vision encoder to
+transcribe the visible strokes, and a small CNN predicts where the legible text ends so that a
+calibrated upper bound on the number of missing characters can be enforced exactly during
+decoding.
+
+Trained on 98{,}176 synthetic burnt lines rendered from 47 Project Gutenberg books in 16 fonts
+and evaluated on 6{,}145 lines from 6 books never seen in training, the image raises \READ\
+accuracy from 23\% (text-only) to 70\% with t5-small. A blank or mismatched image drops it to
+16\% and 7\%, so the model uses the strokes of the line in front of it. The burnt part, in
+contrast, is not recovered by the image: its error stays the same when the image is removed.
+The calibrated bound cuts endings that run too long from 9--20\% to about 2\% and gives the
+largest single gain on the guessed part. Against an off-the-shelf pipeline (TrOCR + the
+1.5B-parameter Qwen2.5 language model), the t5-base model reads the faded characters equally well
+but guesses the burnt part far better (character error 0.72 vs.\ 0.95). The model's confidence is informative (AUROC 0.90; the
+first word is right 90\% of the time in the most confident quarter), and a web demo shows the
+suggestions, alternatives and a vision-only reading for a page. All results are on synthetic
+burns; a protocol for a real burnt-paper test is included but has not yet been run.
+
+\vspace{1em}\noindent\textbf{Keywords:} document restoration, multimodal learning, T5,
+vision--language fusion, CTC, calibration, constrained decoding.
+
+\setstretch{1.25}
+\tableofcontents
+\listoftables
+\listoffigures
+\setstretch{1.4}
+
+% =====================================================================
+\clearpage\pagenumbering{arabic}
+\chapter{Introduction to the Project}
+% =====================================================================
+This chapter introduces the problem, the scope of the work, its objectives and the structure of
+this report.
+
+\section{The problem}
+Fire is one of the most common forms of damage to archival paper. When a book or a stack of
+documents burns from one side, the damage has a characteristic shape (Figure~\ref{fig:pipeline}):
+the left part of each line survives, a narrow band of darkened paper follows in which the printed
+strokes are still faintly visible, and beyond the burn front the paper is charred and the text is
+gone. A reader faced with such a page does two different things. In the faded band they
+\emph{read}: the strokes are evidence, even if they are weak. In the burnt region they
+\emph{guess}: the only evidence is the surviving text and their knowledge of the language.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{fig_pipeline.png}
+\caption{A held-out synthetic page. (a) The original page. (b) The ground-truth burn mask
+produced by our generator: legible text (white), the faded band where strokes are still visible
+(orange, the \READ\ zone) and the charred region (black, the \INF\ zone). (c) The burnt page the
+model receives.}
+\label{fig:pipeline}
+\end{figure}
+
+Automatic restoration systems usually report one number for the whole missing span. That number
+mixes a recognition problem, which has a single right answer, with a language-modelling problem,
+which usually does not. A model can score well by reading the faded characters correctly and
+still be guessing everything after them, and a user shown its output cannot tell which part is
+which.
+
+\section{Scope}
+We study the \emph{line-completion} step: given a page with a side burn, the surviving text of
+each severed line and a crop of the burn edge, predict the missing end of the line. Locating the
+burn on the page and segmenting lines is done by a separate detector; transcribing the surviving
+text (OCR) is outside the scope and is supplied as input. All training and test data are
+synthetic burns rendered from public-domain books.
+
+\section{Objectives}
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item Build a data generator that renders book pages and applies realistic, randomised side
+burns, and that records for every character whether it is legible, faded-but-visible, or burnt.
+\item Design a multimodal model that uses the faded strokes where they exist and the context
+everywhere else.
+\item Evaluate the visible (\READ) and burnt (\INF) parts \emph{separately}, against strong
+baselines and ablations, with significance tests and calibration analysis.
+\item Keep the predicted endings physically plausible: never longer than the space the burn
+destroyed.
+\item Provide a working demo that shows suggestions honestly, as hypotheses with alternatives.
+\end{enumerate}
+
+\section{Organisation of the report}
+Chapter~\ref{ch:motivation} explains why the problem matters. Chapter~\ref{ch:lit} reviews
+related work. Chapter~\ref{ch:design} describes the data, the task definition and the model.
+Chapter~\ref{ch:impl} covers training and the software, and Chapter~\ref{ch:tools} the tools.
+Chapter~\ref{ch:results} presents the results and Chapter~\ref{ch:conclusion} concludes.
+
+% =====================================================================
+\chapter{Motivation}\label{ch:motivation}
+% =====================================================================
+\section{Why burnt documents}
+Libraries, record offices and private collections hold large amounts of fire-damaged paper:
+municipal records, parish registers, letters and books recovered after building fires. The famous
+cases, such as the carbonised Herculaneum scrolls, attract specialised imaging projects, but the
+everyday case is far more common: an ordinary printed page that has lost the right-hand end of
+every line. Human restorers fill such gaps slowly and by hand. A tool that reads the faded
+characters and proposes plausible endings, clearly marked as proposals, could speed this up.
+
+\section{Why separate reading from guessing}
+The main motivation for the design of this project is honesty about evidence. For an archivist,
+the difference between ``the strokes say \emph{d}'' and ``the language model thinks the next words
+are \emph{his son}'' is the difference between a transcription and a conjecture. Our earlier
+prototype reported a single accuracy over the whole missing span and could not tell the two
+apart; once we split the target, it became clear that the image helps almost entirely with the
+visible part and very little with the burnt part (Chapter~\ref{ch:results}). Reporting the two
+parts separately turns a vague claim into two precise ones.
+
+\section{Why it is a good deep-learning problem}
+The task combines several ideas from current research in one compact setting: vision--language
+fusion, text recognition with CTC, conditional text generation with a pretrained encoder--decoder,
+constrained decoding, and uncertainty calibration. Because the data are generated, the ground
+truth is exact at the character level, which makes careful evaluation possible. The whole
+pipeline trains on a single 6\,GB laptop GPU, so it is reproducible without large resources.
+
+% =====================================================================
+\chapter{Literature Survey}\label{ch:lit}
+% =====================================================================
+\section{Restoration of damaged text}
+\emph{Pythia}~\cite{assael2019pythia} and its successor \emph{Ithaca}~\cite{assael2022ithaca}
+restore missing characters in damaged ancient Greek inscriptions from the surrounding text alone,
+and report top-$k$ accuracy because a gap usually admits several readings. They work on
+transcribed text and do not use an image. Our setting adds the image, but follows their practice
+of reporting ranked hypotheses rather than a single answer. Imaging work on carbonised material,
+such as the virtual unwrapping of the En-Gedi scroll~\cite{seales2016engedi}, recovers ink that is
+physically present but invisible to the eye; it is complementary to ours, which deals with ink
+that is faded or destroyed in an ordinary photograph.
+
+\section{Text recognition}
+Connectionist temporal classification (CTC)~\cite{graves2006ctc} trains a recogniser on
+unsegmented sequences and is the standard loss for line-level OCR. TrOCR~\cite{li2023trocr} is a
+transformer encoder--decoder pretrained on large amounts of printed and handwritten text lines;
+we use it as the OCR stage of an external baseline. Tesseract~\cite{smith2007tesseract} is the
+most widely used open-source OCR engine. Unlike these systems, our reading head only needs to read
+a few characters at the burn edge, but it must do so where the ink is faded and the paper dark.
+
+\section{Pretrained language models and multimodal fusion}
+T5~\cite{raffel2020t5} casts every task as text-to-text and is pretrained with a span-corruption
+objective that is very close to our task: the model learns to fill in masked spans marked by
+sentinel tokens. ResNet~\cite{he2016resnet} provides the image backbone. To let a pretrained
+language model use image features without disturbing it at the start of training, Flamingo~\cite{alayrac2022flamingo}
+inserts gated cross-attention layers whose gates are initialised at zero; we use the same idea.
+CLIP~\cite{radford2021clip} popularised contrastive alignment of image and text features; we use
+a contrastive term, but only on characters that are actually visible in the crop. Larger decoder
+models such as Qwen2.5~\cite{qwen2024} serve as the language model of our external baseline.
+
+\section{Constrained decoding and calibration}
+Beam search with constraints on the output is common in generation tasks; here the constraint is
+physical: the missing text must fit in the space the burn destroyed. For uncertainty, Guo et
+al.~\cite{guo2017calibration} showed that modern networks are often mis-calibrated and that simple
+post-hoc scaling~\cite{platt1999} can fix this; the expected calibration error
+(ECE)~\cite{naeini2015ece} is the usual measure. We report raw and Platt-scaled calibration and
+find that, in our setting, scaling fitted on a few validation books does not transfer to new
+books. Paired bootstrap resampling~\cite{efron1993bootstrap} is used for all significance tests.
+
+\section{Gap addressed by this project}
+We found no prior work that (i) treats side-burnt printed lines as a vision--language completion
+problem, (ii) separates the visible from the destroyed part of the target in evaluation, and
+(iii) enforces a calibrated physical length bound during decoding. These three points are the
+contribution of this project.
+
+% =====================================================================
+\chapter{Design and Methodology}\label{ch:design}
+% =====================================================================
+\section{Overview}
+The system has three parts: a data generator that produces burnt pages with exact
+character-level labels, a multimodal model that completes a severed line, and an evaluation
+protocol that scores the visible and burnt parts separately. A page-level detector and a web demo
+wrap the model for use on a full page.
+
+\section{Synthetic data}
+\subsection{Page rendering}
+Text comes from 57 Project Gutenberg books, split \emph{by book} into 47 training, 4 validation
+and 6 test books, so the test text is never seen in training. Pages are rendered at
+$1024\times1024$ pixels in one of 16 fonts with random size, margins, line spacing, paper colour
+and ink darkness. The v3 layout adds paragraph indents, justified lines and hyphenation, so that
+line ends look like real typesetting. For every character the renderer stores its horizontal
+extent.
+
+\subsection{Burn model}
+A jagged burn boundary $b(y)$ is drawn down the right side of the page, removing 15--30\% of the
+width. The charring is applied as an opacity layer that rises across a fade band of random width
+$T\in[30,80]$\,px with a random curve $\gamma\in[0.6,1.8]$:
+\begin{equation}
+\alpha(x,y)=\operatorname{clip}\!\left(\frac{x-(b(y)-T)}{T},0,1\right)^{\gamma}.
+\end{equation}
+On top come a brown scorch halo, blotchy texture, noise, and optional blur and JPEG compression,
+all randomised (domain randomisation). Figure~\ref{fig:linezoom} shows one line through the
+process.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{fig_line_zoom.png}
+\caption{One severed line: the original, the ground-truth mask, the burnt line, and the
+$128\times256$ crop around the burn edge that the model sees. Below: the surviving prefix, the
+\READ\ part and the \INF\ part of the target.}
+\label{fig:linezoom}
+\end{figure}
+
+\subsection{\READ\ and \INF\ labels}
+A character survives in the prefix if the opacity at its centre is below 0.5. Of the remaining
+characters, the leading ones whose centre lies where $\alpha<0.8$ still show visible strokes and
+form the \READ\ part; the rest form the \INF\ part (Figure~\ref{fig:crops}). Every line in the
+dataset therefore carries the exact split of its target. The v3 cache has 98{,}176 training,
+3{,}961 validation and 6{,}145 test lines from 5{,}000, 200 and 300 pages.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{fig_crops.png}
+\caption{Model crops with their labels. The \READ\ characters (orange) are faint but present in
+the crop; the \INF\ characters are burnt and can only be inferred from context.}
+\label{fig:crops}
+\end{figure}
+
+\section{Model}
+Figure~\ref{fig:arch} shows the architecture.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,
+  box/.style={draw,rounded corners=3pt,align=center,minimum height=1.0cm,inner sep=4pt,fill=white},
+  io/.style={box,fill=black!4},
+  ours/.style={box,draw=corange,very thick}]
+\node[io] (crop) {Burn-edge crop\\$128\times256$};
+\node[box,right=0.7cm of crop] (resnet) {ResNet-34\\layer3 + layer4};
+\node[box,right=0.7cm of resnet] (tok) {$8\times16$ visual\\tokens};
+\node[ours,below=0.9cm of tok] (ctc) {CTC reading head\\(visible text)};
+\node[io,above=1.5cm of crop] (prompt) {Prompt: 2 lines above,\\prefix $+$ \texttt{<extra\_id\_0>},\\2 lines below, length hint};
+\node[box] (enc) at (prompt -| tok) {T5 encoder};
+\node[ours,right=0.9cm of enc] (fuse) {Gated cross-\\attention\\(zero-init)};
+\node[box,right=0.9cm of fuse] (dec) {T5 decoder\\beam search};
+\node[ours,below=1.0cm of dec] (bud) {Calibrated upper\\budget (mask)};
+\node[box,below=0.9cm of bud] (cut) {Cut estimator\\CNN};
+\node[io,right=0.8cm of dec] (out) {Missing\\ending};
+\draw[->] (crop) -- (resnet); \draw[->] (resnet) -- (tok);
+\draw[->] (tok) -- (ctc);
+\draw[->] (prompt) -- (enc); \draw[->] (enc) -- (fuse);
+\draw[->] (tok.east) -| (fuse.south);
+\draw[->] (fuse) -- (dec); \draw[->] (dec) -- (out);
+\draw[->] (cut) -- (bud); \draw[->] (bud) -- (dec);
+\draw[->] (crop.south) |- ++(0,-2.6) -| (cut.south);
+\end{tikzpicture}
+\caption{Model overview. Components outlined in orange are additions made in this project on top
+of a T5 + ResNet baseline.}
+\label{fig:arch}
+\end{figure}
+
+\subsection{Text side}
+The prompt contains the surviving prefixes of two lines above and two lines below, the prefix of
+the current line followed by the T5 sentinel \texttt{<extra\_id\_0>}, and an estimate of the number
+of missing characters. Because T5 is pretrained to fill sentinel spans, this framing matches its
+pretraining objective. We train with t5-small (60\,M parameters) and t5-base (220\,M).
+
+\subsection{Image side and fusion}
+A ResNet-34 encodes the crop; features from its last two stages are combined into an
+$8\times16$ grid of visual tokens, about one character per token at typical font sizes. The
+encoder states of T5 attend to these tokens through multi-head cross-attention whose output is
+added through a gate initialised at zero~\cite{alayrac2022flamingo}. At the start of training
+the model is exactly the pretrained T5, and the image is blended in only as far as it helps.
+
+\subsection{Reading head and contrastive loss}
+A CTC head on the visual tokens is trained to transcribe the text actually visible in the crop
+(loss weight $\lambda_{\text{read}}=0.3$). This forces the vision encoder to learn glyphs instead
+of only texture, and gives the demo a reading that does not depend on the language model. A
+contrastive term aligns visual and text features, but only on \READ\ characters: aligning image
+features with text that is not in the image would train the encoder to hallucinate.
+
+\subsection{Calibrated length bound}
+The number of missing characters is estimated from geometry: the gap from the cut to the right
+text margin divided by the average glyph width of the prefix. This is a median-type estimate:
+30\% of true endings are longer than it. The original decoder penalised anything beyond the
+estimate plus two characters. That rule cut off 7.6\% of \emph{correct} endings, yet still let
+models run 7 characters past the estimate. We replaced it with three steps:
+\begin{enumerate}[leftmargin=2em,itemsep=1pt]
+\item a small CNN predicts the cut position from the crop (error 0.96\,px, against 7.3\,px for
+the fixed offset used before);
+\item an upper bound $u=1.139\,\hat n+1$ is calibrated on validation lines so that 99\% of true
+endings fit (98.8\% on test);
+\item during beam search every token that would push the ending past $u$ is masked, so no output
+can exceed it.
+\end{enumerate}
+
+\section{Evaluation protocol}
+All systems are scored on the same 6{,}145 test lines with the same beam search ($k=5$) and the
+same bound. Table~\ref{tab:metrics} lists the metrics.
+
+\begin{table}[H]
+\centering\small
+\caption{Evaluation metrics.}\label{tab:metrics}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+Metric & What it measures\\
+\midrule
+\READ\ accuracy & top-1 prediction starts with exactly the \READ\ characters (lines with $\ge1$ \READ\ character)\\
+\INF\ CER & character error rate on the rest of the target\\
+CER, EM & whole target: character error rate and exact match\\
+EM@5, 1st word@5 & the truth is among the 5 ranked hypotheses\\
+bits/char & $-\log_2 p(\text{truth})$ per character under the model; lower means the truth is more likely\\
+AUROC, ECE & whether the confidence of the first word separates right from wrong, and how well it is calibrated\\
+overlong & top-1 more than 3 characters longer than the true ending\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Systems compared: an empty prediction, zero-shot t5-small, a \textbf{text-only} model trained on
+the same data and schedule with no image, the \textbf{full} model, the full model with a blank or
+a mismatched image (ablations), the full model with 3\% OCR-style noise in its context, and an
+external \textbf{OCR + LLM} baseline (Section~\ref{sec:baseline}). Differences are tested with a
+paired bootstrap ($B=1000$) on the same lines.
+
+% =====================================================================
+\chapter{Implementation}\label{ch:impl}
+% =====================================================================
+\section{Training}
+Training has two stages. In stage 1 (one epoch) T5 is frozen and only the vision side, fusion and
+heads learn. In stage 2 everything is fine-tuned with per-group learning rates. Mixed precision
+(bfloat16) and gradient clipping are used throughout, and the checkpoint with the lowest
+validation CER is kept. Table~\ref{tab:hparams} lists the settings and
+Figure~\ref{fig:training} the training curves.
+
+\begin{table}[H]
+\centering\small
+\caption{Training settings.}\label{tab:hparams}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Setting & Value\\
+\midrule
+Batch size & 16\\
+Epochs & 5 (t5-small), 3 (t5-base, gradient checkpointing)\\
+Learning rates (stage 2) & T5 and ResNet $1\times10^{-5}$; fusion and heads $5\times10^{-5}$\\
+Stage-1 learning rate & $1\times10^{-4}$ (adapters only)\\
+Weight decay, gradient clip & $10^{-4}$, 1.0\\
+Reading loss weight $\lambda_{\text{read}}$ & 0.3\\
+Max.\ prompt / target length & 256 / 32 tokens\\
+Precision & bfloat16 autocast\\
+Time per epoch & $\approx$21 min (t5-small) on one RTX 4050 laptop GPU\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{fig_training.png}
+\caption{Left: validation CER after each epoch on 800 validation lines (decoded with the training
+rule, so values differ slightly from the test tables). Right: smoothed training loss of the two
+multimodal models; the drop at epoch 2 is where stage 2 unfreezes T5.}
+\label{fig:training}
+\end{figure}
+
+\section{Software structure}
+The code is organised so that preprocessing is defined once and shared by training, evaluation
+and inference:
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item \texttt{line\_data.py} -- page rendering, burns, crops, prompts, \READ/\INF\ split, length estimate;
+\item \texttt{model.py} -- the restorer, fusion, CTC head, cut estimator and the length-bound logits processor;
+\item \texttt{train.py} -- the two-stage trainer;
+\item \texttt{scripts/evaluate\_lines.py} -- the evaluation protocol, bootstrap tests and calibration;
+\item \texttt{inference/} -- page-level burn detector and restoration engine;
+\item \texttt{api/} -- a FastAPI service with a web interface;
+\item \texttt{tests/} -- 115 unit and integration tests.
+\end{itemize}
+
+\section{Page-level detector and demo}
+For a full page, a burn detector finds the burn front from normalised darkness and splits the
+page into text lines. On 120 synthetic test pages it finds 99.6\% of severed lines and places the
+burn edge within 5\,px on average. The user pastes the surviving text, one printed line per line,
+and the web interface shows for each severed line the top suggestion, alternatives, the
+vision-only reading and the length estimate (Figure~\ref{fig:ui}). The interface states that
+suggestions are hypotheses.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{fig_ui_demo.png}
+\caption{The web demo on a held-out synthetic page. The pasted text is the exact transcription
+from the generator, not OCR output.}
+\label{fig:ui}
+\end{figure}
+
+% =====================================================================
+\chapter{Hardware/ Software Tools Used}\label{ch:tools}
+% =====================================================================
+\begin{table}[H]
+\centering\small
+\caption{Hardware and software.}\label{tab:tools}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Item & Details\\
+\midrule
+GPU & NVIDIA GeForce RTX 4050 Laptop GPU, 6\,GB\\
+Operating system & Windows 11\\
+Language & Python 3\\
+Deep learning & PyTorch 2 (CUDA 12.6), Hugging Face Transformers 4.57\\
+Pretrained models & T5-small, T5-base, ResNet-34 (ImageNet); TrOCR and Qwen2.5-1.5B for the baseline\\
+Image processing & OpenCV, Pillow, NumPy\\
+Plots & Matplotlib\\
+Web service & FastAPI, Uvicorn, HTML/JavaScript interface\\
+Testing, versioning & pytest, git\\
+Data & Project Gutenberg public-domain books\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All experiments ran on the single laptop GPU above. The largest model (t5-base with the vision
+encoder) peaks at 4.6\,GiB with gradient checkpointing. Generating the v3 dataset (about 10\,GB)
+uses 14 CPU worker processes.
+
+% =====================================================================
+\chapter{Results \& Discussion}\label{ch:results}
+% =====================================================================
+All numbers are on the 6{,}145 test lines from books never seen in training.
+
+\section{Qualitative results}
+Figure~\ref{fig:qual} shows test crops with the truth and the predictions of the text-only and
+full models (both t5-base). The full model reads the faded characters at the start of the
+ending (\emph{he}, \emph{iving}, \emph{r.}); the text-only model guesses them and often gets them
+wrong (\emph{hat}, \emph{oyal}, \emph{s.}). After the visible characters, both models guess, and
+the guesses are fluent but rarely exact (\emph{he man and} for \emph{he Rector and}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{fig_qualitative.png}
+\caption{Test lines: input crop, surviving text, truth, text-only prediction (blue) and our
+prediction (orange), t5-base.}
+\label{fig:qual}
+\end{figure}
+
+\section{Main results}
+\begin{table}[H]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Main results on the test books. $\uparrow$ higher is better, $\downarrow$ lower is better.}
+\label{tab:main}
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+System & \READ\ acc$\uparrow$ & \INF\ CER$\downarrow$ & CER$\downarrow$ & EM$\uparrow$ & EM@5$\uparrow$ & 1st word$\uparrow$ & bits/char$\downarrow$ & overlong$\downarrow$\\
+\midrule
+Empty prediction & 0 & 1.000 & 1.000 & 0 & 0 & 0 & -- & 0\\
+Zero-shot t5-small & 0.113 & 1.040 & 1.015 & 0.001 & 0.002 & 0.060 & 4.27 & 44.8\%\\
+Text-only, t5-small & 0.232 & 0.815 & 0.775 & 0.037 & 0.063 & 0.166 & 1.85 & 1.8\%\\
+\textbf{Ours, t5-small} & \textbf{0.700} & 0.768 & 0.699 & 0.069 & 0.118 & 0.401 & 1.57 & 1.9\%\\
+Text-only, t5-base & 0.361 & 0.741 & 0.702 & 0.078 & 0.132 & 0.293 & 1.44 & 2.7\%\\
+\textbf{Ours, t5-base} & 0.660 & \textbf{0.717} & \textbf{0.656} & \textbf{0.103} & \textbf{0.174} & \textbf{0.418} & \textbf{1.31} & 2.4\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{fig_read_inferred.png}
+\caption{The image triples \READ\ accuracy with t5-small (left) but improves the burnt part only
+modestly (right).}
+\label{fig:readinf}
+\end{figure}
+
+Table~\ref{tab:main} and Figure~\ref{fig:readinf} give the central result. Adding the image
+raises \READ\ accuracy from 0.23 to 0.70 with t5-small and from 0.36 to 0.66 with t5-base. All
+differences between our model and the text-only model of the same size are significant
+($p<0.001$). The \INF\ CER also improves, but much less (0.815$\to$0.768 and 0.741$\to$0.717).
+Section~\ref{sec:ablation} shows that this smaller gain comes from correctly read word starts
+leading to better continuations, not from seeing burnt text.
+
+A larger language model helps the guessing: t5-base improves bits/char from 1.57 to 1.31, EM@5
+from 0.118 to 0.174 and \INF\ CER from 0.768 to 0.717 over t5-small. Trained for only 3 epochs,
+its vision side is less developed (\READ\ 0.66 against 0.70).
+
+\section{Ablations: does the model use the image?}\label{sec:ablation}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{fig_ablation.png}
+\caption{\READ\ accuracy of the full model with the real crop, a blank crop and the crop of a
+different line (decoded with the old length rule for all three, see text).}
+\label{fig:ablation}
+\end{figure}
+
+If the image is replaced by a blank one, \READ\ accuracy falls from 0.70 to 0.16 (t5-small); with
+the crop of a different line it falls to 0.07, below the text-only model, because the model now
+reads the wrong strokes (Figure~\ref{fig:ablation}). The vision-only CTC head transcribes the
+visible text with a CER of 0.03 and falls to chance with a mismatched crop. The model therefore
+reads \emph{this} line's strokes.
+
+The burnt part tells a different story. With the image blanked, \INF\ CER stays the same for
+t5-small (0.823 against 0.827, not significant) and even improves for t5-base (0.779 against
+0.810), partly because blank-image outputs are shorter. \textbf{The image does not recover burnt
+text.} (The ablations are decoded with the old length rule: given a blank image the model is out
+of distribution and would otherwise run on until it reaches the hard bound.)
+
+\section{Effect of the calibrated length bound}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{fig_budget.png}
+\caption{Share of endings more than 3 characters longer than the truth, with the old rule and
+with the calibrated upper bound.}
+\label{fig:budget}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\caption{Old length rule against the calibrated upper bound; same checkpoints and test lines.}
+\label{tab:budget}
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+System & Length rule & CER$\downarrow$ & \INF\ CER$\downarrow$ & EM$\uparrow$ & overlong$\downarrow$ & exceeds bound$\downarrow$\\
+\midrule
+\multirow{2}{*}{Text-only, t5-small} & old & 0.810 & 0.853 & 0.029 & 8.7\% & 8.4\%\\
+ & calibrated & \textbf{0.775} & \textbf{0.815} & \textbf{0.037} & \textbf{1.8\%} & \textbf{0\%}\\
+\multirow{2}{*}{Ours, t5-small} & old & 0.755 & 0.827 & 0.048 & 12.2\% & 11.7\%\\
+ & calibrated & \textbf{0.699} & \textbf{0.768} & \textbf{0.069} & \textbf{1.9\%} & \textbf{0\%}\\
+\multirow{2}{*}{Text-only, t5-base} & old & 0.795 & 0.841 & 0.052 & 20.4\% & 20.1\%\\
+ & calibrated & \textbf{0.702} & \textbf{0.741} & \textbf{0.078} & \textbf{2.7\%} & \textbf{0\%}\\
+\multirow{2}{*}{Ours, t5-base} & old & 0.744 & 0.810 & 0.068 & 18.7\% & 18.3\%\\
+ & calibrated & \textbf{0.656} & \textbf{0.717} & \textbf{0.103} & \textbf{2.4\%} & \textbf{0\%}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The calibrated bound was the largest single improvement for the guessed part
+(Table~\ref{tab:budget}, Figure~\ref{fig:budget}). Overlong endings fall from 9--20\% to about
+2\%, and \INF\ CER improves by 0.04--0.10 for every model (all $p<0.001$). The gain is largest for
+t5-base, which tends to write longer endings. The old rule was wrong in both directions: too tight
+for many correct endings, and too loose to stop a model that keeps writing.
+
+\section{Robustness and confidence}
+With 3\% OCR-style errors in the context lines, CER rises by 0.02--0.03 for all models and the gap
+between full and text-only models is unchanged. Our t5-small model's confidence in its first word
+separates right from wrong answers with an AUROC of 0.90; in its most confident quarter the first
+word is right 90\% of the time, against 44\% for the text-only model. The raw confidence is
+already reasonably calibrated (ECE 0.03--0.04, Figure~\ref{fig:reliab}). Platt scaling fitted on
+the four validation books made it \emph{worse} on the test books (ECE 0.08), because the
+relation between confidence and accuracy shifts from book to book, so the demo shows the raw value.
+
+\begin{table}[H]
+\centering\small
+\caption{Confidence of the first word: separation (AUROC), accuracy in the most confident 25\% of
+lines, and calibration.}
+\label{tab:calib}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+System & AUROC$\uparrow$ & Acc.\ top 25\%$\uparrow$ & ECE raw$\downarrow$ & ECE Platt$\downarrow$\\
+\midrule
+Text-only, t5-small & 0.841 & 0.441 & 0.017 & 0.014\\
+\textbf{Ours, t5-small} & \textbf{0.896} & \textbf{0.897} & 0.037 & 0.077\\
+Text-only, t5-base & 0.840 & 0.696 & 0.033 & 0.046\\
+Ours, t5-base & 0.866 & 0.876 & 0.029 & 0.079\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{fig_reliability.png}
+\caption{Reliability diagram of the first-word confidence on the test books: predicted
+probability against observed accuracy, raw and after Platt scaling.}
+\label{fig:reliab}
+\end{figure}
+
+\section{Variant tried: calibrated estimate in the prompt}
+We also retrained all four models with the cut-estimator's length estimate in the prompt instead
+of the original formula (Table~\ref{tab:v3e}). For the full models the change is small:
+$-0.008$ CER with t5-small ($p<0.001$) and $-0.002$ with t5-base (not significant). The
+text-only models moved in opposite directions. We kept the original checkpoints as the main
+configuration; once the bound is enforced, the length hint is no longer where the error lies.
+
+\begin{table}[H]
+\centering\small
+\caption{Original prompt (v3) against the calibrated estimate in the prompt (v3e).}
+\label{tab:v3e}
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+System & Prompt & \READ\ acc & \INF\ CER & CER & EM & bits/char\\
+\midrule
+\multirow{2}{*}{Text-only, t5-small} & v3 & \textbf{0.232} & \textbf{0.815} & \textbf{0.775} & \textbf{0.037} & \textbf{1.85}\\
+ & v3e & 0.177 & 0.828 & 0.789 & 0.033 & 1.93\\
+\multirow{2}{*}{Ours, t5-small} & v3 & 0.700 & 0.768 & 0.699 & 0.069 & 1.57\\
+ & v3e & \textbf{0.707} & \textbf{0.760} & \textbf{0.692} & 0.069 & 1.57\\
+\multirow{2}{*}{Text-only, t5-base} & v3 & 0.361 & 0.741 & 0.702 & 0.078 & 1.44\\
+ & v3e & \textbf{0.391} & \textbf{0.733} & \textbf{0.694} & \textbf{0.083} & \textbf{1.41}\\
+\multirow{2}{*}{Ours, t5-base} & v3 & 0.660 & 0.717 & 0.656 & 0.103 & 1.31\\
+ & v3e & \textbf{0.672} & 0.716 & 0.655 & \textbf{0.105} & 1.31\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{External baseline: off-the-shelf OCR + a larger language model}\label{sec:baseline}
+To check that the gains are not an artefact of comparing only against our own models, we built
+a baseline from pretrained components with no training on this task. TrOCR (base, stage 1)
+reads the crop; we chose it over Tesseract and TrOCR-large-printed because it had the lowest
+error on the visible text of 150 test crops (CER 0.09 against 0.29 and 0.95; the latter outputs
+only capital letters). Whatever the OCR reads past the known prefix is taken as its \READ\ guess.
+Qwen2.5-1.5B~\cite{qwen2024}, a decoder language model about seven times the size of t5-base,
+then continues the text from the two previous lines, the prefix and the OCR reading with beam
+search. Candidates are re-ranked by the likelihood of the following line, so the baseline also
+uses the context below the line. Every candidate is cut to the same calibrated bound.
+
+\input{baseline_results}
+
+% =====================================================================
+\chapter{Conclusion}\label{ch:conclusion}
+% =====================================================================
+This project built a complete pipeline for completing side-burnt printed lines: a generator with
+exact character-level labels, a multimodal T5 + ResNet model with a reading head and gated
+fusion, a calibrated physical length bound enforced during decoding, a page-level detector and a
+web demo. Its main finding is a clear division of labour. The image reads the faded characters at
+the burn edge (\READ\ accuracy 0.23$\to$0.70), and the ablations show that it reads the strokes of
+the line in front of it. The burnt part is not recovered by the image; there, a larger language
+model and a correct length bound help, and the bound was the largest single gain. Because the
+model's confidence is informative, an interface can show confident suggestions and flag the rest.
+
+\begin{table}[H]
+\centering\small
+\caption{Summary of the main findings (best configuration, test books).}
+\label{tab:summary}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Question & Answer & Evidence\\
+\midrule
+Does the image help read faded characters? & Yes, strongly & \READ\ 0.23$\to$0.70; blank image 0.16\\
+Does it recover burnt text? & No & \INF\ CER unchanged without image\\
+Largest gain on the guessed part? & Calibrated length bound & overlong 9--20\%$\to$2\%\\
+Does a larger LM help? & Yes, for guessing & bits/char 1.57$\to$1.31\\
+Beats off-the-shelf OCR + LLM? & Yes, on the guess & \INF\ CER 0.72 vs.\ 0.95; \READ\ equal\\
+Is the confidence useful? & Yes & AUROC 0.90; 90\% right in top quarter\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Limitations}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item All results are on synthetic burns. Real burnt paper curls, shrinks and discolours in ways
+the generator does not model.
+\item Only right-side burns of printed, single-column English text are covered.
+\item The surviving text must be supplied (pasted); the demo has no OCR stage.
+\item Each configuration was trained once; the run-to-run variation is not measured.
+\item Exact matches remain rare (10\% for the best model). The output is a set of suggestions, not
+a restoration.
+\end{itemize}
+
+\section{Scope of further work}
+\begin{enumerate}[leftmargin=2em,itemsep=1pt]
+\item \textbf{Real-damage test.} Print held-out pages, burn their edges under controlled
+conditions, photograph them and annotate the legible and faint characters. The scripts for this
+protocol are already in the repository.
+\item \textbf{Repeated training runs} (three seeds) for the main models, reporting the mean and
+spread.
+\item \textbf{An OCR stage} for the surviving text, so the demo works on a photograph alone.
+\item \textbf{Other damage}: burns from the left or the top, water damage and tears.
+\item \textbf{Release the generator and data as a benchmark}, with the \READ/\INF\ split as its
+main evaluation.
+\end{enumerate}
+
+% =====================================================================
+\begin{thebibliography}{99}
+\setstretch{1.15}
+\bibitem{assael2019pythia} Y.~Assael, T.~Sommerschield and J.~Prag, ``Restoring ancient text using deep learning: a case study on Greek epigraphy,'' in \emph{Proc. EMNLP-IJCNLP}, 2019, pp.~6368--6375.
+\bibitem{assael2022ithaca} Y.~Assael, T.~Sommerschield, B.~Shillingford, M.~Bordbar, J.~Pavlopoulos, M.~Chatzipanagiotou, I.~Androutsopoulos, J.~Prag and N.~de~Freitas, ``Restoring and attributing ancient texts using deep neural networks,'' \emph{Nature}, vol.~603, pp.~280--283, 2022.
+\bibitem{seales2016engedi} W.~B.~Seales, C.~S.~Parker, M.~Segal, E.~Tov, P.~Shor and Y.~Porath, ``From damage to discovery via virtual unwrapping: Reading the scroll from En-Gedi,'' \emph{Science Advances}, vol.~2, no.~9, e1601247, 2016.
+\bibitem{graves2006ctc} A.~Graves, S.~Fern\'andez, F.~Gomez and J.~Schmidhuber, ``Connectionist temporal classification: labelling unsegmented sequence data with recurrent neural networks,'' in \emph{Proc. ICML}, 2006, pp.~369--376.
+\bibitem{li2023trocr} M.~Li, T.~Lv, J.~Chen, L.~Cui, Y.~Lu, D.~Florencio, C.~Zhang, Z.~Li and F.~Wei, ``TrOCR: Transformer-based optical character recognition with pre-trained models,'' in \emph{Proc. AAAI}, 2023, pp.~13094--13102.
+\bibitem{smith2007tesseract} R.~Smith, ``An overview of the Tesseract OCR engine,'' in \emph{Proc. ICDAR}, 2007, pp.~629--633.
+\bibitem{raffel2020t5} C.~Raffel, N.~Shazeer, A.~Roberts, K.~Lee, S.~Narang, M.~Matena, Y.~Zhou, W.~Li and P.~J.~Liu, ``Exploring the limits of transfer learning with a unified text-to-text transformer,'' \emph{JMLR}, vol.~21, no.~140, pp.~1--67, 2020.
+\bibitem{he2016resnet} K.~He, X.~Zhang, S.~Ren and J.~Sun, ``Deep residual learning for image recognition,'' in \emph{Proc. CVPR}, 2016, pp.~770--778.
+\bibitem{alayrac2022flamingo} J.-B.~Alayrac \emph{et al.}, ``Flamingo: a visual language model for few-shot learning,'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, 2022.
+\bibitem{radford2021clip} A.~Radford \emph{et al.}, ``Learning transferable visual models from natural language supervision,'' in \emph{Proc. ICML}, 2021, pp.~8748--8763.
+\bibitem{qwen2024} Qwen Team, ``Qwen2.5 technical report,'' arXiv:2412.15115, 2024.
+\bibitem{guo2017calibration} C.~Guo, G.~Pleiss, Y.~Sun and K.~Q.~Weinberger, ``On calibration of modern neural networks,'' in \emph{Proc. ICML}, 2017, pp.~1321--1330.
+\bibitem{platt1999} J.~Platt, ``Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods,'' in \emph{Advances in Large Margin Classifiers}, MIT Press, 1999, pp.~61--74.
+\bibitem{naeini2015ece} M.~P.~Naeini, G.~F.~Cooper and M.~Hauskrecht, ``Obtaining well calibrated probabilities using Bayesian binning,'' in \emph{Proc. AAAI}, 2015, pp.~2901--2907.
+\bibitem{efron1993bootstrap} B.~Efron and R.~J.~Tibshirani, \emph{An Introduction to the Bootstrap}. Chapman \& Hall, 1993.
+\bibitem{gutenberg} Project Gutenberg, \url{https://www.gutenberg.org}, accessed 2026.
+\end{thebibliography}
+
+\chapter*{List of Publications}
+\addcontentsline{toc}{chapter}{LIST OF PUBLICATIONS}
+None at the time of submission.
+
+\end{document}

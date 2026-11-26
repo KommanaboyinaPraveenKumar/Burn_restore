@@ -882,6 +882,7 @@ def main() -> None:
     parser.add_argument("--context_noise", type=float, default=None, help="Max OCR-noise rate on context (train).")
     parser.add_argument("--vision_grid", choices=["coarse", "fine"], default=None)
     parser.add_argument("--no_reading_head", action="store_true")
+    parser.add_argument("--seed", type=int, default=None, help="Random seed (default: config, 42).")
     parser.add_argument("--gradient_checkpointing", action="store_true", help="Trade compute for T5 memory.")
     args = parser.parse_args()
 
@@ -912,6 +913,8 @@ def main() -> None:
         config.checkpoint_dir = args.ckpt_dir
     if args.no_amp:
         config.use_amp = False
+    if args.seed is not None:
+        config.seed = args.seed
     if args.text_model is not None:
         config.text_model_name = args.text_model
     if args.prompt_style is not None:

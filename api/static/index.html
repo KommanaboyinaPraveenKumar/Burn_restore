@@ -70,7 +70,10 @@
         <div class="mt-4">
           <div class="flex items-center justify-between">
             <label for="page-text-input" class="text-xs font-semibold text-slate-700">Surviving text</label>
-            <span id="page-text-count" class="text-[10px] text-slate-400 font-mono">0 lines</span>
+            <span class="flex items-center gap-2">
+              <button id="load-sample" type="button" class="px-2 py-0.5 text-[10px] font-semibold rounded border border-amber-600 bg-amber-50 text-amber-900 hover:bg-amber-100 focus:outline-none">Load sample page</button>
+              <span id="page-text-count" class="text-[10px] text-slate-400 font-mono">0 lines</span>
+            </span>
           </div>
           <textarea id="page-text-input" rows="6" spellcheck="false"
             placeholder="Type or paste what is still legible, one printed line per line, top to bottom (leave a blank line for an illegible line). Without it the model only sees the burn edge."
@@ -233,6 +236,23 @@
       };
       reader.readAsDataURL(file);
     }
+
+    // Sample page: a held-out test page plus its surviving text, loaded in one click
+    document.getElementById('load-sample').addEventListener('click', async () => {
+      const [blob, text] = await Promise.all([
+        fetch('/static/sample/burnt_page.png').then(r => r.blob()),
+        fetch('/static/sample/surviving_text.txt').then(r => r.text()),
+      ]);
+      const file = new File([blob], 'burnt_page.png', { type: 'image/png' });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+      handleFile(file);
+      const ta = document.getElementById('page-text-input');
+      ta.value = text.trimEnd();
+      ta.dispatchEvent(new Event('input'));
+      document.getElementById('max-lines-input').value = 18;
+    });
 
     // Mode Toggle
     const autoBtn = document.getElementById('mode-auto');

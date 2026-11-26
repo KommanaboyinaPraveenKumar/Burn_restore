@@ -370,6 +370,8 @@ def main():
     ap.add_argument("--calib_n", type=int, default=0, help="Validation lines used to fit calibration")
     ap.add_argument("--out", default=str(ROOT / "results" / "line_eval.json"))
     ap.add_argument("--skip_zero_shot", action="store_true")
+    ap.add_argument("--main_only", action="store_true",
+                    help="Only the main decoding of each model (no legacy-budget or image-ablation rows); for seed runs")
     ap.add_argument("--cut_ckpt", default=str(ROOT / "checkpoints" / "cut_estimator.pt"),
                     help="CutOffsetRegressor checkpoint; enables the calibrated upper budget")
     ap.add_argument("--budget_mode", default="hard", choices=["hard", "soft"],
@@ -465,15 +467,17 @@ def main():
         del m
     if args.text_only_ckpt:
         m = load_model(args.text_only_ckpt, device)
-        evaluate("text_only", m, modes=(("", "real"), ("_soft", "real", "legacy")), noise_variant=True)
+        evaluate("text_only", m, modes=(("", "real"),) if args.main_only else (("", "real"), ("_soft", "real", "legacy")),
+                 noise_variant=not args.main_only)
         del m
     if args.full_ckpt:
         m = load_model(args.full_ckpt, device)
         print(f"  full: fusion={m.fusion_style} grid={m.visual_encoder.grid} "
               f"reading_head={m.reading_head is not None} t5={m.config.text_model_name}", flush=True)
-        evaluate("full", m, modes=(("", "real"), ("_soft", "real", "legacy"), ("_zero_img", "zero", "legacy"),
-                                   ("_shuf_img", "shuffle", "legacy")),
-                 noise_variant=True)
+        evaluate("full", m, modes=(("", "real"),) if args.main_only else (
+                     ("", "real"), ("_soft", "real", "legacy"), ("_zero_img", "zero", "legacy"),
+                     ("_shuf_img", "shuffle", "legacy")),
+                 noise_variant=not args.main_only)
         del m
     for spec in args.extra_ckpt:
         name, path = spec.split("=", 1)

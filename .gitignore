@@ -35,3 +35,6 @@ Thumbs.db
 # Generated evaluation outputs (line_eval*.json are kept: the README cites them)
 results/smoke_eval.json
 results/test_integration_output/
+report_overleaf.zip
+presentation.zip
+presentation_overleaf.zip
